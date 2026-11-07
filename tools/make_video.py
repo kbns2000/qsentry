@@ -110,7 +110,7 @@ def dash(step, events_upto, cap, reveal=1.0):
         d.text((680, y + 10), f"{name:<6}", font=F_H2, fill=FG)
         d.text((800, y + 12), f"{float(val):9.3f}", font=F_MONO_B, fill=DIM)
         d.text((930, y + 10), f"{verd}", font=F_H2, fill=col)
-        d.text((1080, y + 12), f"p={conf}", font=F_MONO, fill=DIM)
+        if float(conf) > 0: d.text((1080, y + 12), f"p={conf}", font=F_MONO, fill=DIM)
         y += 50
     d.text((660, y + 4), "qsentryd event log", font=F_SMALL, fill=ACC)
     y += 28
@@ -120,24 +120,52 @@ def dash(step, events_upto, cap, reveal=1.0):
     return im
 
 
-CAPS = {
-    1: "Clean driving. A sensor process MsgSend()s 4 signals at 100 Hz to qsentryd; a 293-parameter "
-       "neural net checks every sensor every tick. All OK, state NOMINAL.",
-    2: "Gyro (yaw) drift injected. Alone the signal looks normal, but it no longer matches the bicycle "
-       "model from steering and speed. Flagged 'drift' 2.8 s after injection -> DEGRADED (limp-home).",
-    3: "Fault cleared. A sensor is only un-flagged after confident health (p(ok) >= 0.9) for a full "
-       "second, so an unsure model never hides a fault. Back to NOMINAL.",
-    4: "Wheel-speed sensor frozen: 'stuck' in 0.48 s. Fault isolation: the steer/yaw check uses wheel "
-       "speed, so the gyro pair is not condemned by mistake.",
-    5: "Noise on the accelerometer (pair A) plus gyro drift (pair B): both redundant pairs are lost -> "
-       "SAFE_STOP, latched until an operator reset.",
-    6: "Operator reset 80 ms after the faults were cleared: the 1-second window still holds faulty "
-       "samples, so the supervisor re-latches SAFE_STOP at once. It never trusts stale evidence.",
-    7: "Two priority-9 CPU hogs (qsload) for 10 s. The detector thread runs SCHED_FIFO 40: per-sample time "
-       "stays bounded: p50 144 us, p99 286 us per sample after 10 s of load (emulated CPU).",
-    8: "slay qsensord: the sensor ECU dies. A 100 Hz timer pulse on the same QNX channel is a deadline "
-       "watchdog -> SAFE_STOP 55 ms after the last sample (50 ms deadline + 10 ms tick).",
-}
+def latencies(events):
+    """inject -> first reaction, from the qsentryd event log."""
+    out, pend = {}, None
+    for e in events:
+        m = re.match(r"t=([\d.]+)s (.*)", e)
+        if not m: continue
+        t, msg = float(m.group(1)), m.group(2)
+        if msg.startswith("inject "):
+            pend = (t, msg[7:])
+        elif "->" in msg and pend:
+            out.setdefault(pend[1], (t - pend[0], msg)); pend = None
+        elif msg.startswith("WATCHDOG"):
+            out["watchdog"] = (float(re.search(r"for (\d+) ms", msg).group(1)) / 1000, msg)
+    return out
+
+
+def captions(steps, events):
+    L = latencies(events)
+    kv = {st["n"]: st["kv"] for st in steps}
+    f = lambda k: f"{L[k][0]:.2f} s" if k in L else "?"
+    reset_state = kv.get(6, {}).get("state", "")
+    pl7 = kv.get(7, {}).get("pipeline_us", "").split("max")[0].strip()
+    reset_cap = ("Operator reset after the faults were cleared and the window flushed: back to NOMINAL."
+                 if reset_state == "NOMINAL" else
+                 "Operator reset while the 1-second window still holds faulty samples: the supervisor "
+                 "re-latches SAFE_STOP at once. It never trusts stale evidence.")
+    wd = L.get("watchdog", (0, ""))[0] * 1000
+    return {
+        1: "Clean driving. A sensor process MsgSend()s 4 signals at 100 Hz to qsentryd; a 293-parameter "
+           "neural net checks every sensor every tick. All OK, state NOMINAL.",
+        2: "Gyro (yaw) drift injected. Alone the signal looks normal, but it no longer matches the bicycle "
+           f"model from steering and speed. Flagged 'drift' {f('yaw drift')} after injection -> DEGRADED.",
+        3: "Fault cleared. A sensor is only un-flagged after confident health (p(ok) >= 0.9) for a full "
+           "second, so an unsure model never hides a fault. Back to NOMINAL.",
+        4: f"Wheel-speed sensor frozen: 'stuck' in {f('speed stuck')}. Fault isolation: the steer/yaw check "
+           "uses wheel speed, so the gyro pair is not condemned by mistake.",
+        5: f"Accelerometer noise (flagged in {f('accel noise')}) plus gyro drift: both redundant pairs are "
+           "lost -> SAFE_STOP, latched until an operator reset.",
+        6: reset_cap,
+        7: "Two priority-9 CPU hogs (qsload) for 10 s. The detector thread runs SCHED_FIFO 40 and stays "
+           f"bounded: {pl7} us per sample (software-emulated CPU).",
+        8: "slay qsensord: the sensor ECU dies. A 100 Hz timer pulse on the same QNX channel is a deadline "
+           f"watchdog -> SAFE_STOP {wd:.0f} ms after the last sample (50 ms deadline, 10 ms tick).",
+    }, L
+
+
 
 
 def main(log, out):
@@ -175,6 +203,7 @@ def main(log, out):
     frames.append((im, 7))
 
     order = steps
+    CAPS, L = captions(steps, events)
     for s in order:
         t_now = 1e9
         m = re.search(r"t=([\d.]+)s", s["kv"].get("event", ""))
@@ -184,8 +213,9 @@ def main(log, out):
             frames.append((dash(s, evs, CAPS[s["n"]], r), dur))
 
     frames.append((card("Results", [
-        "On QNX 8.0 (QEMU, software-emulated CPU): drift 2.8 s, stuck 0.48 s, noise 0.18 s, "
-        "two-pair SAFE_STOP 2.5 s, watchdog 55 ms.",
+        "On QNX 8.0 (QEMU, software-emulated CPU): gyro drift %.1f s, wheel speed stuck %.2f s, "
+        "accel noise %.2f s, watchdog %.0f ms." % (L["yaw drift"][0], L["speed stuck"][0],
+                                                   L["accel noise"][0], L["watchdog"][0] * 1000),
         "Offline, held-out seed: 800 / 800 injected faults found with the right sensor and fault type; "
         "0 false alarms in 200 clean drives (3.3 simulated hours).",
         "Detector: 3.5 us per tick on an x86-64 host, no allocation, bounded time."]), 14))
