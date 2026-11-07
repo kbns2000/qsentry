@@ -19,6 +19,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+/* Typed OCB for the resource manager handlers (otherwise RESMGR_OCB_T is void). */
+struct _iofunc_ocb;
+#define RESMGR_OCB_T struct _iofunc_ocb
+#define IOFUNC_OCB_T struct _iofunc_ocb
 #include <errno.h>
 #include <pthread.h>
 #include <sched.h>
