@@ -16,6 +16,9 @@ The detector is a 293-parameter neural network (1.2 KB of weights) that runs in 
 100 Hz tick, with no allocation, no libraries and bounded execution time, so it can live next to
 real-time control code on QNX.
 
+**Demo video (2:47):** https://youtu.be/1FHy8AGi6Ys — every screen is the real serial log of a QNX 8.0 target in QEMU
+([docs/qnx_run_2026-11-07/](docs/qnx_run_2026-11-07/)).
+
 ## What it shows
 
 | | |

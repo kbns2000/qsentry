@@ -3,6 +3,8 @@
 **Project name:** qsentry
 **Tagline:** A 1.2 KB neural network and a hard-deadline watchdog that catch lying sensors on QNX 8.0.
 **Category:** Automotive
+**Video:** https://youtu.be/1FHy8AGi6Ys
+
 **Built with:** c, qnx, qnx-neutrino, qemu, python, numpy
 
 ## Inspiration
