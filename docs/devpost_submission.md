@@ -42,6 +42,11 @@ stream goes silent for more than 50 ms.
 On held-out simulator seeds: 800/800 injected faults detected with the right sensor and fault type,
 0 false alarms in 200 clean drives (3.3 hours), 0 false SAFE_STOPs, ~3.5 µs per tick on x86-64.
 
+On QNX 8.0 in QEMU (x86_64, software-emulated CPU, log in `docs/qnx_run_2026-11-07/`): gyro drift caught
+in 2.8 s, frozen wheel speed in 0.48 s, accelerometer noise in 0.18 s, two-pair SAFE_STOP in 2.5 s, and the
+deadline watchdog tripped 55 ms after the sensor process was killed. Under two priority-9 CPU hogs the
+detector's per-sample time stayed at p50 144 µs / p99 286 µs (emulated).
+
 ## What we learned
 QNX message passing makes a clean real-time pipeline: priorities travel with messages, pulses unify
 timers and data, and a resource manager gives a zero-dependency operator interface.
@@ -51,5 +56,6 @@ Train on recorded CAN/IMU logs, add a third redundant source (GNSS heading) to r
 run on Raspberry Pi 5 with real IMU hardware, and export verdicts over SOME/IP.
 
 ## Build instructions
-See README: QNX SDP 8.0, `make qnx`, `scripts/run_qemu.sh`, `scripts/deploy_qemu.sh`, then
-`sh /tmp/demo_on_target.sh` on the target.
+See README. Linux/WSL host: `make qnx`, `scripts/run_qemu.sh`, `scripts/deploy_qemu.sh`, then
+`sh /tmp/demo_on_target.sh` on the target. Windows host: `scripts\build_qnx.cmd`, then the scripts in
+`scripts/qemu_win/` build a `mkqnximage` QEMU image that boots straight into the scripted demo.
