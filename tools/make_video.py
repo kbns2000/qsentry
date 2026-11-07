@@ -131,6 +131,8 @@ CAPS = {
        "speed, so the gyro pair is not condemned by mistake.",
     5: "Noise on the accelerometer (pair A) plus gyro drift (pair B): both redundant pairs are lost -> "
        "SAFE_STOP, latched until an operator reset.",
+    6: "Operator reset 80 ms after the faults were cleared: the 1-second window still holds faulty "
+       "samples, so the supervisor re-latches SAFE_STOP at once. It never trusts stale evidence.",
     7: "Two priority-9 CPU hogs (qsload) for 10 s. The detector thread runs SCHED_FIFO 40: per-sample time "
        "stays bounded: p50 144 us, p99 286 us per sample after 10 s of load (emulated CPU).",
     8: "slay qsensord: the sensor ECU dies. A 100 Hz timer pulse on the same QNX channel is a deadline "
@@ -172,15 +174,13 @@ def main(log, out):
                "drives everything through /dev/qsentry.")
     frames.append((im, 7))
 
-    order = [s for s in steps if s["n"] != 6]
+    order = steps
     for s in order:
         t_now = 1e9
         m = re.search(r"t=([\d.]+)s", s["kv"].get("event", ""))
         if m: t_now = float(m.group(1))
         evs = [e for t, e in ev_t if t <= t_now] if s["n"] != 1 else [events[0]]
-        if s["n"] == 7:
-            evs = [e for t, e in ev_t if t <= 23.7]
-        for r, dur in ((0.35, 1.2), (0.7, 1.2), (1.0, 13.6)):
+        for r, dur in ((0.35, 1.2), (0.7, 1.2), (1.0, 11.6)):
             frames.append((dash(s, evs, CAPS[s["n"]], r), dur))
 
     frames.append((card("Results", [
