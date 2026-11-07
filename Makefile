@@ -46,7 +46,7 @@ QINC     := $(INC) -Isrc/qnx
 qnx: $(QOUT)/qsentryd $(QOUT)/qsensord $(QOUT)/qsentry-top $(QOUT)/qsload
 
 $(QOUT):
-	mkdir -p $@
+	$(if $(filter Windows_NT,$(OS)),if not exist "$(subst /,\,$@)" mkdir "$(subst /,\,$@)",mkdir -p $@)
 
 $(QOUT)/qsentryd: src/qnx/qsentryd.c src/qnx/qs_proto.h $(CORE) | $(QOUT)
 	$(QCC) $(QFLAGS) $(QINC) -o $@ $< $(CORE) -lm
