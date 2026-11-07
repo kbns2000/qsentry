@@ -45,8 +45,9 @@ echo "inject yaw drift" > $D
 wait_state SAFE_STOP 6
 show "5 faults on both redundant pairs"
 echo clear > $D
+sleep 4          # let the 1 s detector window flush the faulty samples before un-latching
 echo reset > $D
-sleep 3
+wait_state NOMINAL 4
 show "6 operator reset"
 
 ./qsload -p 9 -n 2 > /dev/null 2>&1 &
