@@ -21,7 +21,14 @@ echo [uid=0 gid=0 perms=0755] qsentry/autodemo.sh=%P%/autodemo.sh
 cd /d "%VM%"
 call mkqnximage --noprompt --force --type=qemu --arch=x86_64 --hostname=qsentry --ssh-ident=none --build || exit /b 1
 if exist serial.log del serial.log
-start "qnx-qemu" /b "%QEMU%" -display none -m 1G -smp 2 -cpu max -kernel output\ifs.bin -drive file=output\disk-qemu.vmdk,if=ide,id=drv0 -nic none -serial file:serial.log
-timeout /t 150 /nobreak >nul
+set ACCEL=whpx
+start "qnx-qemu" /b "%QEMU%" -accel whpx -display none -m 1G -smp 2 -kernel output\ifs.bin -drive file=output\disk-qemu.vmdk,if=ide,id=drv0 -nic none -serial file:serial.log
+timeout /t 8 /nobreak >nul
+tasklist /fi "imagename eq qemu-system-x86_64.exe" | find /i "qemu-system" >nul || (
+  set ACCEL=tcg
+  start "qnx-qemu" /b "%QEMU%" -accel tcg -cpu max -display none -m 1G -smp 2 -kernel output\ifs.bin -drive file=output\disk-qemu.vmdk,if=ide,id=drv0 -nic none -serial file:serial.log
+)
+timeout /t 200 /nobreak >nul
 taskkill /im qemu-system-x86_64.exe /f >nul 2>&1
+echo accel=%ACCEL%>> serial.log
 type serial.log
