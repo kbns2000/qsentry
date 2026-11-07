@@ -1,0 +1,11 @@
+# SYNTHETIC test fixture for tools/ipcreport.py - NOT a measurement
+boot noise line
+IPCB_INFO cpus=2 cycles_per_sec=1000000000 samples=100 timer_us=2000 prio=40
+IPCB test=msg size=64 load=none n=100 min_us=1.00 p50_us=2.00 p99_us=5.00 p999_us=6.00 max_us=7.00 mean_us=2.20 hist=0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+IPCB test=msgx size=64 load=none n=100 min_us=1.50 p50_us=3.00 p99_us=8.00 p999_us=9.00 max_us=9.50 mean_us=3.20 hist=0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+IPCB test=pulse size=0 load=none n=100 min_us=1.00 p50_us=1.50 p99_us=4.00 p999_us=4.00 max_us=4.00 mean_us=1.60 hist=0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+IPCB test=timer size=2000 load=none n=100 min_us=0.10 p50_us=10.00 p99_us=50.00 p999_us=60.00 max_us=60.00 mean_us=12.00 hist=0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+IPCB_PHASE load=none seconds=3.2
+IPCB test=msg size=64 load=same n=5 min_us=1.00 p50_us=2.00 p99_us=4000.00 p999_us=4000.00 max_us=4000.00 mean_us=800.00 hist=0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+IPCB_PHASE load=same seconds=9.0
+IPCB_DONE
