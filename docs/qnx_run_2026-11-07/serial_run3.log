@@ -1,0 +1,190 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+# ---> Starting devb
+---> Mounting file systems
+Path=0 - Intel 82371SB
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+---> Mounting file systems
+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Starting Networking
+if_up: tries exhausted
+ifconfig: interface vtnet0 does not exist
+no valid interfaces found
+---> Starting sshd
+/usr/libexec/sshd-auth does not exist or is not executable
+---> Starting misc
+
+To exit QEMU, type <ctrl>a x
+
+[?7hProcess count:23
+Startup complete
+QNX qsentry 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+=== QSENTRY AUTODEMO START Sat Nov  7 14:00:08 UTC 2026
+--- [1 nominal, 5 s of clean driving]
+state=NOMINAL
+reason=startup
+event=started
+samples=502
+seq_gaps=0
+sensor_gap_ms=1.4
+watchdog_ms=50
+reaction_ms=0
+transitions=0
+ch0=speed value=13.1485 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch1=accel value=-1.5916 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch2=steer value=-0.1711 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch3=yaw value=-0.7813 verdict=ok conf=0.99 p=0.99,0.00,0.01,0.00,0.00
+pipeline_us=p50 119  p99 218  max 2787.2  (n=502)
+tick_jitter_us=p50 379  p99 1683  max 2270.2  (n=603)
+
+>>> state=DEGRADED after ~3s (wanted DEGRADED, max 5s)
+--- [2 yaw drift detected]
+state=DEGRADED
+reason=yaw drift (p=0.77)
+event=t=8.85s NOMINAL -> DEGRADED : yaw drift (p=0.77)
+samples=834
+seq_gaps=0
+sensor_gap_ms=8.0
+watchdog_ms=50
+reaction_ms=0
+transitions=1
+ch0=speed value=8.6665 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch1=accel value=0.9426 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch2=steer value=-0.0664 verdict=ok conf=0.67 p=0.67,0.00,0.33,0.00,0.00
+ch3=yaw value=-0.1673 verdict=drift conf=0.85 p=0.15,0.00,0.85,0.00,0.00
+pipeline_us=p50 123  p99 266  max 2787.2  (n=834)
+tick_jitter_us=p50 384  p99 1663  max 2270.2  (n=936)
+
+>>> state=NOMINAL after ~4s (wanted NOMINAL, max 4s)
+--- [3 fault removed, recovered]
+state=NOMINAL
+reason=all channels clean for 2 s
+event=t=12.62s DEGRADED -> NOMINAL : all channels clean for 2 s
+samples=1271
+seq_gaps=0
+sensor_gap_ms=4.3
+watchdog_ms=50
+reaction_ms=0
+transitions=2
+ch0=speed value=11.8591 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch1=accel value=0.1247 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch2=steer value=-0.1982 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch3=yaw value=-0.8485 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+pipeline_us=p50 125  p99 297  max 2787.2  (n=1271)
+tick_jitter_us=p50 399  p99 1618  max 2270.2  (n=1372)
+
+>>> state=DEGRADED after ~1s (wanted DEGRADED, max 5s)
+--- [4 speed stuck (pair-B alarms suppressed by fault isolation)]
+state=DEGRADED
+reason=speed stuck (p=0.96)
+event=t=14.23s NOMINAL -> DEGRADED : speed stuck (p=0.96)
+samples=1389
+seq_gaps=0
+sensor_gap_ms=5.8
+watchdog_ms=50
+reaction_ms=0
+transitions=3
+ch0=speed value=11.9506 verdict=stuck conf=1.00 p=0.00,1.00,0.00,0.00,0.00
+ch1=accel value=0.6960 verdict=ok conf=0.95 p=0.95,0.00,0.05,0.00,0.00
+ch2=steer value=-0.0620 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch3=yaw value=-0.2908 verdict=ok conf=0.96 p=0.96,0.00,0.04,0.00,0.00
+pipeline_us=p50 126  p99 303  max 2787.2  (n=1389)
+tick_jitter_us=p50 395  p99 1618  max 2270.2  (n=1491)
+
+>>> state=NOMINAL after ~4s (wanted NOMINAL, max 4s)
+>>> state=DEGRADED after ~1s (wanted DEGRADED, max 5s)
+>>> state=SAFE_STOP after ~3s (wanted SAFE_STOP, max 6s)
+--- [5 faults on both redundant pairs]
+state=SAFE_STOP
+reason=faults on both redundant pairs
+event=t=22.90s DEGRADED -> SAFE_STOP : faults on both redundant pairs
+samples=2266
+seq_gaps=0
+sensor_gap_ms=2.0
+watchdog_ms=50
+reaction_ms=0
+transitions=6
+ch0=speed value=11.7999 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch1=accel value=0.5000 verdict=noise conf=1.00 p=0.00,0.00,0.00,0.00,1.00
+ch2=steer value=-0.0433 verdict=ok conf=0.71 p=0.71,0.00,0.29,0.00,0.00
+ch3=yaw value=-0.0809 verdict=drift conf=0.71 p=0.27,0.00,0.73,0.00,0.00
+pipeline_us=p50 137  p99 306  max 2787.2  (n=2266)
+tick_jitter_us=p50 390  p99 1573  max 2270.2  (n=2367)
+
+--- [6 operator reset]
+state=SAFE_STOP
+reason=faults on both redundant pairs
+event=t=23.78s NOMINAL -> SAFE_STOP : faults on both redundant pairs
+samples=2571
+seq_gaps=0
+sensor_gap_ms=0.1
+watchdog_ms=50
+reaction_ms=0
+transitions=8
+ch0=speed value=11.7476 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch1=accel value=0.9067 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch2=steer value=-0.1071 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch3=yaw value=-0.4950 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+pipeline_us=p50 132  p99 297  max 2787.2  (n=2571)
+tick_jitter_us=p50 387  p99 1578  max 4749.7  (n=2672)
+
+--- [7 after 10 s under CPU load (qsload -p 9 -n 2)]
+state=SAFE_STOP
+reason=faults on both redundant pairs
+event=t=23.78s NOMINAL -> SAFE_STOP : faults on both redundant pairs
+samples=3575
+seq_gaps=0
+sensor_gap_ms=4.1
+watchdog_ms=50
+reaction_ms=0
+transitions=8
+ch0=speed value=11.8995 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch1=accel value=0.6475 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch2=steer value=0.0536 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch3=yaw value=0.2536 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+pipeline_us=p50 144  p99 286  max 2787.2  (n=3575)
+tick_jitter_us=p50 407  p99 1587  max 4749.7  (n=3676)
+
+--- [8 sensor process killed (deadline watchdog)]
+state=SAFE_STOP
+reason=faults on both redundant pairs
+event=t=36.89s WATCHDOG: no sensor data for 55 ms -> SAFE_STOP
+samples=3580
+seq_gaps=0
+sensor_gap_ms=1049.6
+watchdog_ms=50
+reaction_ms=55
+transitions=8
+ch0=speed value=11.8526 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch1=accel value=0.4802 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch2=steer value=0.0548 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+ch3=yaw value=0.2494 verdict=ok conf=1.00 p=1.00,0.00,0.00,0.00,0.00
+pipeline_us=p50 144  p99 286  max 2787.2  (n=3580)
+tick_jitter_us=p50 409  p99 1590  max 4749.7  (n=3786)
+
+--- qsentryd event log
+qsentryd: ready  service=qsentry  dev=/dev/qsentry  prio=40  watchdog=50 ms  cps=3689085436
+qsentryd: t=6.06s inject yaw drift
+qsentryd: t=8.85s NOMINAL -> DEGRADED : yaw drift (p=0.77)
+qsentryd: t=9.39s fault injection cleared
+qsentryd: t=12.62s DEGRADED -> NOMINAL : all channels clean for 2 s
+qsentryd: t=13.75s inject speed stuck
+qsentryd: t=14.23s NOMINAL -> DEGRADED : speed stuck (p=0.96)
+qsentryd: t=14.94s fault injection cleared
+qsentryd: t=18.54s DEGRADED -> NOMINAL : all channels clean for 2 s
+qsentryd: t=19.28s inject accel noise
+qsentryd: t=19.46s NOMINAL -> DEGRADED : accel spike (p=0.98)
+qsentryd: t=20.41s inject yaw drift
+qsentryd: t=22.90s DEGRADED -> SAFE_STOP : faults on both redundant pairs
+qsentryd: t=23.70s fault injection cleared
+qsentryd: t=23.70s operator reset
+qsentryd: t=23.78s NOMINAL -> SAFE_STOP : faults on both redundant pairs
+qsentryd: t=36.89s WATCHDOG: no sensor data for 55 ms -> SAFE_STOP
+=== QSENTRY AUTODEMO END
