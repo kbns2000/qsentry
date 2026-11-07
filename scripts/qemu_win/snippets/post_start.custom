@@ -1,0 +1,2 @@
+# run the qsentry scripted demo once at boot (output on the console)
+sh /data/qsentry/autodemo.sh &
