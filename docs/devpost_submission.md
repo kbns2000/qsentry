@@ -44,10 +44,11 @@ stream goes silent for more than 50 ms.
 On held-out simulator seeds: 800/800 injected faults detected with the right sensor and fault type,
 0 false alarms in 200 clean drives (3.3 hours), 0 false SAFE_STOPs, ~3.5 µs per tick on x86-64.
 
-On QNX 8.0 in QEMU (x86_64, software-emulated CPU, log in `docs/qnx_run_2026-11-07/`): gyro drift caught
-in 2.8 s, frozen wheel speed in 0.48 s, accelerometer noise in 0.18 s, two-pair SAFE_STOP in 2.5 s, and the
-deadline watchdog tripped 55 ms after the sensor process was killed. Under two priority-9 CPU hogs the
-detector's per-sample time stayed at p50 144 µs / p99 286 µs (emulated).
+On QNX 8.0 in QEMU (x86_64, software-emulated CPU, log `docs/qnx_run_2026-11-07/serial_run4.log`,
+the run shown in the video): gyro drift caught in 2.78 s, frozen wheel speed in 0.43 s, accelerometer
+noise in 0.18 s, two-pair SAFE_STOP 4.06 s after the second fault, operator reset back to NOMINAL, and the
+deadline watchdog tripped 60 ms after the sensor process was killed (50 ms deadline, 10 ms tick). Under two
+priority-9 CPU hogs the detector's per-sample time stayed at p50 179 µs / p99 378 µs (emulated).
 
 ## What we learned
 QNX message passing makes a clean real-time pipeline: priorities travel with messages, pulses unify
