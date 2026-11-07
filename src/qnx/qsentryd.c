@@ -289,7 +289,7 @@ typedef union {
     struct _pulse   pulse;
     uint16_t        type;
     qs_sample_msg_t sample;
-} msg_t;
+} qs_rxmsg_t;
 
 static void usage(void)
 {
@@ -358,7 +358,7 @@ int main(int argc, char **argv)
 
     const uint64_t period = g_cps / QS_RATE_HZ;
     uint64_t last_tick = 0;
-    msg_t msg;
+    qs_rxmsg_t msg;
 
     for (;;) {
         int rcvid = MsgReceive(att->chid, &msg, sizeof(msg), NULL);
