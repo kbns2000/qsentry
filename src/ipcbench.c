@@ -114,7 +114,7 @@ static void serve(server_t *s)
         }
         struct _msg_info info;
         MsgInfo(rcvid, &info);
-        size_t len = info.msglen < sizeof(g_srv_buf) ? info.msglen : sizeof(g_srv_buf);
+        size_t len = (size_t)info.msglen < sizeof(g_srv_buf) ? (size_t)info.msglen : sizeof(g_srv_buf);
         MsgReply(rcvid, EOK, g_srv_buf, len);
     }
 }
