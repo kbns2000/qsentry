@@ -19,6 +19,8 @@ real-time control code on QNX.
 **Demo video (2:47):** https://youtu.be/1FHy8AGi6Ys — every screen is the real serial log of a QNX 8.0 target in QEMU
 ([docs/qnx_run_2026-11-07/](docs/qnx_run_2026-11-07/)).
 
+> **New to QNX?** [codelab/](codelab/README.md) is a step-by-step tutorial: build a QNX 8.0 resource manager + timer-pulse daemon on Windows and boot it in QEMU.
+
 ## What it shows
 
 | | |

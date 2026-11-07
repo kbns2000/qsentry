@@ -1,0 +1,2 @@
+# run the codelab check once at boot (output on the serial console)
+sh /data/codelab/check.sh &
