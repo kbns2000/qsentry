@@ -85,7 +85,7 @@ void qs_features(const qs_window_t *w, float feat[QS_NCH][QS_NFEAT])
         unroll(w, ch, x[ch]);
 
     /* pair residuals, normalised by their nominal sigma (empirical) */
-    const float sa_sd = 0.035f, ys_sd = 0.010f;
+    const float sa_sd = qs_prof->sa_sd, ys_sd = qs_prof->ys_sd;
     float r_sa  = resid_speed_accel(x[QS_CH_SPEED], x[QS_CH_ACCEL], 0, QS_WIN) / sa_sd;
     float r_sa2 = resid_speed_accel(x[QS_CH_SPEED], x[QS_CH_ACCEL], QS_WIN / 2, QS_WIN) / sa_sd;
     float r_ys  = resid_yaw_steer(x[QS_CH_SPEED], x[QS_CH_STEER], x[QS_CH_YAW], 0, QS_WIN) / ys_sd;

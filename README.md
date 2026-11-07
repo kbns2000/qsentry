@@ -92,6 +92,16 @@ so absolute times are slower than real hardware; the point is that they stay bou
 The detector thread runs at SCHED_FIFO 40; saturating the CPU with two priority-9 spinners moves
 its p99 by under 0.1 ms under emulation.
 
+## Real-data check
+
+We replayed a real 60-second highway drive from the public comma2k19 dataset (production-car CAN +
+phone IMU) through the same pipeline: [docs/real_data.md](docs/real_data.md).
+The simulator-trained model **does not transfer** (false SAFE_STOP after 1.1 s: CAN quantisation looks
+"stuck", IMU vibration looks "noisy"). A sensor profile calibrated on that drive (`QS_PROFILE=1`,
+second weight set) cuts the time spent off-NOMINAL on the clean drive from 98 % to 26 % with no
+SAFE_STOP, and catches 7 of 8 faults injected into the real drive with the right sensor and type.
+One minute of one car is evidence of the gap, not a validation.
+
 ## Build and run
 
 Requirements: QNX SDP 8.0 (free non-commercial licence from myQNX), a Linux or WSL2 host, QEMU.
@@ -131,9 +141,9 @@ same C simulator and feature code (`tools/gen_dataset.c`), trains `train/train.p
 
 ## Honest limits
 
-* Sensor data is simulated (a kinematic bicycle model with realistic noise). The model must be
-  re-trained on recorded data before any real use; the pipeline (`gen_dataset` → `train.py` →
-  header) is built for that.
+* The main results use simulated sensors. On one real comma2k19 drive the default model fails and the
+  calibrated profile still raises false DEGRADED alarms (see Real-data check). The model must be
+  re-trained on recorded data from the target vehicle before any real use.
 * With only two sensors in a pair, a slow drift is in principle ambiguous between them. The model
   separates them using each sensor's own trend features, and if it is unsure the supervisor still
   degrades the whole pair. A third source (GNSS heading, a second IMU) would make this robust.

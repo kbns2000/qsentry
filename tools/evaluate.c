@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "qs_core.h"
+#include "tool_profile.h"
 
 #define T_ON   1000   /* fault injected at 10 s */
 #define T_END  3000   /* episode 30 s           */
@@ -21,6 +22,7 @@ static double now_s(void)
 
 int main(int argc, char **argv)
 {
+    qs_tool_profile();
     int n = argc > 1 ? atoi(argv[1]) : 50;
     uint64_t seed = argc > 2 ? strtoull(argv[2], NULL, 10) : 9;
     int det[QS_NCH][QS_NCLASS] = {{0}}, cls_ok[QS_NCH][QS_NCLASS] = {{0}};

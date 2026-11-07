@@ -6,12 +6,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "qs_core.h"
+#include "tool_profile.h"
 
 #define EP_TICKS   3000   /* 30 s */
 #define LABEL_LAG  50     /* fault must be active 0.5 s before it is labelled */
 
 int main(int argc, char **argv)
 {
+    qs_tool_profile();
     int episodes = argc > 1 ? atoi(argv[1]) : 400;
     uint64_t seed = argc > 2 ? strtoull(argv[2], NULL, 10) : 1;
     uint64_t r = seed * 7919 + 13;

@@ -46,6 +46,27 @@ extern const char *const qs_channel_name[QS_NCH];
 extern const char *const qs_fault_name[QS_NCLASS];
 extern const char *const qs_state_name[3];
 
+/* ---------------- sensor profile ---------------- */
+/* Profile 0 "sim": the original simulator sensors (default; QNX build).
+ * Profile 1 "comma2k19": calibrated on a real comma2k19 drive (CAN speed and
+ * steering, windshield-mounted phone IMU): quantised/duplicated CAN samples,
+ * heavy-tailed accelerometer vibration, looser speed/accel residual. */
+typedef struct {
+    const char *name;
+    float noise_sd[QS_NCH];  /* nominal sensor noise, 1 sigma            */
+    float scale[QS_NCH];     /* engineering scale for fault magnitudes   */
+    float quant[QS_NCH];     /* output quantisation step (0 = none)      */
+    float dup[QS_NCH];       /* prob. a sample repeats the previous one  */
+    float tail_p, tail_k;    /* accel vibration bursts: prob, x sigma    */
+    float abias_sd;          /* slow accel bias (mount tilt), 1 sigma    */
+    float steady_p;          /* prob. a driver segment holds steering    */
+    float sa_sd, ys_sd;      /* nominal sigma of the pair residuals      */
+    float wheelbase;
+} qs_profile_t;
+
+extern const qs_profile_t *qs_prof;
+int qs_set_profile(int id);          /* 0 sim, 1 comma2k19; returns 0 on success */
+
 /* ---------------- simulator (deterministic) ---------------- */
 typedef struct {
     uint64_t rng;
@@ -58,6 +79,8 @@ typedef struct {
     uint32_t fault_t0[QS_NCH];
     float    frozen[QS_NCH];
     float    drift_sign[QS_NCH];
+    float    last_out[QS_NCH];
+    float    abias;
 } qs_sim_t;
 
 void  qs_sim_init(qs_sim_t *s, uint64_t seed);

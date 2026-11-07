@@ -6,12 +6,12 @@ INC     := -Iinclude -Isrc/core
 CORE    := src/core/sim.c src/core/features.c src/core/model.c src/core/supervisor.c
 BIN     := build/host
 
-all: $(BIN)/gen_dataset $(BIN)/evaluate $(BIN)/test_core
+all: $(BIN)/gen_dataset $(BIN)/evaluate $(BIN)/replay $(BIN)/test_core
 
 $(BIN):
 	mkdir -p $@
 
-$(BIN)/%: tools/%.c $(CORE) include/qs_core.h src/core/model_weights.h | $(BIN)
+$(BIN)/%: tools/%.c tools/tool_profile.h $(CORE) include/qs_core.h src/core/model_weights.h src/core/model_weights_comma.h | $(BIN)
 	$(CC) $(CFLAGS) $(INC) -o $@ $< $(CORE) -lm
 
 $(BIN)/test_core: tests/test_core.c $(CORE) include/qs_core.h | $(BIN)
@@ -28,10 +28,14 @@ model: $(BIN)/gen_dataset
 eval: $(BIN)/evaluate
 	$(BIN)/evaluate 50 2027
 
+real: $(BIN)/replay
+	$(BIN)/replay data/comma2k19_example1_seg40.csv
+	QS_PROFILE=1 $(BIN)/replay data/comma2k19_example1_seg40.csv
+
 clean:
 	rm -rf build
 
-.PHONY: all test model eval clean
+.PHONY: all test model eval real clean
 
 # ---------------------------------------------------------------------------
 # QNX 8.0 cross build (run after: source ~/qnx800/qnxsdp-env.sh)

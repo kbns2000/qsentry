@@ -1,0 +1,21 @@
+fault          detect  latency_ms  right_class  right_channel  right_pair  false_safe_stop
+speed  stuck    50/50        564     50/50        50/50        50/50        0/50 
+speed  drift    49/50       4584     13/50        13/50        13/50        0/50 
+speed  spike    50/50        225     50/50        50/50        50/50        0/50 
+speed  noise    50/50        302     50/50        50/50        50/50        0/50 
+accel  stuck    50/50        556     50/50        50/50        50/50        0/50 
+accel  drift    50/50       4219     50/50        50/50        50/50        0/50 
+accel  spike    49/50        413     49/50        49/50        49/50        1/50 
+accel  noise    49/50        129     49/50        49/50        49/50        0/50 
+steer  stuck    49/50       1286     49/50        49/50        49/50        0/50 
+steer  drift    50/50       1293     50/50        50/50        50/50        0/50 
+steer  spike    50/50        214     50/50        50/50        50/50        0/50 
+steer  noise    50/50        407     50/50        50/50        50/50        0/50 
+yaw    stuck    49/50        553     49/50        49/50        49/50        0/50 
+yaw    drift    48/50       2268     48/50        48/50        48/50        0/50 
+yaw    spike    49/50        253     49/50        49/50        49/50        0/50 
+yaw    noise    50/50        466     50/50        50/50        50/50        1/50 
+
+clean drives with any alarm: 17/200 (3.33 h simulated)
+fault runs with alarm before injection: 7/800
+mean pipeline time per 100 Hz tick (host): 4.2 us
