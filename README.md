@@ -48,8 +48,9 @@ What this shows:
 - **Your emulator can lie about time, and ipcbench catches it.** In run 1 on
   the same PC, the 2 ms timer's median interval error was 13.1 ms. The pulses
   were effectively ~15 ms apart, and idle message latencies were 1.6–2× higher. The
-  same-priority latencies were ~15 ms instead of ~4 ms. Nothing in the binary's
-  timing code changed between the runs, so the guest clock itself was coarse.
+  same-priority latencies were ~15 ms instead of ~4 ms. The measurement
+  code did not change between the runs (run 2 only added overrun counters),
+  so the guest clock itself was coarse.
   This matches the 15.6 ms default Windows timer resolution (an inference: we did
   not log the host state). `ipcreport.py` now flags such runs as
   **COARSE CLOCK** in a "Timer health" table, so you don't publish emulator
