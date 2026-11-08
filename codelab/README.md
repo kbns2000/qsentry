@@ -215,7 +215,19 @@ Things to check:
 - **`pidin`** shows the daemon `RECEIVE`-blocked. It uses no CPU between ticks
   and requests.
 
-The measured log from our own run is in [`results/`](results/).
+Our own run (2026-11-08, Windows 11, QEMU TCG, 2 vCPUs) printed:
+
+```
+tickdev: /dev/tick ready, period 10 ms, 3696608803 cycles/s
+ticks=103 max_jitter_us=1570 period_ms=10
+ticks=307 max_jitter_us=2146 period_ms=10
+ticks=514 max_jitter_us=2066 period_ms=5
+ticks=3 max_jitter_us=343 period_ms=5
+  290836   1 data/codelab/tickdev          10r RECEIVE        1
+```
+
+The tick counts track 100 Hz and then 200 Hz exactly. The ~2 ms worst-case jitter
+comes from TCG emulation. The full console log is in [`results/`](results/).
 
 ## 7. Pitfalls we hit, and the fixes
 
@@ -226,6 +238,7 @@ The measured log from our own run is in [`results/`](results/).
 | `serial.log` is **0 bytes**, and QEMU prints `WHPX: ... Ignoring request for interrupt vector 0` | With Windows Hypervisor Platform (`-accel whpx`), the QNX 8.0 kernel never got to the console on our PC. | Use `-accel tcg -cpu max`. It is slower, so allow ~1–2 min to boot. qsentry's script tries WHPX for a few seconds and then falls back to TCG. |
 | `The process cannot access the file because it is being used by another process` | You ran `type serial.log`, or started a new run, while QEMU still held the file. | Stop QEMU first (`taskkill /im qemu-system-x86_64.exe /f`), wait a few seconds, then read the file. |
 | The run ends after a few seconds, or a second run's QEMU disappears | `taskkill /im qemu-system-x86_64.exe` kills **every** QEMU, including another run's. Also, `find` in a `tasklist \| find` check can resolve to Git's Unix `find` when Git is on `PATH`. | Start QEMU with `-pidfile`, wait for and kill only that PID, and call `%SystemRoot%\System32\findstr.exe` by full path (see `run_qemu.cmd`). |
+| Inside QNX: `uname: Unknown option '\r'`, `run.sh: ...\r: cannot execute` | Git on Windows (`core.autocrlf=true`) checked the target shell scripts out with CRLF line endings. | Add a `.gitattributes` with `*.sh text eol=lf` and `*.custom text eol=lf`, then re-checkout those files. |
 | `cat /dev/tick` never ends | The read handler ignored `ocb->offset`. | See 3.2. |
 | `timer_settime` fails with `EINVAL` for a 1000 ms period | `tv_nsec` must be below 1 000 000 000. | Split the period into `tv_sec` and `tv_nsec` (see `arm_timer()`). |
 | `mkqnximage: command not found` | The SDP env script was not called in this window. | `call %USERPROFILE%\qnx800\qnxsdp-env.bat` |

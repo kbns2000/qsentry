@@ -1,0 +1,40 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+# ---> Starting devb
+---> Mounting file systems
+Path=0 - Intel 82371SB
+---> Mounting file systems
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Starting Networking
+if_up: tries exhausted
+ifconfig: interface vtnet0 does not exist
+no valid interfaces found
+---> Starting sshd
+/usr/libexec/sshd-auth does not exist or is not executable
+---> Starting misc
+=== TICKDEV CHECK START
+QNX tickdev 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+tickdev: /dev/tick ready, period 10 ms, 3696608803 cycles/s
+
+To exit QEMU, type <ctrl>a x
+
+[?7hProcess count:24
+Startup complete
+QNX tickdev 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+ticks=103 max_jitter_us=1570 period_ms=10
+ticks=307 max_jitter_us=2146 period_ms=10
+ticks=514 max_jitter_us=2066 period_ms=5
+ticks=3 max_jitter_us=343 period_ms=5
+     pid tid name                         prio STATE          Blocked                     
+  290836   1 data/codelab/tickdev          10r RECEIVE        1                           
+=== TICKDEV CHECK END
+
+#
