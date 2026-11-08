@@ -25,7 +25,7 @@ set /a T=0
 :wait
 timeout /t 15 /nobreak >nul
 set /a T+=15
-tasklist /fi "imagename eq qemu-system-x86_64.exe" | find /i "qemu-system" >nul || goto done
+"%SystemRoot%\System32\tasklist.exe" /fi "imagename eq qemu-system-x86_64.exe" | "%SystemRoot%\System32\findstr.exe" /i "qemu-system" >nul || goto done
 if %T% lss 900 goto wait
 echo TIMEOUT after %T% s
 :done
