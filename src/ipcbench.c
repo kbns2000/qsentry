@@ -181,7 +181,12 @@ static size_t test_pulse(server_t *s, int coid, size_t n, uint32_t *ns)
     return s->pulse_cnt;
 }
 
-static size_t test_timer(size_t n, uint32_t *ns)
+typedef struct { unsigned period_us; size_t pulses; long overruns; double elapsed_ms; } timer_diag_t;
+
+/* Periodic timer -> pulse. Records |interval - period| per pulse, and counts
+ * expirations the kernel folded into an already-pending pulse (timer_getoverrun),
+ * so a slow clock source shows up as overruns instead of hiding in the stats. */
+static size_t test_timer(unsigned period_us, size_t n, uint32_t *ns, timer_diag_t *dg)
 {
     int chid = ChannelCreate(_NTO_CHF_PRIVATE);
     if (chid == -1) die("ChannelCreate(timer)");
@@ -192,30 +197,39 @@ static size_t test_timer(size_t n, uint32_t *ns)
     timer_t t;
     if (timer_create(CLOCK_MONOTONIC, &ev, &t) == -1) die("timer_create");
     struct itimerspec its = { 0 };
-    its.it_value.tv_sec = g_timer_us / 1000000u;
-    its.it_value.tv_nsec = (long)(g_timer_us % 1000000u) * 1000L;
+    its.it_value.tv_sec = period_us / 1000000u;
+    its.it_value.tv_nsec = (long)(period_us % 1000000u) * 1000L;
     its.it_interval = its.it_value;
     if (timer_settime(t, 0, &its, NULL) == -1) die("timer_settime");
 
     struct _pulse p;
-    uint64_t last = 0;
-    size_t got = 0;
-    const double period_ns = g_timer_us * 1000.0;
-    for (size_t k = 0; got < n; k++) {
+    uint64_t last = 0, first = 0;
+    size_t got = 0, k;
+    long ovr = 0;
+    const double period_ns = period_us * 1000.0;
+    for (k = 0; got < n; k++) {
         if (MsgReceivePulse(chid, &p, sizeof(p), NULL) == -1) {
             if (errno == EINTR) continue;
             die("MsgReceivePulse");
         }
         uint64_t now = ClockCycles();
+        int o = timer_getoverrun(t);
         if (k >= 2) { /* skip arming transient */
             double d = (double)(now - last) * g_ns_per_cyc - period_ns;
             ns[got++] = (uint32_t)(d < 0 ? -d : d);
+            if (o > 0) ovr += o;
+        } else if (k == 1) {
+            first = now;
         }
         last = now;
     }
     timer_delete(t);
     ConnectDetach(coid);
     ChannelDestroy(chid);
+    dg->period_us = period_us;
+    dg->pulses = got;
+    dg->overruns = ovr;
+    dg->elapsed_ms = (double)(last - first) * g_ns_per_cyc / 1e6;
     return got;
 }
 
@@ -267,8 +281,11 @@ int main(int argc, char **argv)
     int coid = ConnectAttach(0, 0, s.chid, _NTO_SIDE_CHANNEL, 0);
     if (coid == -1) die("ConnectAttach");
 
-    printf("IPCB_INFO cpus=%u cycles_per_sec=%llu samples=%zu timer_us=%u prio=%d\n", g_ncpu,
-           (unsigned long long)SYSPAGE_ENTRY(qtime)->cycles_per_sec, g_n, g_timer_us, PRIO_TEST);
+    struct _clockperiod cp = { 0 };
+    ClockPeriod(CLOCK_REALTIME, NULL, &cp, 0);
+    printf("IPCB_INFO cpus=%u cycles_per_sec=%llu clock_period_ns=%lu samples=%zu timer_us=%u prio=%d\n",
+           g_ncpu, (unsigned long long)SYSPAGE_ENTRY(qtime)->cycles_per_sec, (unsigned long)cp.nsec,
+           g_n, g_timer_us, PRIO_TEST);
     fflush(stdout);
 
     static const phase_t phases[] = { { "none", -1 }, { "low", PRIO_LOW }, { "same", PRIO_TEST } };
@@ -276,7 +293,8 @@ int main(int argc, char **argv)
     if (!buf) die("malloc");
 
     /* results are printed after each phase so console output never competes with the load */
-    enum { MAXRES = 2 * NSIZES + 2 };
+    enum { MAXRES = 2 * NSIZES + 3 };
+    timer_diag_t dg[2];
     struct { const char *test; unsigned size; ipcb_stats_t st; } res[MAXRES];
 
     for (size_t p = 0; p < sizeof(phases) / sizeof(phases[0]); p++) {
@@ -297,12 +315,24 @@ int main(int argc, char **argv)
         size_t got = test_pulse(&s, coid, n, buf);
         res[r].test = "pulse"; res[r].size = 0; ipcb_stats(buf, got, &res[r].st); r++;
         size_t tn = n < 2000 ? n : 2000; /* bound timer phase to ~tn * period */
-        got = test_timer(tn, buf);
-        res[r].test = "timer"; res[r].size = g_timer_us; ipcb_stats(buf, got, &res[r].st); r++;
+        /* the requested period, and 10 ms for comparison (a common control-loop rate) */
+        unsigned periods[2] = { g_timer_us, 10000 };
+        size_t ndg = g_timer_us == 10000 ? 1 : 2;
+        for (size_t i = 0; i < ndg; i++) {
+            size_t want = periods[i] >= 10000 ? tn / 5 : tn; /* keep each run to a few seconds */
+            got = test_timer(periods[i], want, buf, &dg[i]);
+            res[r].test = "timer"; res[r].size = periods[i]; ipcb_stats(buf, got, &res[r].st); r++;
+        }
         load_stop(ph);
         double secs = (double)(ClockCycles() - t0) * g_ns_per_cyc / 1e9;
 
         for (size_t i = 0; i < r; i++) ipcb_print(res[i].test, res[i].size, ph->name, &res[i].st);
+        for (size_t i = 0; i < ndg; i++) {
+            double rate = dg[i].elapsed_ms > 0 ? dg[i].pulses * 1000.0 / dg[i].elapsed_ms : 0;
+            printf("IPCB_TIMER load=%s period_us=%u pulses=%zu overruns=%ld elapsed_ms=%.1f "
+                   "pulse_rate_hz=%.1f expected_hz=%.1f\n", ph->name, dg[i].period_us, dg[i].pulses,
+                   dg[i].overruns, dg[i].elapsed_ms, rate, 1e6 / dg[i].period_us);
+        }
         printf("IPCB_PHASE load=%s seconds=%.1f\n", ph->name, secs);
         fflush(stdout);
     }
