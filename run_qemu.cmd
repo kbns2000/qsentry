@@ -19,17 +19,24 @@ echo [uid=0 gid=0 perms=0755] ipcbench/run.sh=%P%/run.sh
 cd /d "%VM%"
 call mkqnximage --noprompt --force --type=qemu --arch=x86_64 --hostname=ipcbench --ssh-ident=none --build || exit /b 1
 if exist serial.log del serial.log
-start "qnx" /b "%QEMU%" -accel tcg -cpu max -display none -m 1G -smp 2 -kernel output\ifs.bin -drive file=output\disk-qemu.vmdk,if=ide,id=drv0 -nic none -no-reboot -serial file:serial.log
-echo Waiting for QNX to run the benchmark and shut down (up to 15 minutes)...
-set /a T=0
+if exist qemu.pid del qemu.pid
+rem -pidfile lets us wait for / stop only OUR QEMU (other QEMU windows are left alone)
+start "qnx" /b "%QEMU%" -accel tcg -cpu max -display none -m 1G -smp 2 -kernel output\ifs.bin -drive file=output\disk-qemu.vmdk,if=ide,id=drv0 -nic none -no-reboot -pidfile qemu.pid -serial file:serial.log
+timeout /t 10 /nobreak >nul
+set QPID=
+if exist qemu.pid set /p QPID=<qemu.pid
+echo QEMU pid=%QPID%. Waiting for QNX to run the benchmark and shut down (up to 15 minutes)...
+set /a T=10
 :wait
 timeout /t 15 /nobreak >nul
 set /a T+=15
-"%SystemRoot%\System32\tasklist.exe" /fi "imagename eq qemu-system-x86_64.exe" | "%SystemRoot%\System32\findstr.exe" /i "qemu-system" >nul || goto done
+if defined QPID (
+  "%SystemRoot%\System32\tasklist.exe" /fi "PID eq %QPID%" | "%SystemRoot%\System32\findstr.exe" /c:"%QPID%" >nul || goto done
+)
 if %T% lss 900 goto wait
 echo TIMEOUT after %T% s
 :done
-taskkill /im qemu-system-x86_64.exe /f >nul 2>&1
+if defined QPID "%SystemRoot%\System32\taskkill.exe" /pid %QPID% /f >nul 2>&1
 timeout /t 3 /nobreak >nul
 if not exist "%~dp0results" mkdir "%~dp0results"
 copy /y serial.log "%~dp0results\serial.log" >nul
