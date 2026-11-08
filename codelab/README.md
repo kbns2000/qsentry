@@ -226,7 +226,7 @@ ticks=3 max_jitter_us=343 period_ms=5
   290836   1 data/codelab/tickdev          10r RECEIVE        1
 ```
 
-The tick counts track 100 Hz and then 200 Hz exactly. The ~2 ms worst-case jitter
+The tick counts track 100 Hz and then 200 Hz (+204 in 2 s, +207 in ~1 s including command overhead). The ~2 ms worst-case jitter
 comes from TCG emulation. The full console log is in [`results/`](results/).
 
 ## 7. Pitfalls we hit, and the fixes
