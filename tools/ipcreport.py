@@ -22,13 +22,17 @@ COLORS = {"none": "#2a7ab9", "low": "#3aa36b", "same": "#d9822b"}
 
 def parse(path):
     rows, info, phases = [], {}, {}
+    timers = []
     with open(path, encoding="utf-8", errors="replace") as f:
         for line in f:
             line = line.strip()
-            m = re.search(r"IPCB(_INFO|_PHASE)?\s+(.*)$", line)
+            m = re.search(r"IPCB(_INFO|_PHASE|_TIMER)?\s+(.*)$", line)
             if not m:
                 continue
             kv = dict(re.findall(r"(\w+)=(\S+)", m.group(2)))
+            if m.group(1) == "_TIMER":
+                timers.append(kv)
+                continue
             if m.group(1) == "_INFO":
                 info = kv
             elif m.group(1) == "_PHASE":
@@ -39,7 +43,7 @@ def parse(path):
                 kv["n"] = int(kv["n"])
                 kv["size"] = int(kv["size"])
                 rows.append(kv)
-    return info, phases, rows
+    return info, phases, rows, timers
 
 
 def label(r):
@@ -49,6 +53,31 @@ def label(r):
     if t == "timer":
         return f"timer {s} us"
     return t
+
+
+def timer_health(rows, timers):
+    """Flag a coarse clock: a periodic timer whose median interval error is more
+    than half its period, or whose achieved pulse rate is >10% below the request."""
+    out, warn = [], False
+    by = {(r["size"], r["load"]): r for r in rows if r["test"] == "timer"}
+    seen = set()
+    for t in timers:
+        per, load = int(t["period_us"]), t["load"]
+        seen.add((per, load))
+        r = by.get((per, load))
+        rate, exp = float(t["pulse_rate_hz"]), float(t["expected_hz"])
+        bad = rate < 0.9 * exp or (r is not None and r["p50_us"] > per / 2)
+        warn |= bad
+        out.append(f"| {per} us | {load} | {rate:.1f} / {exp:.1f} Hz | {t['overruns']} | "
+                   f"{r['p50_us']:.0f} us | {'COARSE CLOCK' if bad else 'ok'} |" if r else "")
+    for (per, load), r in by.items():
+        if (per, load) not in seen:
+            bad = r["p50_us"] > per / 2
+            warn |= bad
+            out.append(f"| {per} us | {load} | n/a | n/a | {r['p50_us']:.0f} us | {'COARSE CLOCK' if bad else 'ok'} |")
+    hdr = ["| timer period | load | achieved / requested rate | overruns | median interval error | verdict |",
+           "|---|---|---|---|---|---|"]
+    return "\n".join(hdr + [o for o in out if o]), warn
 
 
 def table(rows):
@@ -120,7 +149,7 @@ def main():
     ap.add_argument("log")
     ap.add_argument("-o", "--outdir", default=".")
     a = ap.parse_args()
-    info, phases, rows = parse(a.log)
+    info, phases, rows, timers = parse(a.log)
     if not rows:
         print("no IPCB lines found in", a.log, file=sys.stderr)
         return 1
@@ -131,10 +160,20 @@ def main():
     if phases:
         md.append("Phase durations: " + ", ".join(f"{k} {v:.1f} s" for k, v in phases.items()))
     md += ["", table(rows), "", "![p99](p99.svg)", ""]
+    th, warn = timer_health(rows, timers)
+    md += ["## Timer health", "", th, ""]
+    if warn:
+        md += ["**Warning:** the guest clock looks coarse: timers fire late or get folded together. "
+               "Under QEMU on Windows this has been seen to depend on the host's timer resolution. "
+               "Treat the timer and same-priority numbers from this run as emulator artefacts.", ""]
     with open(os.path.join(a.outdir, "report.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(md))
     svg(rows, os.path.join(a.outdir, "p99.svg"))
     print(table(rows))
+    print()
+    print(th)
+    if warn:
+        print("WARNING: coarse guest clock detected (see report.md)")
     return 0
 
 

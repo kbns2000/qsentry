@@ -18,10 +18,42 @@ The repository also has a one-command flow for **Windows hosts with no target
 board**: cross-compile with SDP 8.0, build a QNX 8.0 image with `mkqnximage`,
 boot it in QEMU, run the benchmark, and produce the report.
 
-## Results
+## Results (QNX 8.0 x86_64 in QEMU TCG, 2 vCPUs, Windows 11 host, 2026-11-08)
 
-_Measured results from a QNX 8.0 x86_64 QEMU run are in [`results/`](results/)
-and summarised here once the run is in._
+Run 2, median (p50) and p99 in microseconds. The raw console logs and reports
+for both runs are in [`results/`](results/).
+
+| test | idle p50 / p99 | busy CPUs at **lower** priority p50 / p99 | busy CPUs at **same** priority p50 / p99 |
+|---|---|---|---|
+| `msg` 4 B, thread to thread | 11.7 / 51.1 | 19.4 / 42.0 | 4186 / 6312 |
+| `msg` 64 KiB | 52.1 / 133.4 | 76.1 / 119.8 | 4002 / 6258 |
+| `msgx` 4 B, process to process | 48.4 / 120.2 | 70.5 / 141.1 | 4211 / 6290 |
+| `msgx` 64 KiB | 125.0 / 261.3 | 188.3 / 277.0 | 3134 / 6208 |
+| `pulse` | 8.9 / 33.7 | 10.8 / 26.0 | 4708 / 6426 |
+| `timer` 10 ms, interval error | 490 / 1774 | 484 / 1640 | 934 / 5910 |
+
+Timer health (`IPCB_TIMER`): the guest clock period was 1 ms with 0 overruns.
+The 10 ms timer delivered 100.0 Hz in every phase. The 2 ms timer delivered
+471.8 Hz of the 500 requested.
+
+What this shows:
+
+- **Priority isolation works.** Two busy-looping threads, one per CPU, at a
+  lower priority barely move message-passing latency: p99 stays within the
+  idle range. The same load at the *same* priority pushes the median from
+  ~10 µs to ~4 ms. That is the 4 ms round-robin timeslice (4 × the 1 ms
+  clock), and the numbers show it directly.
+- **A cross-process server costs ~4× a same-process thread** for small
+  messages under this emulator (48 vs 12 µs). Copy cost appears from 16 KiB up.
+- **Your emulator can lie about time, and ipcbench catches it.** In run 1 on
+  the same PC, the 2 ms timer's median interval error was 13.1 ms. The pulses
+  were effectively ~15 ms apart, and idle message latencies were 1.6–2× higher. The
+  same-priority latencies were ~15 ms instead of ~4 ms. Nothing in the binary's
+  timing code changed between the runs, so the guest clock itself was coarse.
+  This matches the 15.6 ms default Windows timer resolution (an inference: we did
+  not log the host state). `ipcreport.py` now flags such runs as
+  **COARSE CLOCK** in a "Timer health" table, so you don't publish emulator
+  artefacts as RTOS numbers.
 
 ## What it measures
 
