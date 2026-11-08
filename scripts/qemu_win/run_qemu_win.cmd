@@ -24,7 +24,7 @@ if exist serial.log del serial.log
 set ACCEL=whpx
 start "qnx-qemu" /b "%QEMU%" -accel whpx -display none -m 1G -smp 2 -kernel output\ifs.bin -drive file=output\disk-qemu.vmdk,if=ide,id=drv0 -nic none -serial file:serial.log
 timeout /t 8 /nobreak >nul
-tasklist /fi "imagename eq qemu-system-x86_64.exe" | find /i "qemu-system" >nul || (
+"%SystemRoot%\System32\tasklist.exe" /fi "imagename eq qemu-system-x86_64.exe" | "%SystemRoot%\System32\findstr.exe" /i "qemu-system" >nul || (
   set ACCEL=tcg
   start "qnx-qemu" /b "%QEMU%" -accel tcg -cpu max -display none -m 1G -smp 2 -kernel output\ifs.bin -drive file=output\disk-qemu.vmdk,if=ide,id=drv0 -nic none -serial file:serial.log
 )
