@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" font-family="sans-serif" font-size="12">
+<rect width="760" height="360" fill="white"/>
+<text x="70" y="22" font-size="14" font-weight="bold">p99 latency on QNX 8.0 (log scale, microseconds)</text>
+<line x1="70" x2="740" y1="300.0" y2="300.0" stroke="#ddd"/>
+<text x="64" y="304.0" text-anchor="end">10</text>
+<line x1="70" x2="740" y1="235.0" y2="235.0" stroke="#ddd"/>
+<text x="64" y="239.0" text-anchor="end">100</text>
+<line x1="70" x2="740" y1="170.0" y2="170.0" stroke="#ddd"/>
+<text x="64" y="174.0" text-anchor="end">1000</text>
+<line x1="70" x2="740" y1="105.0" y2="105.0" stroke="#ddd"/>
+<text x="64" y="109.0" text-anchor="end">10000</text>
+<line x1="70" x2="740" y1="40.0" y2="40.0" stroke="#ddd"/>
+<text x="64" y="44.0" text-anchor="end">100000</text>
+<rect x="86.8" y="250.7" width="31.5" height="49.3" fill="#2a7ab9"><title>msg 64 B idle: p99 57.3 us</title></rect>
+<rect x="120.2" y="263.4" width="31.5" height="36.6" fill="#3aa36b"><title>msg 64 B busy CPUs, lower prio: p99 36.6 us</title></rect>
+<rect x="153.8" y="91.2" width="31.5" height="208.8" fill="#d9822b"><title>msg 64 B busy CPUs, same prio: p99 16276.4 us</title></rect>
+<text x="137.0" y="318" text-anchor="middle">msg 64 B</text>
+<rect x="220.8" y="225.9" width="31.5" height="74.1" fill="#2a7ab9"><title>msgx 64 B idle: p99 137.9 us</title></rect>
+<rect x="254.2" y="230.5" width="31.5" height="69.5" fill="#3aa36b"><title>msgx 64 B busy CPUs, lower prio: p99 117.3 us</title></rect>
+<rect x="287.8" y="91.2" width="31.5" height="208.8" fill="#d9822b"><title>msgx 64 B busy CPUs, same prio: p99 16303.3 us</title></rect>
+<text x="271.0" y="318" text-anchor="middle">msgx 64 B</text>
+<rect x="354.8" y="242.0" width="31.5" height="58.0" fill="#2a7ab9"><title>msg 16384 B idle: p99 78.1 us</title></rect>
+<rect x="388.2" y="247.5" width="31.5" height="52.5" fill="#3aa36b"><title>msg 16384 B busy CPUs, lower prio: p99 64.2 us</title></rect>
+<rect x="421.8" y="91.4" width="31.5" height="208.6" fill="#d9822b"><title>msg 16384 B busy CPUs, same prio: p99 16207.7 us</title></rect>
+<text x="405.0" y="318" text-anchor="middle">msg 16384 B</text>
+<rect x="488.8" y="258.2" width="31.5" height="41.8" fill="#2a7ab9"><title>pulse idle: p99 44.0 us</title></rect>
+<rect x="522.2" y="269.4" width="31.5" height="30.6" fill="#3aa36b"><title>pulse busy CPUs, lower prio: p99 29.5 us</title></rect>
+<rect x="555.8" y="91.3" width="31.5" height="208.7" fill="#d9822b"><title>pulse busy CPUs, same prio: p99 16267.3 us</title></rect>
+<text x="539.0" y="318" text-anchor="middle">pulse</text>
+<rect x="622.8" y="95.0" width="31.5" height="205.0" fill="#2a7ab9"><title>timer 2000 us idle: p99 14259.6 us</title></rect>
+<rect x="656.2" y="95.0" width="31.5" height="205.0" fill="#3aa36b"><title>timer 2000 us busy CPUs, lower prio: p99 14244.8 us</title></rect>
+<rect x="689.8" y="73.9" width="31.5" height="226.1" fill="#d9822b"><title>timer 2000 us busy CPUs, same prio: p99 30083.6 us</title></rect>
+<text x="673.0" y="318" text-anchor="middle">timer 2000 us</text>
+<rect x="70" y="338" width="12" height="12" fill="#2a7ab9"/>
+<text x="86" y="348">idle</text>
+<rect x="270" y="338" width="12" height="12" fill="#3aa36b"/>
+<text x="286" y="348">busy CPUs, lower prio</text>
+<rect x="470" y="338" width="12" height="12" fill="#d9822b"/>
+<text x="486" y="348">busy CPUs, same prio</text>
+</svg>

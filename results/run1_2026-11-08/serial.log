@@ -1,0 +1,78 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+# ---> Starting devb
+---> Mounting file systems
+Path=0 - Intel 82371SB
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+---> Mounting file systems
+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Starting Networking
+if_up: tries exhausted
+ifconfig: interface vtnet0 does not exist
+no valid interfaces found
+---> Starting sshd
+/usr/libexec/sshd-auth does not exist or is not executable
+---> Starting misc
+=== IPCBENCH START
+QNX ipcbench 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+
+To exit QEMU, type <ctrl>a x
+
+[?7hCPU:X86_64 Release:8.0.0  FreeMem:879MB/1023MB BootTime:Nov 08 02:27:41 UTC 2026
+Processes: 21, Threads: 102
+Processor1: 686 AMD 686 F6M6S3 3691MHz FPU 
+Processor2: 686 AMD 686 F6M6S3 3691MHz FPU 
+IPCB_INFO cpus=2 cycles_per_sec=3691004509 samples=20000 timer_us=2000 prio=40
+Process count:23
+Startup complete
+QNX ipcbench 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+IPCB test=msg size=4 load=none n=20000 min_us=9.56 p50_us=23.12 p99_us=58.20 p999_us=162.53 max_us=433.08 mean_us=25.61 hist=0,0,0,0,2214,15514,2133,103,30,6,0,0,0,0,0,0
+IPCB test=msg size=64 load=none n=20000 min_us=9.68 p50_us=24.67 p99_us=57.34 p999_us=128.89 max_us=484.70 mean_us=26.78 hist=0,0,0,0,1781,15593,2517,88,17,4,0,0,0,0,0,0
+IPCB test=msg size=1024 load=none n=20000 min_us=10.80 p50_us=26.04 p99_us=60.23 p999_us=125.55 max_us=320.87 mean_us=27.70 hist=0,0,0,0,2445,12378,5026,131,16,4,0,0,0,0,0,0
+IPCB test=msg size=16384 load=none n=20000 min_us=19.15 p50_us=47.21 p99_us=78.10 p999_us=134.88 max_us=294.62 mean_us=42.79 hist=0,0,0,0,0,4757,14406,811,21,5,0,0,0,0,0,0
+IPCB test=msg size=65536 load=none n=20000 min_us=45.30 p50_us=79.84 p99_us=131.77 p999_us=257.48 max_us=533.56 mean_us=81.98 hist=0,0,0,0,0,0,2693,17068,218,20,1,0,0,0,0,0
+IPCB test=msgx size=4 load=none n=20000 min_us=41.06 p50_us=78.43 p99_us=128.39 p999_us=238.30 max_us=363.72 mean_us=82.38 hist=0,0,0,0,0,0,2094,17698,193,15,0,0,0,0,0,0
+IPCB test=msgx size=64 load=none n=20000 min_us=41.30 p50_us=77.68 p99_us=137.94 p999_us=229.23 max_us=348.61 mean_us=80.95 hist=0,0,0,0,0,0,3271,16412,303,14,0,0,0,0,0,0
+IPCB test=msgx size=1024 load=none n=20000 min_us=42.24 p50_us=75.79 p99_us=126.57 p999_us=220.29 max_us=421.67 mean_us=79.40 hist=0,0,0,0,0,0,2902,16916,168,14,0,0,0,0,0,0
+IPCB test=msgx size=16384 load=none n=20000 min_us=75.56 p50_us=115.28 p99_us=206.19 p999_us=324.24 max_us=560.53 mean_us=123.32 hist=0,0,0,0,0,0,0,14672,5264,63,1,0,0,0,0,0
+IPCB test=msgx size=65536 load=none n=20000 min_us=113.59 p50_us=150.46 p99_us=257.63 p999_us=412.38 max_us=637.52 mean_us=157.78 hist=0,0,0,0,0,0,0,2196,17592,208,4,0,0,0,0,0
+IPCB test=pulse size=0 load=none n=20000 min_us=5.68 p50_us=16.48 p99_us=43.98 p999_us=85.32 max_us=235.92 mean_us=18.86 hist=0,0,0,1248,7656,9893,1169,26,8,0,0,0,0,0,0,0
+IPCB test=timer size=2000 load=none n=2000 min_us=12455.29 p50_us=13130.46 p99_us=14259.60 p999_us=14623.47 max_us=14755.53 mean_us=13249.96 hist=0,0,0,0,0,0,0,0,0,0,0,0,0,0,2000,0
+IPCB_PHASE load=none seconds=46.2
+IPCB test=msg size=4 load=low n=20000 min_us=9.43 p50_us=19.48 p99_us=34.18 p999_us=65.60 max_us=290.36 mean_us=18.43 hist=0,0,0,0,3694,15879,402,17,7,1,0,0,0,0,0,0
+IPCB test=msg size=64 load=low n=20000 min_us=9.40 p50_us=20.11 p99_us=36.59 p999_us=60.29 max_us=236.95 mean_us=19.42 hist=0,0,0,0,4489,15080,416,8,7,0,0,0,0,0,0,0
+IPCB test=msg size=1024 load=low n=20000 min_us=10.54 p50_us=20.70 p99_us=38.70 p999_us=59.42 max_us=264.10 mean_us=19.82 hist=0,0,0,0,4069,15429,486,12,3,1,0,0,0,0,0,0
+IPCB test=msg size=16384 load=low n=20000 min_us=19.14 p50_us=37.22 p99_us=64.21 p999_us=111.23 max_us=255.21 mean_us=35.23 hist=0,0,0,0,0,6706,13086,192,16,0,0,0,0,0,0,0
+IPCB test=msg size=65536 load=low n=20000 min_us=44.56 p50_us=88.27 p99_us=121.97 p999_us=212.90 max_us=361.79 mean_us=81.65 hist=0,0,0,0,0,0,4838,15016,137,9,0,0,0,0,0,0
+IPCB test=msgx size=4 load=low n=20000 min_us=39.91 p50_us=81.60 p99_us=113.94 p999_us=191.39 max_us=348.19 mean_us=72.56 hist=0,0,0,0,0,0,6247,13683,63,7,0,0,0,0,0,0
+IPCB test=msgx size=64 load=low n=20000 min_us=41.53 p50_us=81.61 p99_us=117.34 p999_us=187.53 max_us=474.11 mean_us=77.32 hist=0,0,0,0,0,0,3846,16041,107,6,0,0,0,0,0,0
+IPCB test=msgx size=1024 load=low n=20000 min_us=41.89 p50_us=83.28 p99_us=122.96 p999_us=231.19 max_us=367.53 mean_us=78.23 hist=0,0,0,0,0,0,4111,15725,152,12,0,0,0,0,0,0
+IPCB test=msgx size=16384 load=low n=20000 min_us=73.16 p50_us=150.82 p99_us=200.79 p999_us=315.16 max_us=439.37 mean_us=139.62 hist=0,0,0,0,0,0,0,4482,15474,44,0,0,0,0,0,0
+IPCB test=msgx size=65536 load=low n=20000 min_us=111.32 p50_us=213.24 p99_us=317.84 p999_us=496.25 max_us=715.87 mean_us=195.29 hist=0,0,0,0,0,0,0,3820,15446,719,15,0,0,0,0,0
+IPCB test=pulse size=0 load=low n=20000 min_us=5.68 p50_us=12.08 p99_us=29.54 p999_us=55.67 max_us=241.13 mean_us=12.11 hist=0,0,0,2192,17194,491,108,8,7,0,0,0,0,0,0,0
+IPCB test=timer size=2000 load=low n=2000 min_us=12425.23 p50_us=13095.22 p99_us=14244.77 p999_us=14418.13 max_us=14726.39 mean_us=13207.57 hist=0,0,0,0,0,0,0,0,0,0,0,0,0,0,2000,0
+IPCB_PHASE load=low seconds=46.0
+IPCB test=msg size=4 load=same n=1000 min_us=29.49 p50_us=15045.62 p99_us=16239.46 p999_us=16402.09 max_us=16423.10 mean_us=14114.73 hist=0,0,0,0,0,1,27,32,11,0,0,0,0,0,927,2
+IPCB test=msg size=64 load=same n=1000 min_us=30.31 p50_us=15087.13 p99_us=16276.43 p999_us=16374.27 max_us=16399.83 mean_us=14159.99 hist=0,0,0,0,0,1,21,27,21,1,0,0,0,0,928,1
+IPCB test=msg size=1024 load=same n=1000 min_us=30.32 p50_us=15051.52 p99_us=16217.01 p999_us=16408.59 max_us=16437.87 mean_us=14086.90 hist=0,0,0,0,0,2,26,26,20,0,0,0,0,0,924,2
+IPCB test=msg size=16384 load=same n=1000 min_us=45.87 p50_us=15041.15 p99_us=16207.69 p999_us=16427.56 max_us=16473.94 mean_us=14183.57 hist=0,0,0,0,0,0,6,46,15,0,0,0,0,0,931,2
+IPCB test=msg size=65536 load=same n=1000 min_us=92.25 p50_us=15090.28 p99_us=16247.27 p999_us=16439.12 max_us=16587.59 mean_us=14857.83 hist=0,0,0,0,0,0,0,13,9,1,0,0,0,0,973,4
+IPCB test=msgx size=4 load=same n=1000 min_us=72.36 p50_us=15084.35 p99_us=16313.79 p999_us=16656.02 max_us=16857.53 mean_us=14611.96 hist=0,0,0,0,0,0,0,18,21,1,0,0,0,0,957,3
+IPCB test=msgx size=64 load=same n=1000 min_us=67.43 p50_us=15079.10 p99_us=16303.32 p999_us=16468.37 max_us=16653.96 mean_us=14532.57 hist=0,0,0,0,0,0,0,24,20,1,0,0,0,0,952,3
+IPCB test=msgx size=1024 load=same n=1000 min_us=68.22 p50_us=15083.15 p99_us=16227.49 p999_us=16327.90 max_us=16346.14 mean_us=14527.35 hist=0,0,0,0,0,0,0,20,24,1,0,0,0,0,955,0
+IPCB test=msgx size=16384 load=same n=1000 min_us=122.28 p50_us=15077.34 p99_us=16243.60 p999_us=16543.42 max_us=16871.47 mean_us=14941.76 hist=0,0,0,0,0,0,0,1,15,0,0,0,0,0,980,4
+IPCB test=msgx size=65536 load=same n=1000 min_us=162.99 p50_us=15115.59 p99_us=16312.62 p999_us=16601.20 max_us=16831.00 mean_us=15130.86 hist=0,0,0,0,0,0,0,0,6,1,0,0,0,0,988,5
+IPCB test=pulse size=0 load=same n=1000 min_us=26.43 p50_us=15046.46 p99_us=16267.29 p999_us=16757.18 max_us=16934.51 mean_us=13928.65 hist=0,0,0,0,0,3,32,24,26,0,0,0,0,0,911,4
+IPCB test=timer size=2000 load=same n=1000 min_us=1882.80 p50_us=13072.64 p99_us=30083.58 p999_us=43596.63 max_us=44007.25 mean_us=14113.58 hist=0,0,0,0,0,0,0,0,0,0,0,228,0,0,550,222
+IPCB_PHASE load=same seconds=190.6
+IPCB_DONE
+=== IPCBENCH END
+
+# elapsed_wait_s=310
