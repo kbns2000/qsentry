@@ -11,7 +11,7 @@ in QEMU on a plain Windows PC (no Linux VM, no target board), and talk to the
 daemon with `cat` and `echo`.
 
 This is the exact path used to bring up [qsentry](../README.md) for the QNX
-Global Hackathon. The first four pitfalls in step 7 are ones we actually hit there.
+Global Hackathon. The first five pitfalls in step 7 are ones we actually hit.
 
 ---
 
@@ -183,7 +183,9 @@ The script does four things:
      -kernel output\ifs.bin -drive file=output\disk-qemu.vmdk,if=ide,id=drv0 ^
      -nic none -serial file:serial.log
    ```
-   It waits 180 s, stops QEMU, and prints `serial.log`. A copy is kept in
+   `check.sh` ends with `shutdown`, and because QEMU runs with `-no-reboot` that
+   ends the VM. The script waits for *its own* QEMU process (`-pidfile qemu.pid`),
+   capped at 10 minutes, then prints `serial.log`. A copy is kept in
    `results\serial_tickdev.log`.
 
 ## 6. Read the result
@@ -223,6 +225,7 @@ The measured log from our own run is in [`results/`](results/).
 | `conflicting types for 'msg_t'` | 8.0 headers already define `msg_t`. | Don't name your own message type `msg_t`. qsentry renamed it `qs_rxmsg_t`. |
 | `serial.log` is **0 bytes**, and QEMU prints `WHPX: ... Ignoring request for interrupt vector 0` | With Windows Hypervisor Platform (`-accel whpx`), the QNX 8.0 kernel never got to the console on our PC. | Use `-accel tcg -cpu max`. It is slower, so allow ~1–2 min to boot. qsentry's script tries WHPX for a few seconds and then falls back to TCG. |
 | `The process cannot access the file because it is being used by another process` | You ran `type serial.log`, or started a new run, while QEMU still held the file. | Stop QEMU first (`taskkill /im qemu-system-x86_64.exe /f`), wait a few seconds, then read the file. |
+| The run ends after a few seconds, or a second run's QEMU disappears | `taskkill /im qemu-system-x86_64.exe` kills **every** QEMU, including another run's. Also, `find` in a `tasklist \| find` check can resolve to Git's Unix `find` when Git is on `PATH`. | Start QEMU with `-pidfile`, wait for and kill only that PID, and call `%SystemRoot%\System32\findstr.exe` by full path (see `run_qemu.cmd`). |
 | `cat /dev/tick` never ends | The read handler ignored `ocb->offset`. | See 3.2. |
 | `timer_settime` fails with `EINVAL` for a 1000 ms period | `tv_nsec` must be below 1 000 000 000. | Split the period into `tv_sec` and `tv_nsec` (see `arm_timer()`). |
 | `mkqnximage: command not found` | The SDP env script was not called in this window. | `call %USERPROFILE%\qnx800\qnxsdp-env.bat` |

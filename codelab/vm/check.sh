@@ -14,3 +14,6 @@ echo reset > /dev/tick
 cat /dev/tick
 pidin -p tickdev
 echo "=== TICKDEV CHECK END"
+sleep 2
+# reboot request; QEMU runs with -no-reboot, so this ends the VM
+shutdown
