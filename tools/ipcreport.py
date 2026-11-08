@@ -55,6 +55,13 @@ def label(r):
     return t
 
 
+def verdict(load, bad):
+    if not bad:
+        return "ok"
+    # under equal-priority load a late timer is the expected round-robin wait, not a clock fault
+    return "late: waits for RR timeslice (expected)" if load == "same" else "COARSE CLOCK"
+
+
 def timer_health(rows, timers):
     """Flag a coarse clock: a periodic timer whose median interval error is more
     than half its period, or whose achieved pulse rate is >10% below the request."""
@@ -67,14 +74,14 @@ def timer_health(rows, timers):
         r = by.get((per, load))
         rate, exp = float(t["pulse_rate_hz"]), float(t["expected_hz"])
         bad = rate < 0.9 * exp or (r is not None and r["p50_us"] > per / 2)
-        warn |= bad
         out.append(f"| {per} us | {load} | {rate:.1f} / {exp:.1f} Hz | {t['overruns']} | "
-                   f"{r['p50_us']:.0f} us | {'COARSE CLOCK' if bad else 'ok'} |" if r else "")
+                   f"{r['p50_us']:.0f} us | {verdict(load, bad)} |" if r else "")
+        warn |= bad and load != "same"
     for (per, load), r in by.items():
         if (per, load) not in seen:
             bad = r["p50_us"] > per / 2
-            warn |= bad
-            out.append(f"| {per} us | {load} | n/a | n/a | {r['p50_us']:.0f} us | {'COARSE CLOCK' if bad else 'ok'} |")
+            warn |= bad and load != "same"
+            out.append(f"| {per} us | {load} | n/a | n/a | {r['p50_us']:.0f} us | {verdict(load, bad)} |")
     hdr = ["| timer period | load | achieved / requested rate | overruns | median interval error | verdict |",
            "|---|---|---|---|---|---|"]
     return "\n".join(hdr + [o for o in out if o]), warn
