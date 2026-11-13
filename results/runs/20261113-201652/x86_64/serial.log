@@ -1,0 +1,1311 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+# ---> Starting devb
+---> Mounting file systems
+Path=0 - Intel 82371SB
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+---> Mounting file systems
+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Starting Networking
+---> Starting sshd
+/usr/libexec/sshd-auth does not exist or is not executable
+---> Starting misc
+O6Q GUEST START
+QNX o6q 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+
+To exit QEMU, type <ctrl>a x
+
+[?7hProcess count:23
+Startup complete
+QNX o6q 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+O6Q GUEST vtnet0 has no DHCP address after 15 s; setting 10.0.2.15
+vtnet0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
+	options=80028<VLAN_MTU,JUMBO_MTU,LINKSTATE>
+	ether 52:54:00:12:34:56
+	inet6 fe80::5054:ff:fe12:3456%vtnet0 prefixlen 64 scopeid 0x5
+	inet 10.0.2.15 netmask 0xffffff00 broadcast 10.0.2.255
+	media: Ethernet autoselect (10Gbase-T <full-duplex>)
+	status: active
+	nd6 options=1<PERFORMNUD>
+O6Q GUEST network check (boot):
+Name       Mtu Network           Address                           Ipkts Ierrs Idrop   Imcast    Opkts Oerrs   Omcast  Coll
+enc0*     1536 <Link#1>          enc0                                  0     0     0        0        0     0        0     0
+lo0      16384 <Link#2>          lo0                                   0     0     0        0        0     0        0     0
+lo0          - 127.0.0.0/8       127.0.0.1                             0     -     -        0        0     -        0     -
+lo0          - ::1/128           ::1                                   0     -     -        0        0     -        0     -
+lo0          - fe80::%lo0/64     fe80::1%lo0                           0     -     -        0        0     -        0     -
+pflog0*  33152 <Link#3>          pflog0                                0     0     0        0        0     0        0     0
+pfsync0*  1500 <Link#4>          pfsync0                               0     0     0        0        0     0        0     0
+vtnet0    1500 <Link#5>          52:54:00:12:34:56                     0     0     0        0       15     0        7     0
+vtnet0       - fe80::%vtnet0/64  fe80::5054:ff:fe12:3456%vtnet0        0     -     -        0        5     -        0     -
+vtnet0       - 10.0.2.0/24       10.0.2.15                             0     -     -        0        0     -        0     -
+Routing tables
+
+Internet:
+Destination        Gateway            Flags         Netif Expire
+default            10.0.2.2           UGS          vtnet0
+10.0.2.0/24        link#5             U            vtnet0
+10.0.2.15          link#5             UHS             lo0
+127.0.0.1          link#2             UH              lo0
+
+Internet6:
+Destination                       Gateway                       Flags         Netif Expire
+::1                               link#2                        UHS             lo0
+fe80::%lo0/64                     link#2                        U               lo0
+fe80::1%lo0                       link#2                        UHS             lo0
+fe80::%vtnet0/64                  link#5                        U            vtnet0
+fe80::5054:ff:fe12:3456%vtnet0    link#5                        UHS             lo0
+PING 10.0.2.2 (10.0.2.2): 56 data bytes
+
+--- 10.0.2.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100.0% packet loss
+? (10.0.2.15) at 52:54:00:12:34:56 on vtnet0 permanent [ethernet]
+? (10.0.2.2) at (incomplete) on vtnet0 expired [ethernet]
+Name       Mtu Network           Address                           Ipkts Ierrs Idrop   Imcast    Opkts Oerrs   Omcast  Coll
+enc0*     1536 <Link#1>          enc0                                  0     0     0        0        0     0        0     0
+lo0      16384 <Link#2>          lo0                                   0     0     0        0        0     0        0     0
+lo0          - 127.0.0.0/8       127.0.0.1                             0     -     -        0        0     -        0     -
+lo0          - ::1/128           ::1                                   0     -     -        0        0     -        0     -
+lo0          - fe80::%lo0/64     fe80::1%lo0                           0     -     -        0        0     -        0     -
+pflog0*  33152 <Link#3>          pflog0                                0     0     0        0        0     0        0     0
+pfsync0*  1500 <Link#4>          pfsync0                               0     0     0        0        0     0        0     0
+vtnet0    1500 <Link#5>          52:54:00:12:34:56                     0     0     0        0       19     0        7     0
+vtnet0       - fe80::%vtnet0/64  fe80::5054:ff:fe12:3456%vtnet0        0     -     -        0        5     -        0     -
+vtnet0       - 10.0.2.0/24       10.0.2.15                             0     -     -        0        3     -        0     -
+CPU:X86_64 Release:8.0.0  FreeMem:874MB/1023MB BootTime:Nov 13 11:16:52 UTC 2026
+Processes: 17, Threads: 103
+Processor1: 686 AMD 686 F6M6S3 3693MHz FPU 
+Processor2: 686 AMD 686 F6M6S3 3693MHz FPU 
+/data/o6q:
+total 37434
+-rw-------  1 root root      54 2026-11-13 10:52 demo.conf
+drwxr-xr-x  2 root root    4096 2026-11-13 10:53 lib
+-rwxr-xr-x  1 root root 6386736 2026-11-13 10:48 o6q_check
+-rwxr-xr-x  1 root root 6377744 2026-11-13 10:48 o6q_check_upstream
+-rwxr-xr-x  1 root root   46336 2026-11-13 10:43 o6q_envprobe
+-rwxr-xr-x  1 root root 6344664 2026-11-13 10:48 o6q_server
+drwxr-xr-x  3 root root    4096 2026-11-13 10:53 pki
+-rwxr-xr-x  1 root root    3060 2026-11-13 10:52 run.sh
+
+/data/o6q/lib:
+total 10312
+-rw-r--r--  1 root root 5279768 2026-11-07 11:58 libcrypto.so.3
+O6Q RUN envprobe
+O6Q ENV uname=QNX 8.0.0 2026/06/05-16:26:03EDT x86pc
+O6Q ENV hostname=o6q
+O6Q ENV compiler=12.2.0
+O6Q ENV sizeof=long=8 pointer=8 time_t=8 bool=1 fd_set=32
+O6Q ENV macro.__STDC_IEC_559__=defined
+O6Q ENV fd.FD_SETSIZE=256
+O6Q ENV fd.sysconf_open_max=1000
+O6Q ENV fd.rlimit_nofile=soft=1000 hard=1000
+O6Q ENV cpus=2
+O6Q ENV clock.monotonic_resolution_ns=1000000
+O6Q ENV qnx.cycles_per_sec=3693469891
+O6Q ENV qnx.clock_period_ns=1000000
+O6Q ENV pthread.default_stack=262144
+O6Q ENV socket.tcp4=ok
+O6Q ENV socket.tcp6=ok
+O6Q ENV socket.udp4=ok
+O6Q ENV socket.udp6=ok
+O6Q ENV resolve.localhost.0=::1
+O6Q ENV resolve.localhost.1=127.0.0.1
+O6Q ENV resolve.o6q=FAILED(Name does not resolve)
+O6Q ENV passive.0=AF_INET6
+O6Q ENV passive.1=AF_INET
+O6Q ENV if.lo0.ipv4=127.0.0.1 index=2 UP RUNNING LOOPBACK MULTICAST
+O6Q ENV if.lo0.ipv6=::1 index=2 UP RUNNING LOOPBACK MULTICAST
+O6Q ENV if.lo0.ipv6=fe80::1 index=2 UP RUNNING LOOPBACK MULTICAST
+O6Q ENV if.vtnet0.ipv6=fe80::5054:ff:fe12:3456 index=5 UP RUNNING MULTICAST
+O6Q ENV if.vtnet0.ipv4=10.0.2.15 index=5 UP RUNNING MULTICAST
+O6Q ENV dev_random=read 16 of 16 bytes
+O6Q ENV openssl.version=OpenSSL 3.0.20 7 Apr 2026
+O6Q ENV openssl.rand_bytes=ok
+O6Q ENV float.release_ua_float_ieee754=1 (CPU list)
+O6Q ENV macro.__GCC_IEC_559=2
+O6Q ENV highfd.dup=descriptor 272 (FD_SETSIZE 256)
+O6Q ENV highfd.poll=returns 1, revents POLLIN
+O6Q ENV highfd.ppoll=returns 1, revents POLLIN
+O6Q ENV highfd.select_large_set=returns 1, descriptor reported readable
+O6Q ENV fd.FD_SET_above_setsize=writes past the fd_set
+O6Q ENV ppoll.no_descriptor=returns 0 after 21.0 ms (timeout 20 ms)
+O6Q ENV poll.negative_descriptor=returns 0 after 21.5 ms, revents none
+O6Q ENV poll.closed_descriptor=returns 1, revents POLLNVAL
+O6Q ENV poll.events0_peer_closed=returns 1, revents POLLHUP
+O6Q ENV poll.events0_tcp_reset=returns 1, revents POLLHUP
+O6Q ENV errno.after_ppoll_timeout=ETIMEDOUT (was EAGAIN before; ppoll returned 0)
+O6Q ENV errno.after_poll_timeout=ETIMEDOUT (was EAGAIN before; poll returned 0)
+O6Q ENV errno.after_select_timeout=ETIMEDOUT (was EAGAIN before; select returned 0)
+O6Q ENV errno.after_ppoll_event=EAGAIN (was EAGAIN before; ppoll returned 1)
+O6Q ENV errno.after_recv_data=EAGAIN (was EAGAIN before; recv returned 1)
+O6Q ENV errno.after_recv_end=EAGAIN (was EAGAIN before; recv returned 0 for a closed peer)
+O6Q ENV tcp.listen_pending=poll returns 1, revents POLLIN
+O6Q ENV tcp.accept_inherits_nonblock=yes
+O6Q ENV tcp.accept_address_length=16 (sockaddr_in 16, sockaddr_storage 128)
+O6Q ENV getnameinfo.real_length=ok 127.0.0.1
+O6Q ENV getnameinfo.storage_length=ok 127.0.0.1
+O6Q ENV tcp.buffers=SO_SNDBUF=49032 SO_RCVBUF=81720
+O6Q ENV tcp.send_until_full=49032 bytes accepted while the peer does not read, then EAGAIN
+O6Q ENV tcp.peer_shutdown_wr=poll returns 1, revents POLLIN; recv returns 0
+O6Q ENV tcp.peer_close=poll returns 1, revents POLLIN; recv returns 0
+O6Q ENV tcp.peer_reset=poll returns 1, revents POLLIN|POLLHUP; recv returns -1 ECONNRESET
+O6Q ENV tcp.reset_before_accept=poll returns 1, revents POLLIN; accept fails with ECONNABORTED
+O6Q ENV tcp.connect_refused=connect says EINPROGRESS; poll(POLLOUT) returns 1, revents POLLOUT; SO_ERROR ECONNREFUSED
+O6Q ENV tcp.accept_empty_queue=accept returns -1 EAGAIN
+O6Q ENV tcp.reset_before_accept_after=accept fails with ECONNABORTED; then the listen socket: poll returns 0, revents none; accept again: EAGAIN
+O6Q ENV tcp.accept_after_abort_next=poll returns 1, revents POLLIN; accept returns a socket
+O6Q ENV tcp.reset_before_accept_by_delay=accept 0 ms after the reset: ECONNABORTED; 20 ms: ECONNABORTED; 300 ms: ECONNABORTED
+O6Q ENV tcp.accept_emfile=accept fails with EMFILE; with the limit restored: poll returns 1, revents POLLIN; accept returns the connection
+O6Q ENV tcp.accept_inherits_nonblock_behaviour=recv without data returns -1 EAGAIN after 0.3 ms: non-blocking
+O6Q ENV errno.after_poll_send_ok=EAGAIN (was EAGAIN before; poll returned 1, send 1)
+O6Q ENV errno.after_tcp_recv_eof=EAGAIN (was EAGAIN before; recv returned 0 after FIN)
+O6Q ENV udp.empty_datagram=poll returns 1, revents POLLIN; recvfrom returns 0, errno 0
+O6Q ENV udp.nothing_to_read=recvfrom(MSG_DONTWAIT) returns -1 EAGAIN
+O6Q ENV multicast.interface=vtnet0 index=5
+O6Q ENV multicast.group.bind_to_group=ok
+O6Q ENV multicast.group.join_mreqn_index=ok
+O6Q ENV multicast.group.join_mreqn_index0=ok
+O6Q ENV multicast.group.join_mreq_address=ok
+O6Q ENV multicast.if_mreqn_index=ok
+O6Q ENV multicast.if_mreqn_index0=ok
+O6Q ENV multicast.if_address=ok
+O6Q ENV multicast.if_mreq_group_first=FAILED(EADDRNOTAVAIL)
+O6Q ENV multicast.if_mreq_group_first_any=FAILED(EADDRNOTAVAIL)
+O6Q ENV multicast.loop_int=ok
+O6Q ENV multicast.loop_char=ok
+O6Q ENV multicast.ttl_int=ok
+O6Q ENV multicast.ttl_char=ok
+O6Q ENV multicast.examples.bind_to_group=ok
+O6Q ENV multicast.examples.join_mreqn_index=ok
+O6Q ENV multicast.examples.join_mreqn_index0=ok
+O6Q ENV multicast.examples.join_mreq_address=ok
+O6Q ENV pipe=ok
+O6Q ENV socketpair.unix_stream=ok
+O6Q ENV getnameinfo.wildcard_name=ok 0.0.0.0 after 0 ms
+O6Q ENV signal.sa_flags=0x0
+O6Q ENV signal.handler_after_delivery=still installed (1 delivered)
+O6Q ENV pthread_getcpuclockid=ok
+O6Q ENV wait_1ms.ppoll=n=200 overshoot_us min=433 p50=1384 p99=2453 max=2621 mean=1398
+O6Q ENV wait_1ms.select=n=200 overshoot_us min=382 p50=1486 p99=2593 max=2689 mean=1474
+O6Q ENV wait_1ms.poll=n=200 overshoot_us min=458 p50=1451 p99=2583 max=2653 mean=1398
+O6Q ENV wait_1ms.nanosleep=n=200 overshoot_us min=340 p50=1451 p99=2579 max=2626 mean=1417
+O6Q ENV done=1
+O6Q EXIT envprobe 0
+O6Q RUN check.core
+O6Q BUILD open62541=v1.4.22 eventloop=ppoll commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=core
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS core.startup server with the full namespace 0 on port 4840 -> Good in 2230 ms
+O6Q PASS core.float_wire 23 of 23 Float/Double values keep their IEEE 754 bit pattern through encode and decode (UA_FLOAT_IEEE754=1)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core.connect.ipv4 opc.tcp://127.0.0.1:4840 -> Good in 83.1 ms; getnameinfo warnings of the server: 0
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://localhost:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core.connect.localhost opc.tcp://localhost:4840 -> Good answer=42 in 50.0 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://[::1]:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core.connect.ipv6 opc.tcp://[::1]:4840 -> Good answer=42 in 42.1 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q INFO core endpoint 0 url=opc.tcp://127.0.0.1:4840 policy=http://opcfoundation.org/UA/SecurityPolicy#None mode=1
+O6Q PASS core.endpoints GetEndpoints -> Good, 1 endpoint(s), 1 without security
+O6Q PASS core.browse Objects: Good, 4 refs, o6q found; o6q: Good, 6 refs (expected 6), qnxinfo found
+O6Q PASS core.translate Objects/1:o6q/1:answer -> ns=1;s=answer
+O6Q PASS core.ns0.namespaces 2 namespaces, [1]=urn:open62541.server.application
+O6Q PASS core.ns0.status State Running (Good), CurrentTime Good (off by 3.1 ms), SoftwareVersion 1.4.22 (Good)
+O6Q PASS core.readwrite 1000 write+read round trips, 0 wrong (Good)
+O6Q LAT core.write n=1000 p50_us=1720.2 p90_us=2043.5 p99_us=2529.7 max_us=4222.0 mean_us=1744.0
+O6Q LAT core.read n=1000 p50_us=1721.3 p90_us=2055.5 p99_us=2552.9 max_us=5933.1 mean_us=1749.0
+O6Q PASS core.call 1000 calls of add(a, 22), 0 wrong (Good)
+O6Q LAT core.call n=1000 p50_us=1763.3 p90_us=2140.6 p99_us=2915.6 max_us=4024.3 mean_us=1804.8
+O6Q PASS core.bigdata.1KiB write Good in 2.6 ms, read Good in 1.9 ms, content identical
+O6Q PASS core.bigdata.64KiB write Good in 6.1 ms, read Good in 4.8 ms, content identical
+O6Q PASS core.bigdata.1MiB write Good in 29.0 ms, read Good in 22.8 ms, content identical
+O6Q PASS core.bigdata.4MiB write Good in 86.6 ms, read Good in 80.0 ms, content identical
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core.sessions 32 of 32 extra sessions connected (Good), 32 read the value; CurrentSessionCount 1 -> 33 -> 1; 3346 ms
+O6Q PASS core.subscribe.create subscription Good, publishing interval 20 ms; monitored item Good, sampling 10 ms, queue 20
+O6Q PASS core.subscribe.datachange 301 notifications in 3.0 s (100 per second, timer runs at 100 per second), 0 out of order, 0 values not delivered
+O6Q LAT core.datachange_age n=301 p50_us=15846.0 p90_us=21511.0 p99_us=22385.0 max_us=24108.0 mean_us=15966.2
+O6Q PASS core.events event item Good; 5 of 5 fire() calls; 5 events received, 5 with the right message, severities 100..500 in order
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q PASS core.subscribe.delete DeleteSubscriptions -> Good
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q PASS core.nodemanagement AddNodes Good, read Good (3.25), DeleteNodes Good, read again BadNodeIdUnknown
+O6Q PASS core.timer 10 ms repeated callback ran 200 times in 2.00 s (99.9 per second)
+O6Q LAT core.timer_10ms_error n=200 p50_us=360.7 p90_us=1114.5 p99_us=1617.2 max_us=1999.7 mean_us=495.7
+O6Q PASS core.qnxinfo Good: QNX 8.0.0 x86pc host=o6q cpus=2 ram_total_mb=1023 ram_free_mb=846 processes=17 threads=104 uptime_s=55.0 clock_period_ns=1000000 cycles_per_sec=3693469891
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS core.restart.stop server stopped in 85 ms; a read on the old session -> BadSecureChannelClosed
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS core.restart.start same port again -> Good in 705 ms
+O6Q LOG (expected) warn/client Client connection already initiated
+O6Q LOG (expected) error/client Could not open a TCP connection to the Endpoint at opc.tcp://127.0.0.1:4840
+O6Q FAIL core.restart.reconnect the same client object connects again -> BadConnectionRejected, answer=0
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core.restart.reconnect_after_disconnect UA_Client_disconnect(), then UA_Client_connect() -> Good, answer=42
+O6Q PASS core.shutdown server stopped in 88 ms; open descriptors at start 3, now 5
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q INFO core 200 log lines printed; the rest is only counted
+O6Q PASS core.lifecycle 5 of 5 start/connect/read/stop cycles on the same port (Good) in 4314 ms; open descriptors 5 -> 5
+O6Q SUMMARY suite=core pass=29 fail=1 skip=0 secs=22.4 log_warnings=198 log_errors=0 log_suppressed=5
+O6Q EXIT check.core 1
+O6Q RUN check.security
+O6Q BUILD open62541=v1.4.22 eventloop=ppoll commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=security
+O6Q PASS security.certificates three RSA-2048 keys with self-signed certificates: Good 1998 ms, Good 3555 ms, Good 2457 ms
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/server Username/Password Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS security.startup server with certificate, trust list and 3 security policies -> Good in 902 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q PASS security.endpoints GetEndpoints -> Good: 6 secure endpoints (3 policies x Sign, SignAndEncrypt), 1 without security, 7 carry the server certificate
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.Basic256Sha256.Sign connect Good in 280 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security.read_Basic256Sha256_Sign n=200 p50_us=2352.3 p90_us=2996.5 p99_us=5074.1 max_us=5714.0 mean_us=2446.1
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.Basic256Sha256.SignAndEncrypt connect Good in 258 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security.read_Basic256Sha256_SignAndEncrypt n=200 p50_us=2750.0 p90_us=3353.6 p99_us=4065.6 max_us=4740.6 mean_us=2800.8
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.Aes128Sha256RsaOaep.Sign connect Good in 250 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security.read_Aes128Sha256RsaOaep_Sign n=200 p50_us=2536.5 p90_us=3374.7 p99_us=6062.5 max_us=6640.7 mean_us=2706.9
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.Aes128Sha256RsaOaep.SignAndEncrypt connect Good in 245 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security.read_Aes128Sha256RsaOaep_SignAndEncrypt n=200 p50_us=2675.1 p90_us=3295.5 p99_us=3748.0 max_us=3996.4 mean_us=2697.8
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.Aes256Sha256RsaPss.Sign connect Good in 250 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security.read_Aes256Sha256RsaPss_Sign n=200 p50_us=2460.6 p90_us=3133.8 p99_us=3592.4 max_us=3968.6 mean_us=2489.1
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.Aes256Sha256RsaPss.SignAndEncrypt connect Good in 240 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security.read_Aes256Sha256RsaPss_SignAndEncrypt n=200 p50_us=2559.2 p90_us=3380.4 p99_us=4234.2 max_us=4695.7 mean_us=2655.7
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.user.password user "operator" with the right password -> Good, answer=42
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/session TCP 9	| SC 17	| Session "ns=1;g=c902ff4d-498b-ad51-cd0c-c04ccebc7b97"	| ActivateSession: The AccessControl plugin denied the activation with the StatusCode BadUserAccessDenied
+O6Q LOG (expected) error/client Session cannot be activated with StatusCode BadUserAccessDenied. The client cannot recover from this, closing the connection.
+O6Q PASS security.user.wrongpassword user "operator" with a wrong password -> BadUserAccessDenied (expected BadUserAccessDenied)
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/channel TCP 9	| SC 19	| Processing the message failed with error BadCertificateUntrusted
+O6Q LOG (expected) error/channel TCP 10	| SC 0	| Received an ERR response with StatusCode BadSecurityChecksFailed and the following reason: 
+O6Q PASS security.reject.untrusted_client client with an unknown certificate -> BadSecurityChecksFailed
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) error/client Processing the message returned the error code BadCertificateUntrusted
+O6Q PASS security.reject.untrusted_server client that does not trust the server certificate -> BadCertificateUntrusted
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/channel TCP 9	| SC 23	| The client's ApplicationURI did not match the certificate
+O6Q PASS security.reject.wrong_uri application URI that is not in the certificate -> BadCertificateUriInvalid (expected BadCertificateUriInvalid)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q PASS security.after_rejects trusted encrypted client Good, anonymous client without security Good
+O6Q LOG (expected) warn/userland Cannot create the Interrupt Manager (only relevant if used)
+O6Q LOG (expected) warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG (expected) warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS security.certfolder.startup server with the trust list in the directory /tmp/o6q_pki_888834/trusted -> Good
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.certfolder.trusted client whose certificate is a file in the directory -> Good
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/channel TCP 11	| SC 4	| Processing the message failed with error BadCertificateUntrusted
+O6Q LOG (expected) error/channel TCP 12	| SC 0	| Received an ERR response with StatusCode BadSecurityChecksFailed and the following reason: 
+O6Q PASS security.certfolder.untrusted client whose certificate is not in the directory -> BadSecurityChecksFailed
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.certfolder.added the same client after its certificate was copied into the directory, server not restarted -> Good
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/channel TCP 11	| SC 8	| Processing the message failed with error BadCertificateUntrusted
+O6Q LOG (expected) error/channel TCP 12	| SC 0	| Received an ERR response with StatusCode BadSecurityChecksFailed and the following reason: 
+O6Q PASS security.certfolder.removed the same client after the file was deleted again -> BadSecurityChecksFailed
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4841 than was used to initialize the connection: opc.tcp://127.0.0.1:4841. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security.certfolder.repeat 20 of 20 further encrypted connections of the trusted client, 467 ms each
+O6Q PASS security.certfolder.log 24 messages "Reloading the trust-list" of the server's PKI for 24 client connections
+O6Q PASS security.certfolder.long_name trust list folder with a name of 1087 bytes (PATH_MAX 1024): verification -> BadInternalError
+O6Q SUMMARY suite=security pass=23 fail=0 skip=0 secs=33.8 log_warnings=99 log_errors=0 log_suppressed=0
+O6Q EXIT check.security 0
+O6Q RUN check.pubsub
+O6Q BUILD open62541=v1.4.22 eventloop=ppoll commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=pubsub
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS pubsub.baseline server without PubSub started and stopped -> Good in 731 ms; 4 descriptors open
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS pubsub.unicast.setup opc.udp://127.0.0.1:4850/, publisher 2234, writer group 100, writer 62541, every 20 ms -> Good
+O6Q PASS pubsub.unicast.flow 201 DataSets received in 4.0 s (50.2 per second, 200 expected); counter 4 -> 405, 0 out of order; value in the address space 405
+O6Q LAT pubsub.unicast_latency n=201 p50_us=1565.0 p90_us=1999.0 p99_us=2609.0 max_us=8171.0 mean_us=1597.5
+O6Q LAT pubsub.unicast_interval_error n=200 p50_us=526.8 p90_us=1394.7 p99_us=2048.0 max_us=6111.7 mean_us=661.2
+O6Q PASS pubsub.unicast.states WriterGroup Operational, ReaderGroup Operational, DataSetReader Operational
+O6Q PASS pubsub.unicast.empty_datagram one UDP datagram without payload sent to port 4850; in the second after that the subscriber received 50 DataSets (at least 25 needed, 50.2 per second in the flow phase); open descriptors 10 -> 10
+O6Q PASS pubsub.unicast.stop server and PubSub stopped in 105 ms; open descriptors 4 -> 4
+O6Q INFO pubsub multicast interface vtnet0 (10.0.2.15), groups 239.192.41.62 and 224.0.0.22
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS pubsub.multicast.setup opc.udp://239.192.41.62:4851/ on vtnet0, publisher 2234, writer group 100, writer 62541, every 20 ms -> Good
+O6Q PASS pubsub.multicast.flow 201 DataSets received in 4.0 s (50.2 per second, 200 expected); counter 2 -> 403, 0 out of order; value in the address space 403
+O6Q LAT pubsub.multicast_latency n=201 p50_us=1902.0 p90_us=2688.0 p99_us=3274.0 max_us=7204.0 mean_us=2000.3
+O6Q LAT pubsub.multicast_interval_error n=200 p50_us=721.6 p90_us=1567.2 p99_us=2680.5 max_us=3261.2 mean_us=793.8
+O6Q PASS pubsub.multicast.states WriterGroup Operational, ReaderGroup Operational, DataSetReader Operational
+O6Q PASS pubsub.multicast.stop server and PubSub stopped in 88 ms; open descriptors 4 -> 4
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG (expected) warn/network UDP 8	| No network interface defined for multicast. The first suitable network interface is used.
+O6Q LOG (expected) warn/network UDP 8	| No network interface defined for multicast. The first suitable network interface is used.
+O6Q LOG (expected) warn/network UDP 8	| No network interface defined for multicast. The first suitable network interface is used.
+O6Q LOG (expected) warn/network UDP 9	| No network interface defined for multicast. The first suitable network interface is used.
+O6Q LOG (expected) warn/network UDP 9	| No network interface defined for multicast. The first suitable network interface is used.
+O6Q PASS pubsub.multicast_anyif.setup opc.udp://224.0.0.22:4852/, publisher 2234, writer group 100, writer 62541, every 20 ms -> Good
+O6Q PASS pubsub.multicast_anyif.flow 201 DataSets received in 4.0 s (50.2 per second, 200 expected); counter 3 -> 403, 0 out of order; value in the address space 403
+O6Q LAT pubsub.multicast_anyif_latency n=201 p50_us=1759.0 p90_us=2388.0 p99_us=2812.0 max_us=3903.0 mean_us=1799.9
+O6Q LAT pubsub.multicast_anyif_interval_error n=200 p50_us=555.8 p90_us=1312.7 p99_us=2336.4 max_us=2766.7 mean_us=651.4
+O6Q PASS pubsub.multicast_anyif.states WriterGroup Operational, ReaderGroup Operational, DataSetReader Operational
+O6Q PASS pubsub.multicast_anyif.stop server and PubSub stopped in 81 ms; open descriptors 4 -> 4
+O6Q SUMMARY suite=pubsub pass=14 fail=0 skip=0 secs=16.7 log_warnings=8 log_errors=0 log_suppressed=0
+O6Q EXIT check.pubsub 0
+O6Q RUN check.highfd
+O6Q BUILD open62541=v1.4.22 eventloop=ppoll commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=highfd
+O6Q INFO highfd FD_SETSIZE=256 RLIMIT_NOFILE soft=1000 hard=1000 eventloop=ppoll
+O6Q PASS highfd.occupy descriptors up to 280 are in use (278 opened here); the next one is 281, FD_SETSIZE is 256
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS highfd.server server on port 4840 -> Good in 791 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS highfd.client connect -> Good, 100 of 100 reads returned the value
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS highfd.sessions 8 of 8 more clients connected (Good); 80 of 80 reads returned the value
+O6Q PASS highfd.idle the server thread used 41 ms of CPU time in 1001 ms without requests
+O6Q PASS highfd.stop everything closed; open descriptors 3 -> 5
+O6Q SUMMARY suite=highfd pass=6 fail=0 skip=0 secs=3.6 log_warnings=38 log_errors=0 log_suppressed=0
+O6Q EXIT check.highfd 0
+O6Q RUN check.robust
+O6Q BUILD open62541=v1.4.22 eventloop=ppoll commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=robust
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS robust.baseline server started and stopped -> Good
+O6Q PASS robust.idle_client 10 x UA_Client_run_iterate(client, 50 ms) without a connection took 519.8 ms (500 ms if every call waits; near 0 means that the loop of the application spins)
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) error/client Could not open a TCP connection to the Endpoint at opc.tcp://127.0.0.1:4844
+O6Q PASS robust.refused connect to opc.tcp://127.0.0.1:4844, where nothing listens -> BadConnectionRejected after 1001.5 ms
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4845 than was used to initialize the connection: opc.tcp://127.0.0.1:4845. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4845 than was used to initialize the connection: opc.tcp://127.0.0.1:4845. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS robust.aborted_connect 5 of 5 connections were reset while they waited in the listen queue (0 refused); a new client after that: Good
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4846 than was used to initialize the connection: opc.tcp://127.0.0.1:4846. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS robust.peer_close 8388608 bytes read by a client that paused for 50 ms -> Good in 221 ms; the connection of a peer that had closed meanwhile was closed by the server after 1 ms; the server thread used 0 ms of CPU time while that was waited for
+O6Q FAIL robust.descriptors open descriptors before and after the tests: 4 -> 5
+O6Q SUMMARY suite=robust pass=5 fail=1 skip=0 secs=6.2 log_warnings=18 log_errors=0 log_suppressed=0
+O6Q EXIT check.robust 1
+O6Q RUN upstream.core
+O6Q BUILD open62541=v1.4.22 eventloop=select variant=upstream commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=core@upstream
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS core@upstream.startup server with the full namespace 0 on port 4840 -> Good in 2381 ms
+O6Q PASS core@upstream.float_wire 23 of 23 Float/Double values keep their IEEE 754 bit pattern through encode and decode (UA_FLOAT_IEEE754=1)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core@upstream.connect.ipv4 opc.tcp://127.0.0.1:4840 -> Good in 125.3 ms; getnameinfo warnings of the server: 0
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://localhost:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core@upstream.connect.localhost opc.tcp://localhost:4840 -> Good answer=42 in 61.1 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://[::1]:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core@upstream.connect.ipv6 opc.tcp://[::1]:4840 -> Good answer=42 in 56.3 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q INFO core@upstream endpoint 0 url=opc.tcp://127.0.0.1:4840 policy=http://opcfoundation.org/UA/SecurityPolicy#None mode=1
+O6Q PASS core@upstream.endpoints GetEndpoints -> Good, 1 endpoint(s), 1 without security
+O6Q PASS core@upstream.browse Objects: Good, 4 refs, o6q found; o6q: Good, 6 refs (expected 6), qnxinfo found
+O6Q PASS core@upstream.translate Objects/1:o6q/1:answer -> ns=1;s=answer
+O6Q PASS core@upstream.ns0.namespaces 2 namespaces, [1]=urn:open62541.server.application
+O6Q PASS core@upstream.ns0.status State Running (Good), CurrentTime Good (off by 3.6 ms), SoftwareVersion 1.4.22 (Good)
+O6Q PASS core@upstream.readwrite 1000 write+read round trips, 0 wrong (Good)
+O6Q LAT core@upstream.write n=1000 p50_us=1907.2 p90_us=2365.3 p99_us=3117.0 max_us=3629.0 mean_us=1943.2
+O6Q LAT core@upstream.read n=1000 p50_us=1912.6 p90_us=2366.1 p99_us=2973.0 max_us=5039.4 mean_us=1946.7
+O6Q PASS core@upstream.call 1000 calls of add(a, 22), 0 wrong (Good)
+O6Q LAT core@upstream.call n=1000 p50_us=2021.6 p90_us=2623.0 p99_us=3731.5 max_us=5276.7 mean_us=2095.3
+O6Q PASS core@upstream.bigdata.1KiB write Good in 13.2 ms, read Good in 2.4 ms, content identical
+O6Q PASS core@upstream.bigdata.64KiB write Good in 65.8 ms, read Good in 5.3 ms, content identical
+O6Q PASS core@upstream.bigdata.1MiB write Good in 303.3 ms, read Good in 29.1 ms, content identical
+O6Q PASS core@upstream.bigdata.4MiB write Good in 506.6 ms, read Good in 103.8 ms, content identical
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core@upstream.sessions 32 of 32 extra sessions connected (Good), 32 read the value; CurrentSessionCount 1 -> 33 -> 1; 2504 ms
+O6Q PASS core@upstream.subscribe.create subscription Good, publishing interval 20 ms; monitored item Good, sampling 10 ms, queue 20
+O6Q PASS core@upstream.subscribe.datachange 302 notifications in 3.0 s (100 per second, timer runs at 100 per second), 0 out of order, 0 values not delivered
+O6Q LAT core@upstream.datachange_age n=302 p50_us=3734.0 p90_us=12446.0 p99_us=13653.0 max_us=14700.0 mean_us=6762.6
+O6Q PASS core@upstream.events event item Good; 5 of 5 fire() calls; 5 events received, 5 with the right message, severities 100..500 in order
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q PASS core@upstream.subscribe.delete DeleteSubscriptions -> Good
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q LOG warn/client Received BadNoSubscription, delete internal information about subscription
+O6Q PASS core@upstream.nodemanagement AddNodes Good, read Good (3.25), DeleteNodes Good, read again BadNodeIdUnknown
+O6Q PASS core@upstream.timer 10 ms repeated callback ran 200 times in 2.00 s (99.9 per second)
+O6Q LAT core@upstream.timer_10ms_error n=200 p50_us=401.9 p90_us=937.6 p99_us=1712.7 max_us=2274.2 mean_us=485.0
+O6Q PASS core@upstream.qnxinfo Good: QNX 8.0.0 x86pc host=o6q cpus=2 ram_total_mb=1023 ram_free_mb=837 processes=17 threads=105 uptime_s=138.7 clock_period_ns=1000000 cycles_per_sec=3693469891
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS core@upstream.restart.stop server stopped in 91 ms; a read on the old session -> BadSecureChannelClosed
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS core@upstream.restart.start same port again -> Good in 706 ms
+O6Q LOG (expected) warn/client Client connection already initiated
+O6Q LOG (expected) error/client Could not open a TCP connection to the Endpoint at opc.tcp://127.0.0.1:4840
+O6Q FAIL core@upstream.restart.reconnect the same client object connects again -> BadConnectionRejected, answer=0
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS core@upstream.restart.reconnect_after_disconnect UA_Client_disconnect(), then UA_Client_connect() -> Good, answer=42
+O6Q PASS core@upstream.shutdown server stopped in 68 ms; open descriptors at start 3, now 5
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q INFO core@upstream 200 log lines printed; the rest is only counted
+O6Q PASS core@upstream.lifecycle 5 of 5 start/connect/read/stop cycles on the same port (Good) in 4170 ms; open descriptors 5 -> 5
+O6Q SUMMARY suite=core@upstream pass=29 fail=1 skip=0 secs=22.9 log_warnings=198 log_errors=0 log_suppressed=5
+O6Q EXIT upstream.core 1
+O6Q RUN upstream.security
+O6Q BUILD open62541=v1.4.22 eventloop=select variant=upstream commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=security@upstream
+O6Q PASS security@upstream.certificates three RSA-2048 keys with self-signed certificates: Good 2144 ms, Good 1659 ms, Good 2051 ms
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/server Username/Password Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS security@upstream.startup server with certificate, trust list and 3 security policies -> Good in 880 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q PASS security@upstream.endpoints GetEndpoints -> Good: 6 secure endpoints (3 policies x Sign, SignAndEncrypt), 1 without security, 7 carry the server certificate
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security@upstream.Basic256Sha256.Sign connect Good in 271 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security@upstream.read_Basic256Sha256_Sign n=200 p50_us=2591.4 p90_us=3205.3 p99_us=4049.4 max_us=4353.1 mean_us=2607.5
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security@upstream.Basic256Sha256.SignAndEncrypt connect Good in 256 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security@upstream.read_Basic256Sha256_SignAndEncrypt n=200 p50_us=2752.3 p90_us=3428.5 p99_us=4069.2 max_us=4244.4 mean_us=2784.0
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security@upstream.Aes128Sha256RsaOaep.Sign connect Good in 231 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security@upstream.read_Aes128Sha256RsaOaep_Sign n=200 p50_us=2498.5 p90_us=3011.7 p99_us=3591.2 max_us=4155.2 mean_us=2510.2
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security@upstream.Aes128Sha256RsaOaep.SignAndEncrypt connect Good in 281 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security@upstream.read_Aes128Sha256RsaOaep_SignAndEncrypt n=200 p50_us=3017.7 p90_us=4000.8 p99_us=4673.0 max_us=4893.3 mean_us=3137.1
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security@upstream.Aes256Sha256RsaPss.Sign connect Good in 273 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security@upstream.read_Aes256Sha256RsaPss_Sign n=200 p50_us=2552.0 p90_us=3041.2 p99_us=3517.5 max_us=3970.4 mean_us=2495.3
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security@upstream.Aes256Sha256RsaPss.SignAndEncrypt connect Good in 215 ms (RSA-2048 handshake); 200 of 200 reads correct
+O6Q LAT security@upstream.read_Aes256Sha256RsaPss_SignAndEncrypt n=200 p50_us=2654.8 p90_us=3429.3 p99_us=4424.4 max_us=5340.5 mean_us=2690.1
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q PASS security@upstream.user.password user "operator" with the right password -> Good, answer=42
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/session TCP 9	| SC 17	| Session "ns=1;g=d3b278b8-dd87-bf25-23f2-2f029aa96aa6"	| ActivateSession: The AccessControl plugin denied the activation with the StatusCode BadUserAccessDenied
+O6Q LOG (expected) error/client Session cannot be activated with StatusCode BadUserAccessDenied. The client cannot recover from this, closing the connection.
+O6Q PASS security@upstream.user.wrongpassword user "operator" with a wrong password -> BadUserAccessDenied (expected BadUserAccessDenied)
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/channel TCP 9	| SC 19	| Processing the message failed with error BadCertificateUntrusted
+O6Q LOG (expected) error/channel TCP 10	| SC 0	| Received an ERR response with StatusCode BadSecurityChecksFailed and the following reason: 
+O6Q PASS security@upstream.reject.untrusted_client client with an unknown certificate -> BadSecurityChecksFailed
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) error/client Processing the message returned the error code BadCertificateUntrusted
+O6Q PASS security@upstream.reject.untrusted_server client that does not trust the server certificate -> BadCertificateUntrusted
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep
+O6Q LOG (expected) warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Aes256_Sha256_RsaPss
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/client The configured ApplicationURI does not match the URI specified in the certificate for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#Aes128_Sha256_RsaOaep
+O6Q LOG (expected) error/userland Empty comparing subjectURI and applicationURI
+O6Q LOG (expected) warn/channel TCP 9	| SC 23	| The client's ApplicationURI did not match the certificate
+O6Q PASS security@upstream.reject.wrong_uri application URI that is not in the certificate -> BadCertificateUriInvalid (expected BadCertificateUriInvalid)
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4840 than was used to initialize the connection: opc.tcp://127.0.0.1:4840. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q PASS security@upstream.after_rejects trusted encrypted client Good, anonymous client without security Good
+O6Q FAIL security@upstream.certfolder.trusted UA_CertificateVerification_CertFolders() of the release is for Linux only
+O6Q FAIL security@upstream.certfolder.added not available (see certfolder.trusted)
+O6Q FAIL security@upstream.certfolder.removed not available (see certfolder.trusted)
+O6Q FAIL security@upstream.certfolder.log not available (see certfolder.trusted)
+O6Q FAIL security@upstream.certfolder.long_name not available (see certfolder.trusted)
+O6Q SUMMARY suite=security@upstream pass=15 fail=5 skip=0 secs=14.2 log_warnings=33 log_errors=0 log_suppressed=0
+O6Q EXIT upstream.security 1
+O6Q RUN upstream.pubsub
+O6Q BUILD open62541=v1.4.22 eventloop=select variant=upstream commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=pubsub@upstream
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS pubsub@upstream.baseline server without PubSub started and stopped -> Good in 814 ms; 4 descriptors open
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS pubsub@upstream.unicast.setup opc.udp://127.0.0.1:4850/, publisher 2234, writer group 100, writer 62541, every 20 ms -> Good
+O6Q PASS pubsub@upstream.unicast.flow 201 DataSets received in 4.0 s (50.2 per second, 200 expected); counter 4 -> 404, 0 out of order; value in the address space 404
+O6Q LAT pubsub@upstream.unicast_latency n=201 p50_us=1469.0 p90_us=2042.0 p99_us=2773.0 max_us=9022.0 mean_us=1553.8
+O6Q LAT pubsub@upstream.unicast_interval_error n=200 p50_us=604.3 p90_us=1474.4 p99_us=2639.6 max_us=7002.7 mean_us=736.8
+O6Q PASS pubsub@upstream.unicast.states WriterGroup Operational, ReaderGroup Operational, DataSetReader Operational
+O6Q FAIL pubsub@upstream.unicast.empty_datagram one UDP datagram without payload sent to port 4850; in the second after that the subscriber received 0 DataSets (at least 25 needed, 50.2 per second in the flow phase); open descriptors 10 -> 9
+O6Q PASS pubsub@upstream.unicast.stop server and PubSub stopped in 92 ms; open descriptors 4 -> 4
+O6Q INFO pubsub@upstream multicast interface vtnet0 (10.0.2.15), groups 239.192.41.62 and 224.0.0.22
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG error/network UDP 8	| Cannot set socket for multicast sending. Error: Can't assign requested address
+O6Q LOG error/pubsub Connection ns=1;i=58192	| Could not open an UDP recv channel
+O6Q FAIL pubsub@upstream.multicast.setup opc.udp://239.192.41.62:4851/ on vtnet0, publisher 2234, writer group 100, writer 62541, every 20 ms -> BadInternalError at addPubSubConnection
+O6Q PASS pubsub@upstream.multicast.stop server and PubSub stopped in 61 ms; open descriptors 4 -> 4
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG (expected) warn/network UDP 8	| No network interface defined for multicast. The first suitable network interface is used.
+O6Q LOG (expected) warn/network UDP 8	| No network interface defined for multicast. The first suitable network interface is used.
+O6Q LOG (expected) error/network UDP 8	| Cannot set socket for multicast sending. Error: Can't assign requested address
+O6Q LOG (expected) error/pubsub Connection ns=1;i=58192	| Could not open an UDP recv channel
+O6Q FAIL pubsub@upstream.multicast_anyif.setup opc.udp://224.0.0.22:4852/, publisher 2234, writer group 100, writer 62541, every 20 ms -> BadInternalError at addPubSubConnection
+O6Q PASS pubsub@upstream.multicast_anyif.stop server and PubSub stopped in 65 ms; open descriptors 4 -> 4
+O6Q SUMMARY suite=pubsub@upstream pass=7 fail=3 skip=0 secs=8.6 log_warnings=8 log_errors=2 log_suppressed=0
+O6Q EXIT upstream.pubsub 1
+O6Q RUN upstream.highfd
+O6Q BUILD open62541=v1.4.22 eventloop=select variant=upstream commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=highfd@upstream
+O6Q INFO highfd@upstream FD_SETSIZE=256 RLIMIT_NOFILE soft=1000 hard=1000 eventloop=select
+O6Q PASS highfd@upstream.occupy descriptors up to 280 are in use (278 opened here); the next one is 281, FD_SETSIZE is 256
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS highfd@upstream.server server on port 4840 -> Good in 786 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/network TCP 284	| Error Resource temporarily unavailable, closing the server socket
+O6Q LOG warn/network TCP 285	| Error Resource temporarily unavailable, closing the server socket
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG error/client Could not open a TCP connection to the Endpoint at opc.tcp://127.0.0.1:4840
+O6Q FAIL highfd@upstream.client connect -> BadConnectionRejected, 0 of 100 reads returned the value
+O6Q FAIL highfd@upstream.sessions 0 of 8 more clients connected (BadConnectionRejected); 0 of 80 reads returned the value
+O6Q PASS highfd@upstream.idle the server thread used 405 ms of CPU time in 1002 ms without requests
+O6Q PASS highfd@upstream.stop everything closed; open descriptors 3 -> 4
+O6Q SUMMARY suite=highfd@upstream pass=4 fail=2 skip=0 secs=1.9 log_warnings=6 log_errors=1 log_suppressed=0
+O6Q EXIT upstream.highfd 1
+O6Q RUN upstream.robust
+O6Q BUILD open62541=v1.4.22 eventloop=select variant=upstream commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=robust@upstream
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS robust@upstream.baseline server started and stopped -> Good
+O6Q FAIL robust@upstream.idle_client 10 x UA_Client_run_iterate(client, 50 ms) without a connection took 0.2 ms (500 ms if every call waits; near 0 means that the loop of the application spins)
+O6Q LOG (expected) warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG (expected) error/client Could not open a TCP connection to the Endpoint at opc.tcp://127.0.0.1:4844
+O6Q PASS robust@upstream.refused connect to opc.tcp://127.0.0.1:4844, where nothing listens -> BadConnectionRejected after 8.5 ms
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4845 than was used to initialize the connection: opc.tcp://127.0.0.1:4845. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/network TCP 7	| Error Software caused connection abort, closing the server socket
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG error/client Could not open a TCP connection to the Endpoint at opc.tcp://127.0.0.1:4845
+O6Q FAIL robust@upstream.aborted_connect 1 of 5 connections were reset while they waited in the listen queue (4 refused); a new client after that: BadConnectionRejected
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4846 than was used to initialize the connection: opc.tcp://127.0.0.1:4846. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q FAIL robust@upstream.peer_close 8388608 bytes read by a client that paused for 50 ms -> Good in 278 ms; the connection of a peer that had closed meanwhile was still open after 3049 ms; the server thread used 1152 ms of CPU time while that was waited for
+O6Q FAIL robust@upstream.descriptors open descriptors before and after the tests: 4 -> 5
+O6Q SUMMARY suite=robust@upstream pass=2 fail=4 skip=0 secs=7.6 log_warnings=16 log_errors=1 log_suppressed=0
+O6Q EXIT upstream.robust 1
+O6Q GUEST stopping the pipe manager
+O6Q RUN envprobe.nopipe
+O6Q ENV nopipe.pipe=FAILED(ENOSYS)
+O6Q ENV nopipe.socketpair=ok; O_NONBLOCK set; write 1; poll returns 1, revents POLLIN; read 1, then -1 EAGAIN
+O6Q ENV nopipe.done=1
+O6Q EXIT envprobe.nopipe 0
+O6Q RUN check.nopipe
+O6Q BUILD open62541=v1.4.22 eventloop=ppoll commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=nopipe
+O6Q INFO nopipe pipe() fails: Function not implemented
+O6Q LOG warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+O6Q LOG warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+O6Q PASS nopipe.server server start while pipe() fails (Function not implemented) -> Good in 2618 ms
+O6Q LOG warn/client skip verifying ApplicationURI for the SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q LOG warn/client The server returned Endpoints with a different EndpointUrl opc.tcp://o6q:4847 than was used to initialize the connection: opc.tcp://127.0.0.1:4847. Some servers require a complete match of the EndpointUrl/DiscoveryUrl (including the path) to return all endpoints.
+O6Q LOG warn/client Removing a UserTokenPolicy that would allow the password to be transmitted without encryption (Can be enabled via config->allowNonePolicyPassword)
+O6Q PASS nopipe.client connect and read -> Good, value 42
+O6Q PASS nopipe.stop server stopped in 77 ms
+O6Q SUMMARY suite=nopipe pass=3 fail=0 skip=0 secs=3.0 log_warnings=6 log_errors=0 log_suppressed=0
+O6Q EXIT check.nopipe 0
+O6Q RUN upstream.nopipe
+O6Q BUILD open62541=v1.4.22 eventloop=select variant=upstream commit=d1e8a8d0cb26 float_ieee754=1 compiler=12.2.0 os=QNX release=8.0.0 machine=x86pc
+O6Q BEGIN suite=nopipe@upstream
+O6Q INFO nopipe@upstream pipe() fails: Function not implemented
+O6Q LOG warn/network Interrupt	| Could not open the pipe for self-signaling (Function not implemented)
+O6Q FAIL nopipe@upstream.server server start while pipe() fails (Function not implemented) -> BadInternalError in 12 ms
+O6Q FAIL nopipe@upstream.client not run: the server did not start (BadInternalError)
+O6Q SUMMARY suite=nopipe@upstream pass=0 fail=2 skip=0 secs=0.0 log_warnings=1 log_errors=0 log_suppressed=0
+O6Q EXIT upstream.nopipe 1
+O6Q GUEST network:
+vtnet0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
+	options=80028<VLAN_MTU,JUMBO_MTU,LINKSTATE>
+	ether 52:54:00:12:34:56
+	inet6 fe80::5054:ff:fe12:3456%vtnet0 prefixlen 64 scopeid 0x5
+	inet 10.0.2.15 netmask 0xffffff00 broadcast 10.0.2.255
+	media: Ethernet autoselect (10Gbase-T <full-duplex>)
+	status: active
+	nd6 options=1<PERFORMNUD>
+O6Q GUEST demo server for the host client
+O6Q DEMO READY port=4840 secure=yes trust=/data/o6q/pki/trusted user=operator log=slog2 os=QNX release=8.0.0 machine=x86pc cpus=2 stack=v1.4.22 eventloop=ppoll
+O6Q DEMO uptime_s=199 cpu_load_avg=2.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=209 cpu_load_avg=2.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=219 cpu_load_avg=2.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=229 cpu_load_avg=2.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=239 cpu_load_avg=1.9 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=249 cpu_load_avg=2.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=259 cpu_load_avg=1.9 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=269 cpu_load_avg=1.8 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=279 cpu_load_avg=3.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=289 cpu_load_avg=1.9 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=299 cpu_load_avg=2.2 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=309 cpu_load_avg=2.2 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=319 cpu_load_avg=2.2 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=329 cpu_load_avg=2.1 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=339 cpu_load_avg=2.4 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=349 cpu_load_avg=1.8 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=359 cpu_load_avg=1.9 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=369 cpu_load_avg=2.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=379 cpu_load_avg=1.9 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=389 cpu_load_avg=1.6 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=399 cpu_load_avg=1.6 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=409 cpu_load_avg=1.6 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=419 cpu_load_avg=2.4 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=429 cpu_load_avg=3.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=439 cpu_load_avg=2.2 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=449 cpu_load_avg=1.5 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=459 cpu_load_avg=2.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=469 cpu_load_avg=1.6 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=479 cpu_load_avg=1.9 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=489 cpu_load_avg=1.8 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=499 cpu_load_avg=2.0 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=509 cpu_load_avg=1.8 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=519 cpu_load_avg=1.6 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=529 cpu_load_avg=1.9 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=539 cpu_load_avg=1.6 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=549 cpu_load_avg=1.8 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=559 cpu_load_avg=1.8 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=569 cpu_load_avg=1.6 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=579 cpu_load_avg=2.8 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=589 cpu_load_avg=1.8 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO uptime_s=599 cpu_load_avg=1.7 ram_free_mb=848.4 processes=17 threads=103 opcua_sessions=0
+O6Q DEMO STOP after_s=420 sessions_total=0 channels_total=0 channels_rejected=0 sessions_rejected=0
+O6Q EXIT demo 0
+O6Q GUEST network check (after the demo):
+Name       Mtu Network           Address                           Ipkts Ierrs Idrop   Imcast    Opkts Oerrs   Omcast  Coll
+enc0*     1536 <Link#1>          enc0                                  0     0     0        0        0     0        0     0
+lo0      16384 <Link#2>          lo0                               27572     0     0        0    27572     0        0     0
+lo0          - 127.0.0.0/8       127.0.0.1                         27468     -     -        0    27468     -        0     -
+lo0          - ::1/128           ::1                                 104     -     -        0      104     -        0     -
+lo0          - fe80::%lo0/64     fe80::1%lo0                           0     -     -        0        0     -        0     -
+pflog0*  33152 <Link#3>          pflog0                                0     0     0        0        0     0        0     0
+pfsync0*  1500 <Link#4>          pfsync0                               0     0     0        0        0     0        0     0
+vtnet0    1500 <Link#5>          52:54:00:12:34:56                     0     0     0        0      429     0      417     0
+vtnet0       - fe80::%vtnet0/64  fe80::5054:ff:fe12:3456%vtnet0        0     -     -        0        5     -        0     -
+vtnet0       - 10.0.2.0/24       10.0.2.15                             0     -     -        0      413     -        0     -
+Routing tables
+
+Internet:
+Destination        Gateway            Flags         Netif Expire
+default            10.0.2.2           UGS          vtnet0
+10.0.2.0/24        link#5             U            vtnet0
+10.0.2.15          link#5             UHS             lo0
+127.0.0.1          link#2             UH              lo0
+
+Internet6:
+Destination                       Gateway                       Flags         Netif Expire
+::1                               link#2                        UHS             lo0
+fe80::%lo0/64                     link#2                        U               lo0
+fe80::1%lo0                       link#2                        UHS             lo0
+fe80::%vtnet0/64                  link#5                        U            vtnet0
+fe80::5054:ff:fe12:3456%vtnet0    link#5                        UHS             lo0
+PING 10.0.2.2 (10.0.2.2): 56 data bytes
+
+--- 10.0.2.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100.0% packet loss
+? (10.0.2.15) at 52:54:00:12:34:56 on vtnet0 permanent [ethernet]
+? (10.0.2.2) at (incomplete) on vtnet0 expired [ethernet]
+Name       Mtu Network           Address                           Ipkts Ierrs Idrop   Imcast    Opkts Oerrs   Omcast  Coll
+enc0*     1536 <Link#1>          enc0                                  0     0     0        0        0     0        0     0
+lo0      16384 <Link#2>          lo0                               27572     0     0        0    27572     0        0     0
+lo0          - 127.0.0.0/8       127.0.0.1                         27468     -     -        0    27468     -        0     -
+lo0          - ::1/128           ::1                                 104     -     -        0      104     -        0     -
+lo0          - fe80::%lo0/64     fe80::1%lo0                           0     -     -        0        0     -        0     -
+pflog0*  33152 <Link#3>          pflog0                                0     0     0        0        0     0        0     0
+pfsync0*  1500 <Link#4>          pfsync0                               0     0     0        0        0     0        0     0
+vtnet0    1500 <Link#5>          52:54:00:12:34:56                     0     0     0        0      432     0      417     0
+vtnet0       - fe80::%vtnet0/64  fe80::5054:ff:fe12:3456%vtnet0        0     -     -        0        5     -        0     -
+vtnet0       - 10.0.2.0/24       10.0.2.15                             0     -     -        0      416     -        0     -
+O6Q GUEST slog2 messages of the demo server:
+Nov 13 11:19:57.817             o6q_server.1028106                opcua*     7  info/eventloop Starting the EventLoop
+Nov 13 11:19:57.828             o6q_server.1028106                opcua      6  info/security The basic256sha256 security policy with openssl is added.
+Nov 13 11:19:57.855             o6q_server.1028106                opcua      6  info/security The Aes256Sha256RsaPss security policy with openssl is added.
+Nov 13 11:19:57.874             o6q_server.1028106                opcua      6  info/security The Aes128Sha256RsaOaep security policy with openssl is added.
+Nov 13 11:19:57.895             o6q_server.1028106                opcua      3  warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+Nov 13 11:19:57.895             o6q_server.1028106                opcua      3  info/server AccessControl: Anonymous login is enabled
+Nov 13 11:19:57.896             o6q_server.1028106                opcua      3  warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+Nov 13 11:19:57.898             o6q_server.1028106                opcua      3  warn/server AccessControl: Unconfigured AccessControl. Users have all permissions.
+Nov 13 11:19:57.898             o6q_server.1028106                opcua      3  warn/server x509 Certificate Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+Nov 13 11:19:57.898             o6q_server.1028106                opcua      3  warn/server Username/Password Authentication configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+Nov 13 11:20:00.905             o6q_server.1028106                opcua      0  info/network TCP	| Listening on all interfaces
+Nov 13 11:20:00.914             o6q_server.1028106                opcua      0  info/network TCP 7	| Creating listen socket for "::" (with local hostname "o6q") on port 4840
+Nov 13 11:20:00.916             o6q_server.1028106                opcua      3  info/server New DiscoveryUrl added: opc.tcp://o6q:4840
+Nov 13 11:20:00.918             o6q_server.1028106                opcua      0  info/network TCP 8	| Creating listen socket for "0.0.0.0" (with local hostname "o6q") on port 4840
+Nov 13 11:26:54.885             o6q_server.1028106                opcua      0  info/network TCP 8	| Socket closed
+Nov 13 11:26:54.886             o6q_server.1028106                opcua      0  info/network TCP 7	| Socket closed
+Nov 13 11:26:54.952             o6q_server.1028106                opcua      7  info/eventloop Stopping the EventLoop
+Nov 13 11:26:54.954             o6q_server.1028106                opcua      0  info/network UDP	| Shutting down the ConnectionManager
+Nov 13 11:26:54.954             o6q_server.1028106                opcua      0  info/network TCP	| Shutting down the ConnectionManager
+Nov 13 11:26:54.954             o6q_server.1028106                opcua      7  info/eventloop The EventLoop has stopped
+Nov 13 11:26:54.965             o6q_server.1028106                opcua      3  info/server PubSub cleanup was called.
+O6Q GUEST DONE
+
+# 
