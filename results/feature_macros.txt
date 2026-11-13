@@ -1,0 +1,92 @@
+O6Q FEATURE x86_64 predefined _QNX_SOURCE not defined
+O6Q FEATURE x86_64 predefined __QNX__ 800
+O6Q FEATURE x86_64 predefined __QNXNTO__ 1
+O6Q FEATURE x86_64 predefined __STDC_IEC_559__ not defined
+O6Q FEATURE x86_64 predefined __GCC_IEC_559 2
+O6Q FEATURE x86_64 predefined __STDC_VERSION__ 199901L
+O6Q FEATURE x86_64 noqnx ppoll declared (the event loop of the port (eventloop-ppoll))
+O6Q FEATURE x86_64 noqnx scandir declared (the certificate folders (pki-folders))
+O6Q FEATURE x86_64 noqnx alphasort declared (the certificate folders (pki-folders))
+O6Q FEATURE x86_64 noqnx socketpair declared (the interrupt manager without pipe() (interrupt-selfpipe))
+O6Q FEATURE x86_64 noqnx getifaddrs declared (the release (PubSub interfaces))
+O6Q FEATURE x86_64 noqnx PATH_MAX declared (the certificate folders (pki-folders))
+O6Q FEATURE x86_64 noqnx MSG_NOSIGNAL declared (the release: no SIGPIPE when a peer is gone)
+O6Q FEATURE x86_64 noqnx MSG_DONTWAIT declared (the release)
+O6Q FEATURE x86_64 noqnx SO_NOSIGPIPE declared (the release: no SIGPIPE when a peer is gone)
+O6Q FEATURE x86_64 noqnx SO_REUSEPORT declared (the release)
+O6Q FEATURE x86_64 noqnx IP_MULTICAST_IF declared (the release (PubSub))
+O6Q FEATURE x86_64 noqnx value FD_SETSIZE 256
+O6Q FEATURE x86_64 noqnx value PATH_MAX 1024
+O6Q FEATURE x86_64 noqnx value MSG_NOSIGNAL 0x00020000
+O6Q FEATURE x86_64 noqnx value SO_NOSIGPIPE 0x00000800
+O6Q FEATURE x86_64 release ppoll declared (the event loop of the port (eventloop-ppoll))
+O6Q FEATURE x86_64 release scandir declared (the certificate folders (pki-folders))
+O6Q FEATURE x86_64 release alphasort declared (the certificate folders (pki-folders))
+O6Q FEATURE x86_64 release socketpair declared (the interrupt manager without pipe() (interrupt-selfpipe))
+O6Q FEATURE x86_64 release getifaddrs declared (the release (PubSub interfaces))
+O6Q FEATURE x86_64 release PATH_MAX declared (the certificate folders (pki-folders))
+O6Q FEATURE x86_64 release MSG_NOSIGNAL declared (the release: no SIGPIPE when a peer is gone)
+O6Q FEATURE x86_64 release MSG_DONTWAIT declared (the release)
+O6Q FEATURE x86_64 release SO_NOSIGPIPE declared (the release: no SIGPIPE when a peer is gone)
+O6Q FEATURE x86_64 release SO_REUSEPORT declared (the release)
+O6Q FEATURE x86_64 release IP_MULTICAST_IF declared (the release (PubSub))
+O6Q FEATURE x86_64 release value FD_SETSIZE 256
+O6Q FEATURE x86_64 release value PATH_MAX 1024
+O6Q FEATURE x86_64 release value MSG_NOSIGNAL 0x00020000
+O6Q FEATURE x86_64 release value SO_NOSIGPIPE 0x00000800
+O6Q FEATURE x86_64 release open62541.h UA_FLOAT_IEEE754 1
+O6Q FEATURE x86_64 release open62541.h UA_FLOAT_LITTLE_ENDIAN 1
+O6Q FEATURE x86_64 release open62541.h UA_BINARY_OVERLAYABLE_FLOAT 1
+O6Q FEATURE x86_64 release open62541.h _QNX_SOURCE 1
+O6Q FEATURE x86_64 release open62541.h __STDC_IEC_559__ 1
+O6Q FEATURE x86_64 port open62541.h UA_FLOAT_IEEE754 1
+O6Q FEATURE x86_64 port open62541.h UA_FLOAT_LITTLE_ENDIAN 1
+O6Q FEATURE x86_64 port open62541.h UA_BINARY_OVERLAYABLE_FLOAT 1
+O6Q FEATURE x86_64 port open62541.h _QNX_SOURCE 1
+O6Q FEATURE x86_64 port open62541.h __STDC_IEC_559__ 1
+O6Q FEATURE aarch64le predefined _QNX_SOURCE not defined
+O6Q FEATURE aarch64le predefined __QNX__ 800
+O6Q FEATURE aarch64le predefined __QNXNTO__ 1
+O6Q FEATURE aarch64le predefined __STDC_IEC_559__ not defined
+O6Q FEATURE aarch64le predefined __GCC_IEC_559 2
+O6Q FEATURE aarch64le predefined __STDC_VERSION__ 199901L
+O6Q FEATURE aarch64le noqnx ppoll declared (the event loop of the port (eventloop-ppoll))
+O6Q FEATURE aarch64le noqnx scandir declared (the certificate folders (pki-folders))
+O6Q FEATURE aarch64le noqnx alphasort declared (the certificate folders (pki-folders))
+O6Q FEATURE aarch64le noqnx socketpair declared (the interrupt manager without pipe() (interrupt-selfpipe))
+O6Q FEATURE aarch64le noqnx getifaddrs declared (the release (PubSub interfaces))
+O6Q FEATURE aarch64le noqnx PATH_MAX declared (the certificate folders (pki-folders))
+O6Q FEATURE aarch64le noqnx MSG_NOSIGNAL declared (the release: no SIGPIPE when a peer is gone)
+O6Q FEATURE aarch64le noqnx MSG_DONTWAIT declared (the release)
+O6Q FEATURE aarch64le noqnx SO_NOSIGPIPE declared (the release: no SIGPIPE when a peer is gone)
+O6Q FEATURE aarch64le noqnx SO_REUSEPORT declared (the release)
+O6Q FEATURE aarch64le noqnx IP_MULTICAST_IF declared (the release (PubSub))
+O6Q FEATURE aarch64le noqnx value FD_SETSIZE 256
+O6Q FEATURE aarch64le noqnx value PATH_MAX 1024
+O6Q FEATURE aarch64le noqnx value MSG_NOSIGNAL 0x00020000
+O6Q FEATURE aarch64le noqnx value SO_NOSIGPIPE 0x00000800
+O6Q FEATURE aarch64le release ppoll declared (the event loop of the port (eventloop-ppoll))
+O6Q FEATURE aarch64le release scandir declared (the certificate folders (pki-folders))
+O6Q FEATURE aarch64le release alphasort declared (the certificate folders (pki-folders))
+O6Q FEATURE aarch64le release socketpair declared (the interrupt manager without pipe() (interrupt-selfpipe))
+O6Q FEATURE aarch64le release getifaddrs declared (the release (PubSub interfaces))
+O6Q FEATURE aarch64le release PATH_MAX declared (the certificate folders (pki-folders))
+O6Q FEATURE aarch64le release MSG_NOSIGNAL declared (the release: no SIGPIPE when a peer is gone)
+O6Q FEATURE aarch64le release MSG_DONTWAIT declared (the release)
+O6Q FEATURE aarch64le release SO_NOSIGPIPE declared (the release: no SIGPIPE when a peer is gone)
+O6Q FEATURE aarch64le release SO_REUSEPORT declared (the release)
+O6Q FEATURE aarch64le release IP_MULTICAST_IF declared (the release (PubSub))
+O6Q FEATURE aarch64le release value FD_SETSIZE 256
+O6Q FEATURE aarch64le release value PATH_MAX 1024
+O6Q FEATURE aarch64le release value MSG_NOSIGNAL 0x00020000
+O6Q FEATURE aarch64le release value SO_NOSIGPIPE 0x00000800
+O6Q FEATURE aarch64le release open62541.h UA_FLOAT_IEEE754 1
+O6Q FEATURE aarch64le release open62541.h UA_FLOAT_LITTLE_ENDIAN 1
+O6Q FEATURE aarch64le release open62541.h UA_BINARY_OVERLAYABLE_FLOAT 1
+O6Q FEATURE aarch64le release open62541.h _QNX_SOURCE 1
+O6Q FEATURE aarch64le release open62541.h __STDC_IEC_559__ 1
+O6Q FEATURE aarch64le port open62541.h UA_FLOAT_IEEE754 1
+O6Q FEATURE aarch64le port open62541.h UA_FLOAT_LITTLE_ENDIAN 1
+O6Q FEATURE aarch64le port open62541.h UA_BINARY_OVERLAYABLE_FLOAT 1
+O6Q FEATURE aarch64le port open62541.h _QNX_SOURCE 1
+O6Q FEATURE aarch64le port open62541.h __STDC_IEC_559__ 1
