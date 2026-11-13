@@ -1,0 +1,10 @@
+o6q.py run --interop at 2026-11-13 17:32:18
+o6q.py: x86_64: starting QEMU
+o6q.py: aarch64le: no image in F:\Claude\o6q\open62541-qnx\out\vm\aarch64le, not run
+o6q.py: x86_64: running boot
+o6q.py: x86_64: running check.security
+o6q.py: x86_64: running upstream.security
+o6q.py: x86_64: running upstream.nopipe
+o6q.py: x86_64: QEMU ended (exit 0 after 191 s)
+o6q.py: x86_64: port 73 passed, 4 failed; exits {'envprobe': '0', 'check.core': '1', 'check.security': '0', 'check.pubsub': '1', 'check.highfd': '0', 'check.robust': '1', 'upstream.core': '1', 'upstream.security': '1', 'upstream.pubsub': '1', 'upstream.highfd': '1', 'upstream.robust': '1', 'envprobe.nopipe': '0', 'check.nopipe': '0', 'upstream.nopipe': '1', 'demo': '1'}
+o6q.py: summary: F:\Claude\o6q\open62541-qnx\results\runs\20261113-173218\SUMMARY.md
