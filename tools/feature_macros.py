@@ -3,14 +3,16 @@
 
     python tools/feature_macros.py [--arch x86_64,aarch64le] [--out FILE]
 
-open62541.h v1.4.10 defines _XOPEN_SOURCE 600, _DEFAULT_SOURCE, _BSD_SOURCE
-and _GNU_SOURCE before its first system header. The QNX headers then declare
-only what belongs to those standards unless _QNX_SOURCE is defined as well
-(patches/08-qnx-source.change). This script compiles one small file per name
-with qcc, once with the macros of the release and once with _QNX_SOURCE added
-as the port does, and prints whether the name is declared. It also prints
-what qcc predefines, a few values, and UA_FLOAT_IEEE754 as the release header
-and the port header decide it (patches/09 was about that value).
+open62541.h defines _XOPEN_SOURCE 600, _DEFAULT_SOURCE, _BSD_SOURCE and
+_GNU_SOURCE before its first system header. The QNX headers then declare only
+what belongs to those standards unless _QNX_SOURCE is defined as well. Since
+v1.4.12 open62541.h defines _QNX_SOURCE when the compiler predefines __QNX__
+(v1.4.10 did not, and an earlier version of this port added it). This script
+compiles one small file per name with qcc, once with the macros of the
+release ("release") and once without its QNX block ("noqnx", as up to v1.4.11),
+and prints whether the name is declared. It also prints what qcc predefines, a
+few values, and _QNX_SOURCE and UA_FLOAT_IEEE754 as the release header and
+the port header decide them.
 
 Run the QNX SDP environment script first; the output also goes to
 results/feature_macros.txt. Nothing is run on the target.
@@ -27,13 +29,14 @@ import tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VARIANT = {"x86_64": "gcc_ntox86_64", "aarch64le": "gcc_ntoaarch64le"}
 
-# the feature macros of open62541.h v1.4.10, in its order
-RELEASE_MACROS = """#define _XOPEN_SOURCE 600
+# the feature macros of open62541.h v1.4.22, in its order (the release puts
+# each of the four under #ifndef, which changes nothing in these probes)
+NOQNX_MACROS = """#define _XOPEN_SOURCE 600
 #define _DEFAULT_SOURCE
 #define _BSD_SOURCE
 #define _GNU_SOURCE
 """
-PORT_MACROS = "#define _QNX_SOURCE\n" + RELEASE_MACROS
+RELEASE_MACROS = "#if defined(__QNX__)\n# define _QNX_SOURCE 1\n#endif\n" + NOQNX_MACROS
 
 HEADERS = """#include <limits.h>
 #include <poll.h>
@@ -48,12 +51,12 @@ HEADERS = """#include <limits.h>
 
 # (name, kind, what uses it)
 NAMES = [
-    ("ppoll", "function", "the event loop of the port (change 01)"),
-    ("scandir", "function", "the certificate folders (change 10)"),
-    ("alphasort", "function", "the certificate folders (change 10)"),
-    ("socketpair", "function", "the interrupt manager without pipe() (change 05)"),
+    ("ppoll", "function", "the event loop of the port (eventloop-ppoll)"),
+    ("scandir", "function", "the certificate folders (pki-folders)"),
+    ("alphasort", "function", "the certificate folders (pki-folders)"),
+    ("socketpair", "function", "the interrupt manager without pipe() (interrupt-selfpipe)"),
     ("getifaddrs", "function", "the release (PubSub interfaces)"),
-    ("PATH_MAX", "macro", "the certificate folders (change 10)"),
+    ("PATH_MAX", "macro", "the certificate folders (pki-folders)"),
     ("MSG_NOSIGNAL", "macro", "the release: no SIGPIPE when a peer is gone"),
     ("MSG_DONTWAIT", "macro", "the release"),
     ("SO_NOSIGPIPE", "macro", "the release: no SIGPIPE when a peer is gone"),
@@ -138,7 +141,7 @@ def main():
             for name in PREDEFINED:
                 say(f"O6Q FEATURE {arch} predefined {name} " +
                     ((pre[name] or "defined") if name in pre else "not defined"))
-            for variant, block in (("release", RELEASE_MACROS), ("port", PORT_MACROS)):
+            for variant, block in (("noqnx", NOQNX_MACROS), ("release", RELEASE_MACROS)):
                 for name, kind, use in NAMES:
                     if kind == "function":
                         body = f"int main(void) {{ return &{name} != 0; }}\n"

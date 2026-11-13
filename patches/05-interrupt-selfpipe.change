@@ -16,7 +16,7 @@
 # which an OPC UA server needs in any case.
 #
 @@ hunk
-<<<<<<< open62541 v1.4.10
+<<<<<<< open62541 v1.4.22
     int err = pipe(pipefd);
 =======
     int err = pipe(pipefd);

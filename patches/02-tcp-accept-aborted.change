@@ -22,7 +22,7 @@
 # the EventLoop spin on the readable listen socket.
 #
 @@ hunk
-<<<<<<< open62541 v1.4.10
+<<<<<<< open62541 v1.4.22
         /* Temporary error -- retry */
         if(UA_ERRNO == UA_INTERRUPTED)
             return;

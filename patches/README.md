@@ -1,7 +1,8 @@
 # The changes of open62541-qnx
 
 Each `.change` file in this directory is one change to the official
-single-file release of open62541 v1.4.10 (`open62541.c`, `open62541.h`).
+single-file release of open62541 v1.4.22 (`open62541.c`, `open62541.h`; the
+version and its SHA-256 hashes are pinned in `scripts/port.py`).
 `scripts/port.py` applies them in the order of [`series`](series) and stops if
 a text it replaces is not found exactly once, so a different upstream version
 fails loudly instead of producing a half-ported build.
@@ -22,7 +23,7 @@ followed by hunks: the text of the release, then the text of the port.
 
 ```
 @@ hunk [open62541.c|open62541.h]
-<<<<<<< open62541 v1.4.10
+<<<<<<< open62541 v1.4.22
 (text of the release)
 =======
 (text of the port)

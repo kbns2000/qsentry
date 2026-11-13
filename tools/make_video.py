@@ -124,8 +124,8 @@ def main():
     im, d = frame()
     d.text((60, 190), "open62541-qnx", font=F_BIG, fill=ACC)
     d.text((60, 270), "OPC UA on QNX 8.0 - every change shown on QNX itself", font=F_H1, fill=FG)
-    d.text((60, 330), "open62541 v1.4.10  |  x86_64 + aarch64le  |  encryption (OpenSSL 3)  |  PubSub",
-           font=F_TXT, fill=FG)
+    d.text((60, 330), f"open62541 {port.VERSION}  |  x86_64 + aarch64le  |  encryption (OpenSSL 3)  |  "
+           "PubSub", font=F_TXT, fill=FG)
     d.text((60, 420), "Open-source port category. Every result in this video is parsed from the console",
            font=F_SMALL, fill=DIM)
     d.text((60, 446), "logs of QNX 8.0 guests in QEMU; nothing is typed in by hand.", font=F_SMALL,
@@ -139,11 +139,12 @@ def main():
     for text in ["OPC UA (IEC 62541) is how PLCs, robots, drives and SCADA/MES systems "
                  "exchange data on the factory floor.",
                  "QNX runs many of the controllers underneath them.",
-                 "open62541 is the open-source C implementation of OPC UA (MPL-2.0). Upstream "
-                 "knows QNX only through a toolchain file for QNX 6.5."]:
+                 "open62541 is the open-source C implementation of OPC UA (MPL-2.0). It builds "
+                 "for QNX since v1.4.12; its platform table lists QNX as tier 3 (no CI, no "
+                 "test system)."]:
         y = paragraph(d, 80, y, "•  " + text) + 22
     caption(d, "It compiles for QNX 8.0. The question is whether the code behaves the same way "
-               "as on Linux, where it is tested.")
+               "as on Linux, where it is tested. This project measures that.")
     scenes.append((im, 9))
 
     # 3 method
@@ -154,7 +155,7 @@ def main():
     count = words[len(series)] if len(series) < len(words) else str(len(series))
     header(d, f"The port: {count} small changes, each with a test on QNX")
     d.rectangle([60, 130, W - 60, 470], fill=PANEL)
-    rows = [("release", "open62541.c / .h v1.4.10, SHA-256 checked, never committed"),
+    rows = [("release", f"open62541.c / .h {port.VERSION}, SHA-256 checked, never committed"),
             ("patches/", f"{len(series)} changes: reason, upstream file, the test that shows it"),
             ("o6q_check", "test program built from the PORT"),
             ("o6q_check_upstream", "the same program built from the unchanged RELEASE"),
@@ -172,7 +173,7 @@ def main():
     steps = ["python scripts/o6q.py all --interop",
              "  build   qcc for x86_64 and aarch64le (CMake, Ninja, SDP 8.0)",
              "  image   mkqnximage --type=qemu, programs in /data/o6q, run.sh at boot",
-             "  run     qemu-system-x86_64 + qemu-system-aarch64 at the same time",
+             "  run     qemu-system-x86_64 (aarch64le: built, no QEMU BSP in the SDP)",
              "          python asyncua client -> demo server in the x86_64 guest",
              "  report  SUMMARY.md: port vs release for every change"]
     d.rectangle([60, 140, W - 60, 470], fill=PANEL)
@@ -253,7 +254,7 @@ def main():
 
     # 8 suites
     im, d = frame()
-    header(d, "All suites, both CPUs", "pass / fail / skip")
+    header(d, "All suites", "pass / fail / skip")
     y = 130
     for a in archs:
         d.text((60, y), a, font=F_H2, fill=ACC)
@@ -319,7 +320,7 @@ def main():
     d.text((60, 200), "open62541-qnx", font=F_BIG, fill=ACC)
     d.text((60, 280), args.repo, font=F_H1, fill=FG)
     for i, s in enumerate(["Changes to open62541: MPL-2.0 (like open62541). Everything else: Apache-2.0.",
-                           "QNX SDP 8.0, qcc, x86_64 and aarch64le; QEMU for the run.",
+                           "QNX SDP 8.0, qcc for x86_64 and aarch64le; the run: QEMU x86_64.",
                            "Results from QEMU emulation: behaviour, not performance figures."]):
         d.text((60, 360 + 38 * i), s, font=F_TXT, fill=DIM if i == 2 else FG)
     scenes.append((im, 7))

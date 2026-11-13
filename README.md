@@ -3,26 +3,31 @@
 [open62541](https://www.open62541.org/) is the open-source C implementation of
 OPC UA (IEC 62541), the protocol that PLCs, robots, drives and SCADA/MES
 systems use to exchange data. QNX runs many of the controllers underneath
-them. Upstream open62541 knows QNX only through a toolchain file for QNX 6.5.
+them.
 
-This repository ports the **open62541 v1.4.10** release to **QNX 8.0**, for
-**x86_64 and aarch64le**, with **encryption** (OpenSSL 3 of the QNX SDP) and
-**PubSub**, and shows on QNX itself why each change is needed:
+open62541 builds for QNX since v1.4.12, and its
+[platform table](https://github.com/open62541/open62541/blob/master/arch/README.md)
+lists QNX as tier 3: no continuous integration, no test system. So the code
+compiles for QNX 8.0, but nobody checks whether it *behaves* there as on
+Linux, where it is tested. This repository checks that for the newest release
+of the 1.4 line, **open62541 v1.4.22**, on **QNX 8.0**, with **encryption**
+(OpenSSL 3 of the QNX SDP) and **PubSub**:
 
-- **Ten small changes** to the release, each one file with the reason, the
+- **A test program that runs on QNX** twice: built from the unchanged release,
+  and built from the port. The report puts the two side by side for every
+  change.
+- **Seven small changes** to the release, each one file with the reason, the
   upstream source file it belongs to, and the test that shows it
-  ([`patches/`](patches/)).
-- **A test program that runs on QNX** twice: built from the port, and built
-  from the unchanged release with the same configuration. The report puts the
-  two side by side for every change.
+  ([`patches/`](patches/)). A change stays only where the test on QNX shows
+  the difference.
 - **A probe of the operating system** (no open62541 in it) that measures the
   QNX behaviours the changes depend on, next to Linux reference values.
 - **A demo server**: the live QNX system (CPU load, memory, processes, uptime)
   as OPC UA nodes, encrypted, with user login, a certificate trust folder that
   is re-read while it runs, and log messages in **slog2**.
-- **One command** builds both CPUs, makes QEMU images with `mkqnximage`, boots
-  them, lets an independent OPC UA client (python asyncua) talk to the demo
-  server, and writes the report.
+- **One command** cross-compiles for x86_64 and aarch64le, makes a QEMU image
+  with `mkqnximage`, boots it, lets an independent OPC UA client (python
+  asyncua) talk to the demo server, and writes the report.
 
 <!-- FILL: results table from the QEMU run -->
 
@@ -30,23 +35,24 @@ This repository ports the **open62541 v1.4.10** release to **QNX 8.0**, for
 
 | # | Change | Why (short) | Shown by |
 |---|---|---|---|
-| 01 | [Wait in `ppoll()` instead of `select()`](patches/01-eventloop-ppoll.change) | Outside Linux the event loop uses `select()` and never compares a descriptor with `FD_SETSIZE`: a descriptor ≥ `FD_SETSIZE` makes `FD_SET()` write past the `fd_set` on the stack. On QNX 8.0 `FD_SETSIZE` is 256. | `highfd.*`, `robust.idle_client` |
-| 02 | [Keep the listen socket when `accept()` finds an aborted connection](patches/02-tcp-accept-aborted.change) | Any `accept()` error but `EINTR` closes the listen socket: the server stops accepting connections. A BSD stack reports a connection reset in the listen queue as `ECONNABORTED`. | `robust.aborted_connect` |
+| 01 | [Wait in `ppoll()` instead of `select()`](patches/01-eventloop-ppoll.change) | Outside Linux the event loop uses `select()` and never compares a descriptor with `FD_SETSIZE`: a descriptor ≥ `FD_SETSIZE` makes `FD_SET()` write past the `fd_set` on the stack. | `highfd.*`, `robust.idle_client` |
+| 02 | [Keep the listen socket when `accept()` finds an aborted connection](patches/02-tcp-accept-aborted.change) | Any `accept()` error but `EINTR` closes the listen socket: the server stops accepting connections. A BSD network stack reports a connection reset in the listen queue as `ECONNABORTED`. | `robust.aborted_connect` |
 | 03 | [Take `recv() == 0` as the end of the connection](patches/03-tcp-recv-eof.change) | The code also looks at `errno` when `recv()` returns 0; a stale `EAGAIN` keeps a closed connection registered and the event loop spinning. | `robust.peer_close` |
 | 04 | [Do not close a UDP socket because of an empty datagram](patches/04-udp-empty-datagram.change) | `recvfrom() == 0` is a valid empty datagram, not an error; one such datagram leaves a PubSub subscriber without a socket. | `pubsub.unicast.empty_datagram` |
 | 05 | [Fall back to a socket pair when `pipe()` is not available](patches/05-interrupt-selfpipe.change) | On QNX `pipe()` needs the pipe manager process; images without it cannot start the server. | `nopipe.*` |
 | 06 | [Pass the real address length to `getnameinfo()`](patches/06-tcp-peer-name.change) | The size of `sockaddr_storage` is passed instead of the length from `accept()`. | `core.connect.ipv4` |
-| 07 | [No reverse DNS query for the wildcard address at start](patches/07-listen-numeric-name.change) | Each listen socket triggers a DNS lookup for a log line; without a reachable DNS server the start waits for the resolver timeout. | `core.startup` |
-| 08 | [Ask the QNX headers for the full API](patches/08-qnx-source.change) | `_XOPEN_SOURCE 600` hides QNX functions that the event loop calls. | build log |
-| 09 | [Know AArch64 as an IEEE 754 CPU](patches/09-aarch64-ieee754.change) | Without `__STDC_IEC_559__` (glibc defines it, QNX libc does not) Float and Double go through a slow portable routine that changes subnormal values. | `core.float_wire` |
-| 10 | [Certificate folders on QNX](patches/10-pki-folders.change) | The trust list folders are "Linux only" in the release although they need only `scandir()`; the change also frees the directory lists, which leaked on every verification. | `security.certfolder.*` |
+| 10 | [Certificate folders on QNX](patches/10-pki-folders.change) | The trust list folders are "Linux only" in the release although they need only `scandir()`. The change also refuses folder names of `PATH_MAX` or more, which overflow a stack buffer in the release (on Linux as well). | `security.certfolder.*` |
 
-The build configuration also changes three options of the release header:
-OpenSSL instead of Mbed TLS (QNX SDP 8.0 ships OpenSSL 3), and no PubSub
-message encryption (which needs Mbed TLS in this version).
 [`patches/README.md`](patches/README.md) explains the format of a change.
+`scripts/port.py` also sets the build configuration of the release header:
+OpenSSL instead of Mbed TLS (QNX SDP 8.0 ships OpenSSL 3), and no PubSub
+message encryption (which needs Mbed TLS in this version). With OpenSSL the
+single-file release of v1.4.22 does not compile: two of its source files
+define a static array `openssl_PEM_PRE`, which collide in the one file, so
+`port.py` renames the one of the client. Both builds, release and port, get
+this configuration.
 
-<!-- FILL: per-change result (release vs port, x86_64 and aarch64le) -->
+<!-- FILL: per-change result (release vs port) -->
 
 ## Build and run
 
@@ -54,7 +60,7 @@ message encryption (which needs Mbed TLS in this version).
 
 - QNX SDP 8.0 (the free non-commercial licence is enough), on Windows or Linux
 - Python 3.9 or newer; CMake 3.16+ and Ninja (`pip install cmake ninja` works)
-- QEMU (`qemu-system-x86_64`, `qemu-system-aarch64`) for the QEMU run
+- QEMU (`qemu-system-x86_64`) for the QEMU run
 - For the host client: `pip install asyncua`
 
 ### Everything in one go
@@ -75,15 +81,21 @@ cd open62541-qnx
 python3 scripts/o6q.py all --interop
 ```
 
-`all` runs the four steps below. The QEMU run emulates the CPUs in software
-and takes a while (both guests run at the same time).
+`all` runs the four steps below. The QEMU run emulates the CPU in software and
+takes a while.
 
 | Step | Command | What it does |
 |---|---|---|
 | build | `o6q.py build` | `scripts/port.py` downloads the release (SHA-256 checked) and applies [`patches/`](patches/); CMake and Ninja cross-compile for x86_64 and aarch64le with the toolchain file [`cmake/qnx800.toolchain.cmake`](cmake/qnx800.toolchain.cmake). Compiler output: `results/build_<cpu>.log`. |
-| image | `o6q.py image --interop` | One QEMU image per CPU with `mkqnximage`: the programs in `/data/o6q`, the SDP's `libcrypto.so.3`, and [`vm/run.sh`](vm/run.sh), which runs at boot. |
-| run | `o6q.py run --interop` | Boots both images headless, keeps each console in `results/runs/<time>/<cpu>/serial.log`, starts the host client when the demo server is up, waits for the guests to shut down. |
-| report | `o6q.py report` | Writes `SUMMARY.md` next to the logs: suites per CPU, every change with its tests for the port and the release, latencies, host client, demo server, and the operating system probe next to Linux. |
+| image | `o6q.py image --interop` | A QEMU image per CPU with `mkqnximage`: the programs in `/data/o6q`, the SDP's `libcrypto.so.3`, and [`vm/run.sh`](vm/run.sh), which runs at boot. |
+| run | `o6q.py run --interop` | Boots the images headless, keeps each console in `results/runs/<time>/<cpu>/serial.log`, starts the host client when the demo server is up, waits for the guests to shut down. |
+| report | `o6q.py report` | Writes `SUMMARY.md` next to the logs: the suites, every change with its tests for the release and the port, latencies, host client, demo server, and the operating system probe next to Linux. |
+
+aarch64le is cross-compiled but not run: for aarch64le `mkqnximage` needs
+`startup-qemu-virt`, which is not part of the SDP 8.0 installation used here
+(`Host file 'startup-qemu-virt' not available`, see
+[`results/o6q_image.log`](results/o6q_image.log)). With that board support
+package installed, `o6q.py` builds and boots the aarch64le image as well.
 
 ### Only the library
 
@@ -138,21 +150,23 @@ UaExpert or [`scripts/o6q_client.py`](scripts/o6q_client.py).
    QEMU's port forwarding.
 
 Every claim in the report is a line of a console log under `results/`.
+[`tools/feature_macros.py`](tools/feature_macros.py) shows at compile time
+which QNX declarations the feature macros of `open62541.h` make visible.
 
-## Repository layout
+## Related work
 
-| Path | Content |
-|---|---|
-| [`patches/`](patches/) | the ten changes (MPL-2.0), `series`, format description |
-| [`scripts/port.py`](scripts/port.py) | download, verify, configure and patch the release |
-| [`scripts/o6q.py`](scripts/o6q.py) | build, image, run, report |
-| [`scripts/o6q_client.py`](scripts/o6q_client.py) | host client (python asyncua) for the demo server |
-| [`src/`](src/) | `o6q_check` and its suites, `o6q_envprobe`, `o6q_server` |
-| [`src/qnx/`](src/qnx/) | QNX system information (system page, procfs) and the slog2 logger |
-| [`vm/`](vm/) | what runs on the QNX guest |
-| [`cmake/`](cmake/) | CMake toolchain file for QNX SDP 8.0 |
-| [`tools/`](tools/) | compile-time API probe of the SDP, a mock server to test the host client |
-| [`results/`](results/) | logs and reports of the runs |
+- Upstream open62541 defines `_QNX_SOURCE` on QNX since v1.4.12, so that the
+  release compiles there; the changes here are about behaviour, not about the
+  build.
+- [conan-center-index](https://github.com/conan-io/conan-center-index/tree/master/recipes/open62541)
+  has a recipe that builds open62541 for QNX (Neutrino).
+- Two other projects of the QNX hackathon port open62541 with general porting
+  tools: [PortPilot](https://github.com/HyunsikParker/portpilot) builds
+  v1.5.10 and runs upstream's unit tests on a QNX 8.0 x86_64 QEMU target, and
+  [qnx-porter](https://github.com/thegoodengineers/qnx-porter) builds v1.4.6
+  as a static library. This repository instead writes tests for the places
+  where QNX differs from Linux, and runs them against the unchanged release
+  as well.
 
 ## How this was made
 
@@ -162,6 +176,21 @@ loop for assumptions that hold on Linux but not necessarily on QNX, wrote the
 operating system probe to measure them, and kept a change only where the
 measurement on QNX showed the problem. Every number in this repository comes
 from a log under [`results/`](results/).
+
+## Repository layout
+
+| Path | Content |
+|---|---|
+| [`patches/`](patches/) | the changes (MPL-2.0), `series`, format description |
+| [`scripts/port.py`](scripts/port.py) | download, verify, configure and patch the release |
+| [`scripts/o6q.py`](scripts/o6q.py) | build, image, run, report |
+| [`scripts/o6q_client.py`](scripts/o6q_client.py) | host client (python asyncua) for the demo server |
+| [`src/`](src/) | `o6q_check` and its suites, `o6q_envprobe`, `o6q_server` |
+| [`src/qnx/`](src/qnx/) | QNX system information (system page, procfs) and the slog2 logger |
+| [`vm/`](vm/) | what runs on the QNX guest |
+| [`cmake/`](cmake/) | CMake toolchain file for QNX SDP 8.0 |
+| [`tools/`](tools/) | compile-time probes of the SDP, a mock server to test the host client, the video renderer |
+| [`results/`](results/) | logs and reports of the runs |
 
 ## Licence
 

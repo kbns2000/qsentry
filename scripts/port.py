@@ -29,11 +29,11 @@ import os
 import sys
 import urllib.request
 
-VERSION = "v1.4.10"
+VERSION = "v1.4.22"  # the newest release of the 1.4 line (2026-10-30)
 BASE = f"https://github.com/open62541/open62541/releases/download/{VERSION}/"
 FILES = {
-    "open62541.c": "b7aa0a50033047d9e9c8c3f246dd8039524e55e3dd021550a27cab238427fa74",
-    "open62541.h": "cd0d746e7d5a9cce232e52252366a930b0d2f235634b8040436e180d9089b47a",
+    "open62541.c": "763069e2e65242b157f07fbc423c87d1af3d670ff6af409b601beb962843e499",
+    "open62541.h": "47b06f26b44617eb059d86d9c9f53438803e782733e80e096c86622883ff759b",
 }
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -55,6 +55,19 @@ CONFIG = [
      "/* #undef UA_ENABLE_PUBSUB_ENCRYPTION */ /* qnx: upstream has it for Mbed TLS only */\n",
      "PubSub message encryption exists upstream only on Mbed TLS "
      "(upstream: -DUA_ENABLE_PUBSUB_ENCRYPTION=OFF)."),
+    # Not an option: the single file with OpenSSL does not compile without it.
+    ("open62541.c",
+     'static const unsigned char openssl_PEM_PRE[26] = "-----END CERTIFICATE-----";\n',
+     'static const unsigned char client_PEM_END[26] = "-----END CERTIFICATE-----";'
+     ' /* qnx: renamed */\n',
+     "After v1.4.10, src/client/ua_client_connect.c got a static array with the "
+     "name that plugins/crypto/openssl/ua_pki_openssl.c also uses. Upstream compiles "
+     "them as two files; in the single file with OpenSSL they collide (the release is "
+     "configured for Mbed TLS, which hides it). The array of the client is renamed."),
+    ("open62541.c",
+     "UA_BstrstrClient(rc.data, rc.length, openssl_PEM_PRE, 25);\n",
+     "UA_BstrstrClient(rc.data, rc.length, client_PEM_END, 25); /* qnx: renamed */\n",
+     "The one use of the renamed array."),
 ]
 
 # Amalgamated sections (one per original source file) that are removed from
@@ -183,15 +196,21 @@ def load_series():
 
 
 # ------------------------------------------------------------------------ steps
+def sha256_of(path):
+    with open(path, "rb") as fh:
+        return hashlib.sha256(fh.read()).hexdigest()
+
+
 def fetch(outdir):
     os.makedirs(outdir, exist_ok=True)
     for name, sha in FILES.items():
         path = os.path.join(outdir, name + ".orig")
-        if not os.path.exists(path):
+        # A file of another release (from before VERSION changed) is replaced.
+        if not os.path.exists(path) or sha256_of(path) != sha:
             print("download", BASE + name)
-            urllib.request.urlretrieve(BASE + name, path)
-        with open(path, "rb") as fh:
-            got = hashlib.sha256(fh.read()).hexdigest()
+            urllib.request.urlretrieve(BASE + name, path + ".part")
+            os.replace(path + ".part", path)
+        got = sha256_of(path)
         if got != sha:
             die(f"SHA-256 mismatch for {name}: {got}")
         print("ok      ", name, "sha256", sha[:16] + "...")

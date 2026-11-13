@@ -16,7 +16,7 @@
 # warnings of the server.
 #
 @@ hunk
-<<<<<<< open62541 v1.4.10
+<<<<<<< open62541 v1.4.22
     /* Log the name of the remote host */
     char hoststr[UA_MAXHOSTNAME_LENGTH];
     int get_res = UA_getnameinfo((struct sockaddr *)&remote, sizeof(remote),

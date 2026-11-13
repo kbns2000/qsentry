@@ -21,7 +21,7 @@
 # only that no datagram is waiting.
 #
 @@ hunk
-<<<<<<< open62541 v1.4.10
+<<<<<<< open62541 v1.4.22
     /* Receive has failed */
     if(ret <= 0) {
         if(UA_ERRNO == UA_INTERRUPTED)

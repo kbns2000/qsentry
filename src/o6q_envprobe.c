@@ -1301,7 +1301,7 @@ static void nopipe(void) {
 
 /* ---------------------------------------------- floating point encoding */
 
-/* What the IEEE 754 test of open62541.h v1.4.10 (without the port) decides
+/* What the IEEE 754 test of open62541.h v1.4.22 (without the port) decides
  * here. The headers that open62541.h includes before the test are included
  * above; the exact value of the release is "float_ieee754=" in the BUILD line
  * of o6q_check_upstream. */

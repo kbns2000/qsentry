@@ -24,7 +24,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-project(open62541_qnx VERSION 1.4.10 LANGUAGES C)
+project(open62541_qnx VERSION 1.4.22 LANGUAGES C)
 
 option(O6Q_BUILD_UPSTREAM "Also build the unchanged release and o6q_check_upstream" ON)
 set(O6Q_EVENTLOOP "auto" CACHE STRING
