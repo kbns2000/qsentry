@@ -8,13 +8,17 @@
 #
 # A UDP datagram without payload is a valid datagram, and recvfrom() returns
 # 0 for it. The code takes every result <= 0 except EINTR as the end of the
-# socket and closes it. A PubSub connection reopens its receive socket only if
-# it has received a message before; a subscriber that gets an empty datagram
-# before its first message stays without a socket. Anybody who can reach the
-# port can send that datagram.
+# socket and closes it. A PubSub connection of this release does not reopen a
+# receive socket that the EventLoop has closed: its connection callback
+# reconnects only in the state Operational (src/pubsub/ua_pubsub_eventloop.c),
+# and UA_PubSubConnection_setPubSubState() never stores that state for a
+# connection, only PreOperational (src/pubsub/ua_pubsub_connection.c). One
+# empty datagram leaves the subscriber without a socket, while its ReaderGroup
+# and DataSetReader still report Operational. Anybody who can reach the port
+# can send that datagram.
 #
-# The same branch also closes the socket after EAGAIN, which a wake-up without
-# a readable datagram produces.
+# The same branch also closes the socket after EAGAIN or EWOULDBLOCK, which say
+# only that no datagram is waiting.
 #
 @@ hunk
 <<<<<<< open62541 v1.4.10
@@ -29,8 +33,8 @@
     if(ret <= 0) {
         /* qnx: a datagram without payload is a valid datagram, and anybody can
          * send one: recvfrom() returns 0 for it and does not set errno. It is
-         * no reason to close the socket, and neither is a wake-up without a
-         * datagram. */
+         * no reason to close the socket, and neither is EAGAIN, which says
+         * only that no datagram is waiting. */
         if(ret == 0 || UA_ERRNO == UA_INTERRUPTED ||
            UA_ERRNO == UA_AGAIN || UA_ERRNO == UA_WOULDBLOCK)
             return;

@@ -17,6 +17,10 @@
 # listen socket there (they do not on Linux), so send() returns EAGAIN and the
 # stack waits and retries, successfully, without touching errno again.
 #
+# The same holds for a client on any system: its socket is made non-blocking
+# explicitly, so a large request can leave EAGAIN behind, and a server that
+# closes the connection afterwards goes unnoticed.
+#
 @@ hunk
 <<<<<<< open62541 v1.4.10
     /* Receive has failed */
@@ -37,4 +41,6 @@
             UA_ERRNO == UA_WOULDBLOCK ||
             UA_ERRNO == UA_AGAIN))
             return; /* Temporary error on an non-blocking socket */
+        if(ret == 0)
+            errno = 0; /* qnx: no stale errno in the log line below */
 >>>>>>> open62541-qnx

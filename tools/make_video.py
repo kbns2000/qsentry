@@ -149,7 +149,10 @@ def main():
     # 3 method
     tests = sum(len(o6q.TEST_NAME.findall(c.meta["test"])) for c in series)
     im, d = frame()
-    header(d, "The port: ten small changes, each with a test on QNX")
+    words = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+             "ten", "eleven", "twelve"]
+    count = words[len(series)] if len(series) < len(words) else str(len(series))
+    header(d, f"The port: {count} small changes, each with a test on QNX")
     d.rectangle([60, 130, W - 60, 470], fill=PANEL)
     rows = [("release", "open62541.c / .h v1.4.10, SHA-256 checked, never committed"),
             ("patches/", f"{len(series)} changes: reason, upstream file, the test that shows it"),

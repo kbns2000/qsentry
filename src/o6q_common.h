@@ -81,6 +81,8 @@ int o6q_open_fds(void);
  * After O6Q_LOG_CAP lines in one suite the rest is counted, not printed. */
 #define O6Q_LOG_CAP 200
 UA_Logger *o6q_logger(void);
+/* Warnings of the stack so far that name getnameinfo() */
+unsigned o6q_log_getnameinfo(void);
 void o6q_expect_errors(int on);
 
 /* -------------------------------------------------------- server harness */

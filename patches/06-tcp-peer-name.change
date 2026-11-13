@@ -4,12 +4,16 @@
 # title: Pass the real address length to getnameinfo() for a new connection
 # file: open62541.c
 # upstream: arch/eventloop_posix_tcp.c
-# test: core.connect.ipv4 (no "getnameinfo" warning in the log)
+# test: core.connect.ipv4
 #
 # For the log line of a new connection the code calls getnameinfo() with the
 # size of struct sockaddr_storage instead of the length that accept() has
 # returned. A getnameinfo() that compares the length with the address family
-# refuses that. The host string is then used without having been set.
+# refuses that (the KAME code of FreeBSD 11 and older and of NetBSD 6 does;
+# FreeBSD 12 and later accept a longer length). The host string is then used
+# without having been set. o6q_envprobe shows what the target does
+# (getnameinfo.storage_length); core.connect.ipv4 counts the getnameinfo
+# warnings of the server.
 #
 @@ hunk
 <<<<<<< open62541 v1.4.10

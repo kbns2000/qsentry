@@ -63,6 +63,7 @@ static void test_connect(Core *t) {
     UA_StatusCode rc;
     UA_Int32 answer = 0;
     double ms = 0, t0;
+    unsigned gni0, gni;
     char url[64];
 
     o6q_step("connect.ipv4");
@@ -71,10 +72,16 @@ static void test_connect(Core *t) {
         CHECK("connect.ipv4", 0, "cannot create a client");
         return;
     }
+    gni0 = o6q_log_getnameinfo();
     t0 = o6q_now_us();
     rc = UA_Client_connect(t->client, t->url);
     ms = (o6q_now_us() - t0) / 1000.0;
-    CHECK("connect.ipv4", rc == UA_STATUSCODE_GOOD, "%s -> %s in %.1f ms", t->url, SC(rc), ms);
+    /* The server logs the new connection before it answers, so a warning of
+     * its getnameinfo() call is counted by now */
+    gni = o6q_log_getnameinfo() - gni0;
+    CHECK("connect.ipv4", rc == UA_STATUSCODE_GOOD && gni == 0,
+          "%s -> %s in %.1f ms; getnameinfo warnings of the server: %u", t->url, SC(rc), ms,
+          gni);
 
     /* Name resolution on the target: /etc/hosts and the resolver of libsocket. */
     o6q_step("connect.localhost");

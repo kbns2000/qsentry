@@ -288,7 +288,11 @@ def qemu_command(args, arch, vm, interop):
         if interop:
             nic += f",hostfwd=tcp:127.0.0.1:{INTEROP_PORT}-:4840"
         return [qemu, "-accel", "tcg", "-cpu", "max"] + common + [
-            "-drive", f"file={disk},if=ide,id=drv0", "-nic", nic]
+            "-drive", f"file={disk},if=ide,id=drv0", "-nic", nic,
+            # as mkqnximage: an entropy source for the random service, which
+            # OpenSSL and the security suite depend on (rng-builtin: Windows
+            # has no /dev/urandom for rng-random)
+            "-object", "rng-builtin,id=rng0", "-device", "virtio-rng-pci,rng=rng0"]
     return [qemu, "-machine", aarch64_machine(qemu), "-cpu", "cortex-a57"] + common + [
         "-drive", f"file={disk},if=none,id=drv0", "-device", "virtio-blk-device,drive=drv0",
         "-netdev", "user,id=net0", "-device", "virtio-net-device,netdev=net0",

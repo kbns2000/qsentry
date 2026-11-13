@@ -7,14 +7,19 @@
 # test: robust.aborted_connect
 #
 # When accept() fails with anything but EINTR, the listen socket is closed
-# and the server accepts no connection any more until it is restarted.
+# and the server accepts no connection on it any more until it is restarted.
 #
 # A connection that the peer resets while it waits in the listen queue is such
-# a failure on a BSD network stack: accept() returns ECONNABORTED, or the
-# stack has already removed the connection and the non-blocking accept()
-# returns EWOULDBLOCK. Linux hands out the dead connection instead, so the
-# problem does not show there. One TCP handshake followed by a reset is all
-# that a peer needs to send.
+# a failure on a BSD network stack: the connection stays in the queue, and
+# accept() takes it out, closes it and fails with ECONNABORTED. Linux hands
+# out the dead connection instead, so the problem does not show there. One
+# TCP handshake followed by a reset is all that a peer needs to send.
+# EAGAIN/EWOULDBLOCK (nothing to accept on the non-blocking listen socket) is
+# no reason to close it either.
+#
+# EMFILE, ENFILE, ENOBUFS and ENOMEM still close the listen socket, as in the
+# release: the connection stays in the queue then, and returning would make
+# the EventLoop spin on the readable listen socket.
 #
 @@ hunk
 <<<<<<< open62541 v1.4.10
@@ -24,9 +29,9 @@
 =======
         /* Temporary error -- retry.
          * qnx: so is a connection that the peer has reset while it waited in
-         * the listen queue. A BSD network stack reports it as ECONNABORTED, or
-         * it has removed it already and the non-blocking accept() finds
-         * nothing. Neither is a reason to close the listen socket. */
+         * the listen queue: a BSD network stack takes it out of the queue and
+         * reports ECONNABORTED. EAGAIN/EWOULDBLOCK means that there was
+         * nothing to accept. Neither is a reason to close the listen socket. */
         if(UA_ERRNO == UA_INTERRUPTED || UA_ERRNO == ECONNABORTED ||
            UA_ERRNO == UA_AGAIN || UA_ERRNO == UA_WOULDBLOCK)
             return;

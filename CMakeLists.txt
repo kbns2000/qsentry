@@ -5,8 +5,8 @@
 #         -DCMAKE_TOOLCHAIN_FILE=cmake/qnx800.toolchain.cmake -DQNX_ARCH=x86_64
 #   cmake --build build/x86_64
 #
-# QNX_ARCH is x86_64 or aarch64le. Without the toolchain file the same sources
-# build for the host (Linux), which is how the code is checked in CI.
+# QNX_ARCH is x86_64 or aarch64le. The file also configures for the host
+# (Linux), but all results of this project come from the QNX builds.
 #
 # Targets
 #   open62541            static library of the port          (libopen62541.a)

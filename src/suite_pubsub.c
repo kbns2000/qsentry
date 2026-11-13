@@ -102,26 +102,50 @@ static const char *state_name(UA_PubSubState s) {
 }
 
 /* The first interface that is up, can do multicast, is not the loopback and
- * has an IPv4 address. */
+ * has an IPv4 address. One that is also running is preferred: sending on an
+ * interface that is not fails with ENETDOWN. */
 static int multicast_interface(char *name, size_t name_len, char *addr, size_t addr_len) {
     struct ifaddrs *list = NULL, *ifa;
-    int found = 0;
+    int pass, found = 0;
     if(getifaddrs(&list) != 0)
         return 0;
-    for(ifa = list; ifa && !found; ifa = ifa->ifa_next) {
-        if(!ifa->ifa_addr || ifa->ifa_addr->sa_family != AF_INET)
-            continue;
-        if(!(ifa->ifa_flags & IFF_UP) || !(ifa->ifa_flags & IFF_MULTICAST) ||
-           (ifa->ifa_flags & IFF_LOOPBACK))
-            continue;
-        snprintf(name, name_len, "%s", ifa->ifa_name);
-        if(!inet_ntop(AF_INET, &((struct sockaddr_in *)(void *)ifa->ifa_addr)->sin_addr, addr,
-                      (socklen_t)addr_len))
-            snprintf(addr, addr_len, "?");
-        found = 1;
+    for(pass = 0; pass < 2 && !found; pass++) {
+        for(ifa = list; ifa && !found; ifa = ifa->ifa_next) {
+            if(!ifa->ifa_addr || ifa->ifa_addr->sa_family != AF_INET)
+                continue;
+            if(!(ifa->ifa_flags & IFF_UP) || !(ifa->ifa_flags & IFF_MULTICAST) ||
+               (ifa->ifa_flags & IFF_LOOPBACK))
+                continue;
+            if(pass == 0 && !(ifa->ifa_flags & IFF_RUNNING))
+                continue;
+            snprintf(name, name_len, "%s", ifa->ifa_name);
+            if(!inet_ntop(AF_INET, &((struct sockaddr_in *)(void *)ifa->ifa_addr)->sin_addr,
+                          addr, (socklen_t)addr_len))
+                snprintf(addr, addr_len, "?");
+            found = 1;
+        }
     }
     freeifaddrs(list);
     return found;
+}
+
+/* Sending to a group without a named interface needs a route for the group
+ * (FreeBSD and Linux return ENETUNREACH without one). connect() on a UDP
+ * socket does that lookup and sends nothing. Returns 0 or the errno. */
+static int group_route(const char *group) {
+    struct sockaddr_in a;
+    int err = 0, fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if(fd < 0)
+        return errno;
+    memset(&a, 0, sizeof(a));
+    a.sin_family = AF_INET;
+    a.sin_port = htons(9);
+    if(inet_pton(AF_INET, group, &a.sin_addr) != 1)
+        err = EINVAL;
+    else if(connect(fd, (struct sockaddr *)&a, sizeof(a)) != 0)
+        err = errno;
+    close(fd);
+    return err;
 }
 
 /* One UDP datagram without payload to the loopback address. */
@@ -479,8 +503,14 @@ static void run_case(const char *name, unsigned tcp_port, char *url, char *inter
               state_name(dr));
 
         if(empty_port) {
-            unsigned before, after, per_second = (unsigned)(1000.0 / PS_INTERVAL_MS);
-            int err = 0, sent;
+            /* The release closes the receiving socket: from then on no
+             * DataSet arrives and one descriptor less is open. The rate is
+             * compared with the one of the flow phase, not the nominal one,
+             * so that a slow emulated CPU cannot fail the port. */
+            unsigned before, after, need = (unsigned)(0.5 * (double)n / secs);
+            int err = 0, sent, fds_a = o6q_open_fds(), fds_b;
+            if(need < 1)
+                need = 1;
             snprintf(test, sizeof(test), "%s.empty_datagram", name);
             o6q_step(test);
             sent = send_empty_datagram(empty_port, &err);
@@ -488,13 +518,15 @@ static void run_case(const char *name, unsigned tcp_port, char *url, char *inter
             before = probe_datasets(&probe);
             o6q_sleep_ms(1000);
             after = probe_datasets(&probe);
+            fds_b = o6q_open_fds();
             if(sent != 0)
                 o6q_skip(test, "cannot send a datagram without payload: %s", strerror(err));
             else
-                CHECK(test, after - before >= per_second / 2,
+                CHECK(test, after - before >= need && fds_b == fds_a,
                       "one UDP datagram without payload sent to port %u; in the second after "
-                      "that the subscriber received %u DataSets (%u expected)",
-                      empty_port, after - before, per_second);
+                      "that the subscriber received %u DataSets (at least %u needed, %.1f per "
+                      "second in the flow phase); open descriptors %d -> %d",
+                      empty_port, after - before, need, (double)n / secs, fds_a, fds_b);
         }
     }
 
@@ -539,13 +571,22 @@ int o6q_suite_pubsub(unsigned port, int n) {
                                     "multicast (other than the loopback)");
         o6q_skip("multicast_anyif.setup", "same reason");
     } else {
+        int rerr;
         o6q_info("multicast interface %s (%s), groups %s and %s", ifname, ifaddr, PS_GROUP,
                  PS_GROUP_EXAMPLES);
         snprintf(url, sizeof(url), "opc.udp://%s:%u/", PS_GROUP, port + 11);
         run_case("multicast", port, url, ifname, 0, 0);
-        /* As in the upstream examples: their group, and no interface named. */
-        snprintf(url, sizeof(url), "opc.udp://%s:%u/", PS_GROUP_EXAMPLES, port + 12);
-        run_case("multicast_anyif", port, url, NULL, 1, 0);
+        /* As in the upstream examples: their group, and no interface named.
+         * Without a named interface the system needs a route to send. */
+        rerr = group_route(PS_GROUP_EXAMPLES);
+        if(rerr != 0) {
+            o6q_skip("multicast_anyif.setup", "no route for %s (%s): without a named interface "
+                                              "the system needs one to send", PS_GROUP_EXAMPLES,
+                     strerror(rerr));
+        } else {
+            snprintf(url, sizeof(url), "opc.udp://%s:%u/", PS_GROUP_EXAMPLES, port + 12);
+            run_case("multicast_anyif", port, url, NULL, 1, 0);
+        }
     }
 
     return o6q_end();

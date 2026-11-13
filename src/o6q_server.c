@@ -126,11 +126,6 @@ static void write_scalar(UA_Server *server, const Demo *d, int v, void *value,
     UA_Server_writeValue(server, var_id(d, v), var);
 }
 
-static void write_string(UA_Server *server, const Demo *d, int v, const char *text) {
-    UA_String s = UA_STRING((char *)(uintptr_t)text);
-    write_scalar(server, d, v, &s, &UA_TYPES[UA_TYPES_STRING]);
-}
-
 static void update_load(Demo *d, UA_Double *loads, size_t *n) {
     double sum = 0.0;
     unsigned valid = 0;

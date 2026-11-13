@@ -31,6 +31,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <poll.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,7 +41,9 @@
 #define NODE(name) UA_NODEID_STRING(O6Q_NS, name)
 
 #define RB_ROUNDS 5
-#define RB_BIG (4u * 1024u * 1024u)
+/* larger than what the loopback socket buffers take while the client does not
+ * read, so that the server's send() meets EAGAIN */
+#define RB_BIG (8u * 1024u * 1024u)
 #define RB_CLOSE_WAIT_MS 3000.0
 
 /* A plain TCP connection to the loopback address, without OPC UA on it. */
@@ -222,6 +225,49 @@ static void big_read_cb(UA_Client *client, void *userdata, UA_UInt32 request_id,
  * fills up, send() reports EAGAIN, the server waits and goes on.  Meanwhile
  * another peer closes its connection.  recv() returns 0 for that one, and
  * errno still holds the EAGAIN of the send(). */
+/* Whether an accepted socket inherits O_NONBLOCK from the listen socket (1)
+ * or not (0); -1 if that cannot be found out. */
+static int accept_inherits_nonblock(void) {
+    struct sockaddr_in a;
+    socklen_t len = sizeof(a);
+    int l, c = -1, s = -1, res = -1, flags;
+    l = socket(AF_INET, SOCK_STREAM, 0);
+    if(l < 0)
+        return -1;
+    memset(&a, 0, sizeof(a));
+    a.sin_family = AF_INET;
+    a.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    if(bind(l, (struct sockaddr *)&a, sizeof(a)) != 0 || listen(l, 1) != 0 ||
+       getsockname(l, (struct sockaddr *)&a, &len) != 0)
+        goto done;
+    flags = fcntl(l, F_GETFL);
+    if(flags < 0 || fcntl(l, F_SETFL, flags | O_NONBLOCK) != 0)
+        goto done;
+    c = socket(AF_INET, SOCK_STREAM, 0);
+    if(c < 0 || connect(c, (struct sockaddr *)&a, sizeof(a)) != 0)
+        goto done;
+    for(int i = 0; i < 100 && s < 0; i++) {
+        s = accept(l, NULL, NULL);
+        if(s < 0) {
+            if(errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR)
+                goto done;
+            o6q_sleep_ms(10);
+        }
+    }
+    if(s >= 0) {
+        flags = fcntl(s, F_GETFL);
+        if(flags >= 0)
+            res = (flags & O_NONBLOCK) ? 1 : 0;
+    }
+done:
+    if(s >= 0)
+        close(s);
+    if(c >= 0)
+        close(c);
+    close(l);
+    return res;
+}
+
 static void test_peer_close(unsigned port) {
     static O6QModel model;
     O6QServer srv;
@@ -236,6 +282,14 @@ static void test_peer_close(unsigned port) {
     big.status = UA_STATUSCODE_BADINTERNALERROR;
 
     o6q_step("peer_close");
+    /* The release can only fail here if the server's send() returns EAGAIN,
+     * which needs a non-blocking accepted socket. The server never sets that
+     * itself: it relies on the listen socket passing it on. */
+    if(accept_inherits_nonblock() == 0) {
+        o6q_skip("peer_close", "accepted sockets do not inherit O_NONBLOCK here, so send() "
+                               "blocks instead of returning EAGAIN: the release cannot fail");
+        return;
+    }
     snprintf(url, sizeof(url), "opc.tcp://127.0.0.1:%u", port);
     rc = o6q_server_start_model(&srv, &model, port);
     if(rc != UA_STATUSCODE_GOOD) {

@@ -24,6 +24,7 @@ static struct {
     unsigned pass, fail, skip;
     unsigned log_warnings, log_errors; /* unexpected ones only */
     unsigned log_lines, log_suppressed;
+    unsigned log_getnameinfo; /* warnings that name getnameinfo() */
     double t0_us;
     int expect_errors;
     int verbose;
@@ -258,6 +259,8 @@ static void log_cb(void *context, UA_LogLevel level, UA_LogCategory category,
     vsnprintf(buf, sizeof(buf), msg, args);
 
     pthread_mutex_lock(&g.lock);
+    if((int)level >= (int)UA_LOGLEVEL_WARNING && strstr(buf, "getnameinfo") != NULL)
+        g.log_getnameinfo++;
     if(!g.expect_errors) {
         if((int)level >= (int)UA_LOGLEVEL_ERROR)
             g.log_errors++;
@@ -280,6 +283,14 @@ static UA_Logger g_logger = {log_cb, NULL, NULL};
 
 UA_Logger *o6q_logger(void) {
     return &g_logger;
+}
+
+unsigned o6q_log_getnameinfo(void) {
+    unsigned n;
+    pthread_mutex_lock(&g.lock);
+    n = g.log_getnameinfo;
+    pthread_mutex_unlock(&g.lock);
+    return n;
 }
 
 void o6q_expect_errors(int on) {
