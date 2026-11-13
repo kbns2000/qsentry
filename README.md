@@ -29,7 +29,46 @@ of the 1.4 line, **open62541 v1.4.22**, on **QNX 8.0**, with **encryption**
   with `mkqnximage`, boots it, lets an independent OPC UA client (python
   asyncua) talk to the demo server, and writes the report.
 
-<!-- FILL: results table from the QEMU run -->
+## Results on QNX 8.0
+
+One unattended run on a QEMU x86_64 guest (QNX 8.0.0, 2 CPUs, software
+emulation on a Windows PC), report: [`results/runs/20261113-205131/SUMMARY.md`](results/runs/20261113-205131/SUMMARY.md),
+console log: [`serial.log`](results/runs/20261113-205131/x86_64/serial.log).
+
+| suite | port: pass / fail | unchanged v1.4.22: pass / fail |
+|---|---|---|
+| core | 29 / 1 | 29 / 1 |
+| security | 23 / 0 | 15 / 5 |
+| pubsub | 14 / 0 | 7 / 3 |
+| highfd | 6 / 0 | 4 / 2 |
+| robust | 5 / 1 | 2 / 4 |
+| nopipe | 3 / 0 | 0 / 2 |
+
+- **All 17 tests named by the seven changes pass with the port.** With the
+  unchanged release 15 of them fail and 2 cannot run, because the step
+  before them already failed (table below).
+- **Independent client:** python asyncua on the Windows host talks to the
+  demo server on QNX through QEMU's port forward: 8 of 8 checks pass. These
+  cover the endpoint list (7 endpoints), anonymous login refused, and
+  `Basic256Sha256` SignAndEncrypt with user name (17 variables read). They
+  also cover 15 data changes in 15 s on a subscription, `Aes128Sha256RsaOaep`
+  and `Aes256Sha256RsaPss`, and the refusal of a wrong password and of a
+  certificate that is not in the trust folder.
+- Latency on the emulated CPU (port, loopback, 1000 calls): read p50
+  2.1 ms / p99 4.4 ms; encrypted read (`Basic256Sha256` SignAndEncrypt)
+  p50 2.6 ms; PubSub UDP DataSet p50 1.8 ms; a 10 ms timer is late by
+  0.5 ms (p50).
+- Failing in both builds, not changed here: a client object that was
+  connected when the server went away does not connect again
+  (`core.restart.reconnect`; after `UA_Client_disconnect()` it does,
+  `core.restart.reconnect_after_disconnect`), and one descriptor more is open
+  after the robust suite than before it (`robust.descriptors`, 4 -> 5).
+
+The earlier runs under [`results/runs/`](results/runs/) are kept: each of them
+found something the next one fixed. The demo server's arrays needed
+ArrayDimensions in v1.4.22. Multicast PubSub failed (change 07). The guest
+received no packets until its NIC sat in the PCI slot that the image's
+`pci_hw.cfg` routes interrupts for.
 
 ## The changes
 
@@ -52,7 +91,25 @@ define a static array `openssl_PEM_PRE`, which collide in the one file, so
 `port.py` renames the one of the client. Both builds, release and port, get
 this configuration.
 
-<!-- FILL: per-change result (release vs port) -->
+### Each change on the target
+
+| change | test | port | unchanged v1.4.22 |
+|---|---|---|---|
+| 01 eventloop-ppoll | highfd.client, highfd.sessions | PASS | FAIL: connect -> BadTimeout, 0 of 100 reads |
+| 01 eventloop-ppoll | robust.idle_client | PASS (10 idle iterations take 522 ms) | FAIL: 0.2 ms, the loop spins |
+| 02 tcp-accept-aborted | robust.aborted_connect | PASS | FAIL: the listen socket is closed, the next client is refused |
+| 03 tcp-recv-eof | robust.peer_close | PASS | FAIL: a closed connection stays open for 3 s and costs CPU time |
+| 04 udp-empty-datagram | pubsub.unicast.empty_datagram | PASS | FAIL: 0 DataSets after one empty datagram |
+| 05 interrupt-selfpipe | nopipe.server, nopipe.client | PASS | FAIL: the server does not start without the pipe manager |
+| 06 pki-folders | security.certfolder.* (5 tests) | PASS | FAIL: certificate folders are "Linux only" |
+| 07 udp-multicast-if | pubsub.multicast*.setup / .flow (4 tests) | PASS | FAIL: BadInternalError, `EADDRNOTAVAIL` |
+
+The operating system probe shows the QNX behaviour behind each change next to
+Linux: `FD_SET()` above `FD_SETSIZE` (256 on QNX) writes past the `fd_set`
+instead of stopping the program, `accept()` after a reset in the listen queue
+fails with `ECONNABORTED`, `pipe()` fails with `ENOSYS` without the pipe
+manager, and `IP_MULTICAST_IF` with a `struct ip_mreq` fails with
+`EADDRNOTAVAIL` (Linux: ok).
 
 ## Build and run
 
