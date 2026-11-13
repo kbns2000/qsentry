@@ -291,7 +291,10 @@ def qemu_command(args, arch, vm, interop):
             "-drive", f"file={disk},if=ide,id=drv0", "-nic", nic]
     return [qemu, "-machine", aarch64_machine(qemu), "-cpu", "cortex-a57"] + common + [
         "-drive", f"file={disk},if=none,id=drv0", "-device", "virtio-blk-device,drive=drv0",
-        "-netdev", "user,id=net0", "-device", "virtio-net-device,netdev=net0"]
+        "-netdev", "user,id=net0", "-device", "virtio-net-device,netdev=net0",
+        # as mkqnximage: the third virtio-mmio device (0xa003a00) is the entropy
+        # source of 'random -l devr-virtio.so:mem=0xa003a00' in the aarch64 image
+        "-object", "rng-builtin,id=rng0", "-device", "virtio-rng-device,rng=rng0"]
 
 
 def read_text(path):
