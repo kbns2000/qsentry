@@ -19,3 +19,5 @@ patches/LICENSE-MPL-2.0 text eol=lf
 *.der binary
 *.mp4 binary
 *.png binary
+# raw QEMU console logs: kept byte for byte (the guest prints stray CRs)
+results/runs/**/serial.log -text
