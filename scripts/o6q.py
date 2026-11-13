@@ -328,8 +328,14 @@ def cmd_run(args):
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     rundir = os.path.join(ROOT, "results", "runs", stamp)
     procs = {}
+    skipped = {}
     for arch in args.arch:
         vm = os.path.join(args.vmroot, arch)
+        if not os.path.exists(os.path.join(vm, "output", "ifs.bin")):
+            # e.g. an SDP without the QEMU board support for this CPU
+            skipped[arch] = "not run: no image (o6q.py image)"
+            say(f"{arch}: no image in {vm}, not run")
+            continue
         adir = os.path.join(rundir, arch)
         os.makedirs(adir)
         interop = args.interop and arch == "x86_64"
@@ -341,6 +347,8 @@ def cmd_run(args):
         procs[arch] = (subprocess.Popen(cmd, cwd=adir, stdout=qlog, stderr=subprocess.STDOUT),
                        qlog, time.time())
 
+    if not procs:
+        die("no image to run: run 'o6q.py image' first")
     deadline = time.time() + args.timeout * 60
     interop_done = not args.interop or "x86_64" not in procs
     status = {}
@@ -375,7 +383,7 @@ def cmd_run(args):
                     runs = re.findall(r"O6Q RUN (\S+)", serial)
                     say(f"{arch}: running {runs[-1] if runs else 'boot'}")
     with open(os.path.join(rundir, "qemu_status.txt"), "w") as fh:
-        for arch, s in status.items():
+        for arch, s in list(status.items()) + list(skipped.items()):
             fh.write(f"{arch} {s}\n")
     for arch in procs:
         scrub_file(os.path.join(rundir, arch, "qemu.log"))
