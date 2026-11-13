@@ -1,0 +1,2 @@
+x86_64 exit 0 after 631 s
+aarch64le not run: no image (o6q.py image)
