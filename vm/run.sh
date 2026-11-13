@@ -46,7 +46,7 @@ sleep 1
 if [ -f $D/demo.conf ]; then
     . $D/demo.conf
     echo "O6Q GUEST demo server for the host client"
-    ./o6q_server -p 4840 -s 240 --secure --trust $D/pki/trusted \
+    ./o6q_server -p 4840 -s 420 --secure --trust $D/pki/trusted \
         --user "$O6Q_DEMO_USER:$O6Q_DEMO_PASS" &
     srv=$!
     wait $srv

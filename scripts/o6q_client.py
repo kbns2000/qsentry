@@ -44,7 +44,7 @@ def report(ok, name, text):
     print(f"O6Q {'PASS' if ok else 'FAIL'} host.{name} {text}", flush=True)
 
 
-def make_cert(cert_path, key_path, common_name="o6q host client"):
+def make_cert(cert_path, key_path, common_name="o6q host client", uri=CLIENT_URI):
     """A self-signed application instance certificate (RSA 2048, SHA-256)."""
     from cryptography import x509
     from cryptography.hazmat.primitives import hashes, serialization
@@ -62,7 +62,7 @@ def make_cert(cert_path, key_path, common_name="o6q host client"):
             .not_valid_before(now - datetime.timedelta(days=1))
             .not_valid_after(now + datetime.timedelta(days=365))
             .add_extension(x509.SubjectAlternativeName(
-                [x509.UniformResourceIdentifier(CLIENT_URI), x509.DNSName("localhost")]),
+                [x509.UniformResourceIdentifier(uri), x509.DNSName("localhost")]),
                 critical=False)
             .add_extension(x509.BasicConstraints(ca=False, path_length=None), critical=True)
             .add_extension(x509.KeyUsage(

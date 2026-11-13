@@ -580,8 +580,32 @@ def main():
     p.add_argument("rundir", nargs="?")
     common(sub.add_parser("all", help="build, image, run"), image=True, run_=True)
     args = ap.parse_args()
+    # everything this script prints also goes to results/o6q_<command>.log
+    os.makedirs(os.path.join(ROOT, "results"), exist_ok=True)
+    log = open(os.path.join(ROOT, "results", f"o6q_{args.command}.log"), "w",
+               encoding="utf-8", errors="replace")
+    sys.stdout, sys.stderr = Tee(sys.stdout, log), Tee(sys.stderr, log)
+    print(f"o6q.py {' '.join(sys.argv[1:])} at {datetime.datetime.now():%Y-%m-%d %H:%M:%S}",
+          flush=True)
     {"build": cmd_build, "image": cmd_image, "run": cmd_run, "report": cmd_report,
      "all": cmd_all}[args.command](args)
+
+
+class Tee:
+    """Writes to a stream and to a log file."""
+
+    def __init__(self, stream, log):
+        self.stream, self.log = stream, log
+
+    def write(self, text):
+        self.stream.write(text)
+        self.log.write(text)
+        self.log.flush()
+        return len(text)
+
+    def flush(self):
+        self.stream.flush()
+        self.log.flush()
 
 
 if __name__ == "__main__":
