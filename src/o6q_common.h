@@ -47,6 +47,8 @@ void o6q_info(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
 
 /* ---------------------------------------------------------- time, stats */
 double o6q_now_us(void); /* CLOCK_MONOTONIC in microseconds */
+/* CPU time that a thread has used, in microseconds; < 0 if unknown */
+double o6q_thread_cpu_us(pthread_t thread);
 void o6q_sleep_ms(unsigned ms);
 /* Sorts v and prints one "O6Q LAT" line. */
 void o6q_lat(const char *what, double *v, size_t n);

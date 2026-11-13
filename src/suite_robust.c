@@ -71,15 +71,6 @@ static void tcp_reset(int fd) {
     close(fd);
 }
 
-/* CPU time that a thread has used, in microseconds; < 0 if unknown */
-static double thread_cpu_us(pthread_t thread) {
-    clockid_t clock;
-    struct timespec ts;
-    if(pthread_getcpuclockid(thread, &clock) != 0 || clock_gettime(clock, &ts) != 0)
-        return -1.0;
-    return (double)ts.tv_sec * 1e6 + (double)ts.tv_nsec / 1e3;
-}
-
 /* ------------------------------------------------------------ idle_client */
 
 /* An event loop without a descriptor: a client that is not connected. The
@@ -305,7 +296,7 @@ static void test_peer_close(unsigned port) {
     read_ms = (o6q_now_us() - t0) / 1000.0;
 
     /* The server has to notice the closed connection and close its side. */
-    cpu0 = thread_cpu_us(srv.thread);
+    cpu0 = o6q_thread_cpu_us(srv.thread);
     t0 = o6q_now_us();
     while(!closed && (o6q_now_us() - t0) / 1000.0 < RB_CLOSE_WAIT_MS) {
         struct pollfd p;
@@ -320,7 +311,7 @@ static void test_peer_close(unsigned port) {
         }
     }
     close_ms = (o6q_now_us() - t0) / 1000.0;
-    cpu1 = thread_cpu_us(srv.thread);
+    cpu1 = o6q_thread_cpu_us(srv.thread);
 
     CHECK("peer_close",
           big.done && big.status == UA_STATUSCODE_GOOD && big.length == RB_BIG && closed,

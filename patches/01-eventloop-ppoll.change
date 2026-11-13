@@ -4,7 +4,7 @@
 # title: Wait in ppoll() instead of select()
 # file: open62541.c
 # upstream: arch/eventloop_posix.h arch/eventloop_posix_select.c
-# test: highfd.server highfd.client highfd.sessions robust.idle_client
+# test: highfd.client highfd.sessions highfd.idle robust.idle_client
 #
 # open62541 waits in epoll on Linux. On every other POSIX system its event
 # loop calls select(), and that code puts every registered descriptor into an
@@ -12,10 +12,11 @@
 # FD_SETSIZE or more makes FD_SET() write outside of the fd_set, on the stack
 # of UA_EventLoopPOSIX_pollFDs.
 #
-# On QNX 8.0 FD_SETSIZE is 256 while a process may by default open 1000
-# descriptors, so the case is within reach: a server with some hundred
+# The case is within reach wherever FD_SETSIZE is smaller than the number of
+# descriptors a process may open (RLIMIT_NOFILE): a server with a few hundred
 # connections, or an application that has many files or devices open before
-# it starts the server.
+# it starts the server. o6q_envprobe prints both values on the target
+# (fd.FD_SETSIZE, fd.rlimit_nofile).
 #
 # The change keeps the select() code and adds a second version of
 # UA_EventLoopPOSIX_pollFDs that waits in ppoll(). It is chosen with
@@ -32,7 +33,9 @@
  *   O6Q_EVENTLOOP_POLL    ppoll(), the default on QNX
  *   O6Q_EVENTLOOP_SELECT  select(), as in the release
  * Both are in eventloop_posix_select.c. On Linux either of them replaces
- * epoll, which makes it possible to test this code there. */
+ * epoll, which makes it possible to test this code there. Without epoll the
+ * interrupt manager uses a self-pipe instead of signalfd (as on QNX), and a
+ * process can then have only one of them. */
 #if !defined(O6Q_EVENTLOOP_POLL) && !defined(O6Q_EVENTLOOP_SELECT) && \
     defined(__QNXNTO__)
 # define O6Q_EVENTLOOP_POLL 1
@@ -63,8 +66,8 @@ setFDSets(UA_EventLoopPOSIX *el, fd_set *readset, fd_set *writeset, fd_set *errs
  *
  * select() cannot wait on a descriptor whose number is FD_SETSIZE or more,
  * and FD_SET() with such a number writes outside of the fd_set. The version
- * above does not check for that. On QNX 8.0 FD_SETSIZE is 256 and a process
- * may by default open 1000 descriptors.
+ * above does not check for that, and a process may open more descriptors
+ * than FD_SETSIZE.
  *
  * ppoll() takes an array of descriptors, so the number of a descriptor does
  * not matter, and the timeout keeps its resolution. Where this version
@@ -94,10 +97,17 @@ UA_EventLoopPOSIX_pollFDs(UA_EventLoopPOSIX *el, UA_DateTime listenTimeout) {
     size_t n = el->fdsSize;
     if(n > O6Q_POLL_ONSTACK) {
         heap = UA_malloc(n * (sizeof(UA_RegisteredFD*) + sizeof(struct pollfd)));
-        if(!heap)
-            return UA_STATUSCODE_BADOUTOFMEMORY;
-        rfds = (UA_RegisteredFD**)heap;
-        pfds = (struct pollfd*)(rfds + n);
+        if(heap) {
+            rfds = (UA_RegisteredFD**)heap;
+            pfds = (struct pollfd*)(rfds + n);
+        } else {
+            /* Do not return at once (the caller would spin): wait on the
+             * first descriptors, the others when memory is back */
+            UA_LOG_WARNING(el->eventLoop.logger, UA_LOGCATEGORY_EVENTLOOP,
+                           "Out of memory: waiting on %u of %u descriptors",
+                           (unsigned)O6Q_POLL_ONSTACK, (unsigned)n);
+            n = O6Q_POLL_ONSTACK;
+        }
     }
     for(size_t i = 0; i < n; i++) {
         UA_RegisteredFD *rfd = el->fds[i];
@@ -176,7 +186,7 @@ UA_EventLoopPOSIX_pollFDs(UA_EventLoopPOSIX *el, UA_DateTime listenTimeout) {
         rfd->eventSourceCB(rfd->es, rfd, event);
 
         /* The fd has removed itself */
-        if(i == el->fdsSize || rfd != el->fds[i])
+        if(i >= el->fdsSize || rfd != el->fds[i])
             i--;
     }
 

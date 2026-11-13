@@ -37,6 +37,14 @@ double o6q_now_us(void) {
     return (double)ts.tv_sec * 1e6 + (double)ts.tv_nsec / 1e3;
 }
 
+double o6q_thread_cpu_us(pthread_t thread) {
+    clockid_t clock;
+    struct timespec ts;
+    if(pthread_getcpuclockid(thread, &clock) != 0 || clock_gettime(clock, &ts) != 0)
+        return -1.0;
+    return (double)ts.tv_sec * 1e6 + (double)ts.tv_nsec / 1e3;
+}
+
 void o6q_sleep_ms(unsigned ms) {
     struct timespec ts;
     ts.tv_sec = (time_t)(ms / 1000);

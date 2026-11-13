@@ -9,7 +9,7 @@
  *
  * The suite occupies the descriptors below FD_SETSIZE and then runs a server
  * and clients.  It is run twice: with the event loop of the port and, as
- * "highfd@select", with the unchanged upstream one.
+ * "highfd@upstream", with the unchanged release (select() on QNX).
  *
  * SPDX-License-Identifier: Apache-2.0 */
 #ifndef _QNX_SOURCE
@@ -143,6 +143,22 @@ int o6q_suite_highfd(unsigned port, int n) {
     CHECK("sessions", connected == HF_CLIENTS && good == HF_CLIENTS * 10,
           "%d of %d more clients connected (%s); %d of %d reads returned the value", connected,
           HF_CLIENTS, SC(first_error), good, HF_CLIENTS * 10);
+
+    /* A select() loop that answers but never sleeps would pass the steps
+     * above. Without requests the server thread has to wait. */
+    o6q_step("idle");
+    {
+        double c0 = o6q_thread_cpu_us(srv.thread), w0 = o6q_now_us(), c1, w;
+        o6q_sleep_ms(1000);
+        c1 = o6q_thread_cpu_us(srv.thread);
+        w = o6q_now_us() - w0;
+        if(c0 < 0 || c1 < 0)
+            o6q_skip("idle", "no CPU clock for the server thread");
+        else
+            CHECK("idle", c1 - c0 < 0.5 * w,
+                  "the server thread used %.0f ms of CPU time in %.0f ms without requests",
+                  (c1 - c0) / 1000.0, w / 1000.0);
+    }
 
 cleanup:
     o6q_step("stop");
