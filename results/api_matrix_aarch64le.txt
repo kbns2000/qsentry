@@ -2,6 +2,16 @@
 O6Q_API library socket yes
 O6Q_API library slog2 yes
 O6Q_API package OpenSSL-3.0.20 yes
+O6Q_API header net/if_dl.h yes
+O6Q_API header net/bpf.h yes
+O6Q_API header net/ethernet.h yes
+O6Q_API header netinet/if_ether.h yes
+O6Q_API header netpacket/packet.h no
+O6Q_API header linux/if_packet.h no
+O6Q_API header net/if_types.h yes
+O6Q_API header net/route.h yes
+O6Q_API header netinet/ip.h yes
+O6Q_API header netinet6/in6.h no
 O6Q_API header stdatomic.h yes
 O6Q_API header sys/epoll.h no
 O6Q_API header sys/event.h no
@@ -12,12 +22,6 @@ O6Q_API header sys/select.h yes
 O6Q_API header poll.h yes
 O6Q_API header ifaddrs.h yes
 O6Q_API header net/if.h yes
-O6Q_API header net/if_dl.h no
-O6Q_API header net/bpf.h no
-O6Q_API header net/ethernet.h no
-O6Q_API header netinet/if_ether.h no
-O6Q_API header netpacket/packet.h no
-O6Q_API header linux/if_packet.h no
 O6Q_API header sys/sockio.h yes
 O6Q_API header sys/ioctl.h yes
 O6Q_API header sys/un.h yes
@@ -76,11 +80,11 @@ O6Q_API symbol IPV6_PKTINFO yes
 O6Q_API symbol IPV6_RECVPKTINFO yes
 O6Q_API symbol MCAST_JOIN_GROUP yes
 O6Q_API symbol INADDR_LOOPBACK yes
-O6Q_API member struct ip_mreq.imr_interface yes
-O6Q_API member struct ip_mreqn.imr_ifindex yes
-O6Q_API member struct ipv6_mreq.ipv6mr_interface yes
-O6Q_API member struct sockaddr_in.sin_len yes
-O6Q_API member struct sockaddr_storage.ss_len yes
+O6Q_API member ip_mreq.imr_interface yes
+O6Q_API member ip_mreqn.imr_ifindex yes
+O6Q_API member ipv6_mreq.ipv6mr_interface yes
+O6Q_API member sockaddr_in.sin_len yes
+O6Q_API member sockaddr_storage.ss_len yes
 O6Q_API symbol TCP_NODELAY yes
 O6Q_API symbol TCP_KEEPIDLE yes
 O6Q_API symbol TCP_KEEPINTVL yes
