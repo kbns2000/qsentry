@@ -1,0 +1,30 @@
+# open62541-qnx change: qnx-source
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Ask the QNX headers for the full API
+# file: open62541.h
+# upstream: include/open62541/config.h.in
+# test: build (no implicit function declaration)
+#
+# The header defines _XOPEN_SOURCE 600 before the first system header. The
+# QNX headers then hide what is not part of that standard, among it functions
+# that the POSIX event loop calls. _QNX_SOURCE makes them visible again; it is
+# what QNX assumes when no feature test macro is defined at all.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.10
+#ifdef UA_ARCHITECTURE_POSIX
+# if !defined(_XOPEN_SOURCE) && !defined(__FreeBSD__)
+#  define _XOPEN_SOURCE 600
+# endif
+=======
+#ifdef UA_ARCHITECTURE_POSIX
+/* qnx: with _XOPEN_SOURCE set, the QNX headers declare the rest of the OS
+ * API only if _QNX_SOURCE is defined as well */
+# if defined(__QNXNTO__) && !defined(_QNX_SOURCE)
+#  define _QNX_SOURCE
+# endif
+# if !defined(_XOPEN_SOURCE) && !defined(__FreeBSD__)
+#  define _XOPEN_SOURCE 600
+# endif
+>>>>>>> open62541-qnx

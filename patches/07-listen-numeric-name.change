@@ -1,0 +1,21 @@
+# open62541-qnx change: listen-numeric-name
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: No reverse DNS query for the wildcard address at server start
+# file: open62541.c
+# upstream: arch/eventloop_posix_tcp.c
+# test: core.startup (time to start the server)
+#
+# For every listen socket the code asks getnameinfo() for the name of the
+# address it binds to, which is the wildcard address in the default
+# configuration, and uses the answer in a log line only. On a target whose
+# resolver cannot reach a DNS server each of these queries runs into the
+# resolver timeout before the server starts to listen.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.10
+                                 addrstr, sizeof(addrstr), NULL, 0, 0);
+=======
+                                 addrstr, sizeof(addrstr), NULL, 0,
+                                 NI_NUMERICHOST); /* qnx: only logged; no DNS query */
+>>>>>>> open62541-qnx

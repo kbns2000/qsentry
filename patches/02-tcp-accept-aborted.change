@@ -1,0 +1,33 @@
+# open62541-qnx change: tcp-accept-aborted
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Keep the listen socket when accept() finds an aborted connection
+# file: open62541.c
+# upstream: arch/eventloop_posix_tcp.c
+# test: robust.aborted_connect
+#
+# When accept() fails with anything but EINTR, the listen socket is closed
+# and the server accepts no connection any more until it is restarted.
+#
+# A connection that the peer resets while it waits in the listen queue is such
+# a failure on a BSD network stack: accept() returns ECONNABORTED, or the
+# stack has already removed the connection and the non-blocking accept()
+# returns EWOULDBLOCK. Linux hands out the dead connection instead, so the
+# problem does not show there. One TCP handshake followed by a reset is all
+# that a peer needs to send.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.10
+        /* Temporary error -- retry */
+        if(UA_ERRNO == UA_INTERRUPTED)
+            return;
+=======
+        /* Temporary error -- retry.
+         * qnx: so is a connection that the peer has reset while it waited in
+         * the listen queue. A BSD network stack reports it as ECONNABORTED, or
+         * it has removed it already and the non-blocking accept() finds
+         * nothing. Neither is a reason to close the listen socket. */
+        if(UA_ERRNO == UA_INTERRUPTED || UA_ERRNO == ECONNABORTED ||
+           UA_ERRNO == UA_AGAIN || UA_ERRNO == UA_WOULDBLOCK)
+            return;
+>>>>>>> open62541-qnx

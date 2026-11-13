@@ -1,0 +1,40 @@
+# open62541-qnx change: tcp-recv-eof
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Take recv() == 0 as the end of the connection, whatever errno says
+# file: open62541.c
+# upstream: arch/eventloop_posix_tcp.c
+# test: robust.peer_close
+#
+# recv() returns 0 when the peer has closed the connection, and it leaves
+# errno alone. The code looks at errno also in that case. If errno still holds
+# EAGAIN from an earlier call, the closed connection is taken for a temporary
+# condition: it stays registered, it stays readable, and the event loop spins
+# on it at full CPU load.
+#
+# An earlier EAGAIN is the normal case on QNX after a message that did not fit
+# into the socket buffer at once: accepted sockets inherit O_NONBLOCK from the
+# listen socket there (they do not on Linux), so send() returns EAGAIN and the
+# stack waits and retries, successfully, without touching errno again.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.10
+    /* Receive has failed */
+    if(ret <= 0) {
+        if(UA_ERRNO == UA_INTERRUPTED ||
+           UA_ERRNO == UA_WOULDBLOCK ||
+           UA_ERRNO == UA_AGAIN)
+            return; /* Temporary error on an non-blocking socket */
+=======
+    /* Receive has failed */
+    if(ret <= 0) {
+        /* qnx: recv() == 0 means that the peer has closed, and errno is not
+         * set then. Look at errno only after a failure: an EAGAIN left over
+         * from an earlier send() would hide the end of the connection and the
+         * EventLoop would spin on the readable socket. */
+        if(ret < 0 &&
+           (UA_ERRNO == UA_INTERRUPTED ||
+            UA_ERRNO == UA_WOULDBLOCK ||
+            UA_ERRNO == UA_AGAIN))
+            return; /* Temporary error on an non-blocking socket */
+>>>>>>> open62541-qnx

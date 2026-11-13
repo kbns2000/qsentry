@@ -1,0 +1,39 @@
+# open62541-qnx change: udp-empty-datagram
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Do not close a UDP socket because of an empty datagram
+# file: open62541.c
+# upstream: arch/eventloop_posix_udp.c
+# test: pubsub.unicast.empty_datagram
+#
+# A UDP datagram without payload is a valid datagram, and recvfrom() returns
+# 0 for it. The code takes every result <= 0 except EINTR as the end of the
+# socket and closes it. A PubSub connection reopens its receive socket only if
+# it has received a message before; a subscriber that gets an empty datagram
+# before its first message stays without a socket. Anybody who can reach the
+# port can send that datagram.
+#
+# The same branch also closes the socket after EAGAIN, which a wake-up without
+# a readable datagram produces.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.10
+    /* Receive has failed */
+    if(ret <= 0) {
+        if(UA_ERRNO == UA_INTERRUPTED)
+            return;
+
+        /* Orderly shutdown of the socket. We can immediately close as no method
+=======
+    /* Receive has failed */
+    if(ret <= 0) {
+        /* qnx: a datagram without payload is a valid datagram, and anybody can
+         * send one: recvfrom() returns 0 for it and does not set errno. It is
+         * no reason to close the socket, and neither is a wake-up without a
+         * datagram. */
+        if(ret == 0 || UA_ERRNO == UA_INTERRUPTED ||
+           UA_ERRNO == UA_AGAIN || UA_ERRNO == UA_WOULDBLOCK)
+            return;
+
+        /* Orderly shutdown of the socket. We can immediately close as no method
+>>>>>>> open62541-qnx

@@ -1,0 +1,75 @@
+O6Q ENV uname=Linux 6.18.44-fc-v445 #1 SMP PREEMPT_DYNAMIC @0 x86_64
+O6Q ENV hostname=vm
+O6Q ENV compiler=13.3.0
+O6Q ENV sizeof=long=8 pointer=8 time_t=8 bool=1 fd_set=128
+O6Q ENV macro.__STDC_IEC_559__=defined
+O6Q ENV fd.FD_SETSIZE=1024
+O6Q ENV fd.sysconf_open_max=20000
+O6Q ENV fd.rlimit_nofile=soft=20000 hard=20000
+O6Q ENV cpus=4
+O6Q ENV clock.monotonic_resolution_ns=1
+O6Q ENV pthread.default_stack=8388608
+O6Q ENV socket.tcp4=ok
+O6Q ENV socket.tcp6=FAILED(errno 97 (Address family not supported by protocol))
+O6Q ENV socket.udp4=ok
+O6Q ENV socket.udp6=FAILED(errno 97 (Address family not supported by protocol))
+O6Q ENV resolve.localhost.0=127.0.0.1
+O6Q ENV resolve.vm.0=127.0.0.1
+O6Q ENV passive.0=AF_INET
+O6Q ENV passive.1=AF_INET6
+O6Q ENV if.lo.ipv4=127.0.0.1 index=1 UP RUNNING LOOPBACK
+O6Q ENV if.eth0.ipv4=192.0.2.2 index=4 UP RUNNING MULTICAST
+O6Q ENV dev_random=read 16 of 16 bytes
+O6Q ENV highfd.dup=descriptor 1040 (FD_SETSIZE 1024)
+O6Q ENV highfd.poll=returns 1, revents POLLIN
+O6Q ENV highfd.ppoll=returns 1, revents POLLIN
+O6Q ENV highfd.select_large_set=returns 1, descriptor reported readable
+O6Q ENV ppoll.no_descriptor=returns 0 after 20.1 ms (timeout 20 ms)
+O6Q ENV poll.negative_descriptor=returns 0 after 20.1 ms, revents none
+O6Q ENV poll.closed_descriptor=returns 1, revents POLLNVAL
+O6Q ENV poll.events0_peer_closed=returns 1, revents POLLHUP
+O6Q ENV errno.after_ppoll_timeout=EAGAIN (was EAGAIN before; ppoll returned 0)
+O6Q ENV errno.after_poll_timeout=EAGAIN (was EAGAIN before; poll returned 0)
+O6Q ENV errno.after_select_timeout=EAGAIN (was EAGAIN before; select returned 0)
+O6Q ENV errno.after_ppoll_event=EAGAIN (was EAGAIN before; ppoll returned 1)
+O6Q ENV errno.after_recv_data=EAGAIN (was EAGAIN before; recv returned 1)
+O6Q ENV errno.after_recv_end=EAGAIN (was EAGAIN before; recv returned 0 for a closed peer)
+O6Q ENV tcp.listen_pending=poll returns 1, revents POLLIN
+O6Q ENV tcp.accept_inherits_nonblock=no
+O6Q ENV tcp.accept_address_length=16 (sockaddr_in 16, sockaddr_storage 128)
+O6Q ENV getnameinfo.real_length=ok 127.0.0.1
+O6Q ENV getnameinfo.storage_length=ok 127.0.0.1
+O6Q ENV tcp.buffers=SO_SNDBUF=3939840 SO_RCVBUF=131072
+O6Q ENV tcp.send_until_full=3910656 bytes accepted while the peer does not read, then EAGAIN
+O6Q ENV tcp.peer_shutdown_wr=poll returns 1, revents POLLIN; recv returns 0
+O6Q ENV tcp.peer_close=poll returns 1, revents POLLIN; recv returns 0
+O6Q ENV tcp.peer_reset=poll returns 1, revents POLLIN|POLLERR|POLLHUP; recv returns -1 ECONNRESET
+O6Q ENV tcp.reset_before_accept=poll returns 1, revents POLLIN; accept returns a socket, recv on it returns -1 ECONNRESET
+O6Q ENV tcp.connect_refused=connect says EINPROGRESS; poll(POLLOUT) returns 1, revents POLLOUT|POLLERR|POLLHUP; SO_ERROR ECONNREFUSED
+O6Q ENV udp.empty_datagram=poll returns 1, revents POLLIN; recvfrom returns 0, errno 0
+O6Q ENV udp.nothing_to_read=recvfrom(MSG_DONTWAIT) returns -1 EAGAIN
+O6Q ENV multicast.group.bind_to_group=ok
+O6Q ENV multicast.group.join_mreqn_index=ok
+O6Q ENV multicast.group.join_mreqn_index0=ok
+O6Q ENV multicast.group.join_mreq_address=ok
+O6Q ENV multicast.if_mreqn_index=ok
+O6Q ENV multicast.if_mreqn_index0=ok
+O6Q ENV multicast.if_address=ok
+O6Q ENV multicast.loop_int=ok
+O6Q ENV multicast.loop_char=ok
+O6Q ENV multicast.ttl_int=ok
+O6Q ENV multicast.ttl_char=ok
+O6Q ENV multicast.examples.bind_to_group=ok
+O6Q ENV multicast.examples.join_mreqn_index=ok
+O6Q ENV multicast.examples.join_mreqn_index0=ok
+O6Q ENV multicast.examples.join_mreq_address=ok
+O6Q ENV pipe=ok
+O6Q ENV socketpair.unix_stream=ok
+O6Q ENV getnameinfo.wildcard_name=ok 0.0.0.0 after 1 ms
+O6Q ENV signal.handler_after_delivery=still installed (1 delivered)
+O6Q ENV pthread_getcpuclockid=ok
+O6Q ENV wait_1ms.ppoll=n=200 overshoot_us min=20 p50=97 p99=201 max=228 mean=103
+O6Q ENV wait_1ms.select=n=200 overshoot_us min=51 p50=87 p99=156 max=194 mean=95
+O6Q ENV wait_1ms.poll=n=200 overshoot_us min=26 p50=94 p99=190 max=2214 mean=113
+O6Q ENV wait_1ms.nanosleep=n=200 overshoot_us min=27 p50=101 p99=193 max=220 mean=101
+O6Q ENV done=1

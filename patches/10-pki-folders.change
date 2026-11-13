@@ -1,0 +1,145 @@
+# open62541-qnx change: pki-folders
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Certificate folders (trust list, issuers, revocation lists) on QNX
+# file: open62541.c
+# upstream: plugins/crypto/openssl/ua_pki_openssl.c plugins/include/open62541/plugin/pki_default.h plugins/ua_config_json.c
+# test: security.certfolder.trusted security.certfolder.added security.certfolder.removed
+#
+# UA_CertificateVerification_CertFolders() reads the trusted certificates,
+# the issuer certificates and the revocation lists from three directories,
+# again for every certificate that is verified. A certificate can so be
+# trusted or withdrawn while the server runs. The release has the function
+# "for Linux only so far". It needs nothing but scandir(), which QNX has.
+#
+# The directory lists that scandir() returns were never freed. The memory
+# was lost with every verification; the change frees them.
+#
+@@ hunk open62541.h
+<<<<<<< open62541 v1.4.10
+#ifdef __linux__ /* Linux only so far */
+
+#ifdef UA_ENABLE_CERT_REJECTED_DIR
+UA_EXPORT UA_StatusCode
+UA_CertificateVerification_CertFolders(UA_CertificateVerification *cv,
+=======
+#if defined(__linux__) || defined(__QNXNTO__) /* qnx: needs only scandir() */
+
+#ifdef UA_ENABLE_CERT_REJECTED_DIR
+UA_EXPORT UA_StatusCode
+UA_CertificateVerification_CertFolders(UA_CertificateVerification *cv,
+>>>>>>> open62541-qnx
+@@ hunk
+<<<<<<< open62541 v1.4.10
+#ifdef __linux__
+#include <dirent.h>
+
+static int UA_Certificate_Filter_der_pem (const struct dirent * entry) {
+=======
+#if defined(__linux__) || defined(__QNXNTO__) /* qnx: needs only scandir() */
+#include <dirent.h>
+#include <limits.h>
+
+/* qnx: scandir() allocates the list and every entry of it. The release
+ * never frees them, so every verification loses that memory. */
+static void
+UA_Certificate_freeDirList (struct dirent *** dirlist, int count) {
+    while (count > 0)
+        free ((*dirlist)[--count]);
+    free (*dirlist);
+    *dirlist = NULL;
+}
+
+static int UA_Certificate_Filter_der_pem (const struct dirent * entry) {
+>>>>>>> open62541-qnx
+@@ hunk
+<<<<<<< open62541 v1.4.10
+            if (UA_skTrusted_Cert2X509 (&strCert, 1, ctx) != UA_STATUSCODE_GOOD) {
+                UA_LOG_INFO (ctx->cv->logging, UA_LOGCATEGORY_SERVER,
+                            "Failed to decode the certificate file %s", certFile);
+                UA_ByteString_clear (&strCert);
+                continue;  /* continue or return ? */
+            }
+            UA_ByteString_clear (&strCert);
+        }
+=======
+            if (UA_skTrusted_Cert2X509 (&strCert, 1, ctx) != UA_STATUSCODE_GOOD) {
+                UA_LOG_INFO (ctx->cv->logging, UA_LOGCATEGORY_SERVER,
+                            "Failed to decode the certificate file %s", certFile);
+                UA_ByteString_clear (&strCert);
+                continue;  /* continue or return ? */
+            }
+            UA_ByteString_clear (&strCert);
+        }
+        UA_Certificate_freeDirList (&dirlist, numCertificates);
+>>>>>>> open62541-qnx
+@@ hunk
+<<<<<<< open62541 v1.4.10
+            if (UA_skIssuer_Cert2X509 (&strCert, 1, ctx) != UA_STATUSCODE_GOOD) {
+                UA_LOG_INFO (ctx->cv->logging, UA_LOGCATEGORY_SERVER,
+                            "Failed to decode the certificate file %s", certFile);
+                UA_ByteString_clear (&strCert);
+                continue;  /* continue or return ? */
+            }
+            UA_ByteString_clear (&strCert);
+        }
+=======
+            if (UA_skIssuer_Cert2X509 (&strCert, 1, ctx) != UA_STATUSCODE_GOOD) {
+                UA_LOG_INFO (ctx->cv->logging, UA_LOGCATEGORY_SERVER,
+                            "Failed to decode the certificate file %s", certFile);
+                UA_ByteString_clear (&strCert);
+                continue;  /* continue or return ? */
+            }
+            UA_ByteString_clear (&strCert);
+        }
+        UA_Certificate_freeDirList (&dirlist, numCertificates);
+>>>>>>> open62541-qnx
+@@ hunk
+<<<<<<< open62541 v1.4.10
+            if (UA_skCrls_Cert2X509 (&strCert, 1, ctx) != UA_STATUSCODE_GOOD) {
+                UA_LOG_INFO (ctx->cv->logging, UA_LOGCATEGORY_SERVER,
+                            "Failed to decode the revocation file %s", certFile);
+                UA_ByteString_clear (&strCert);
+                continue;  /* continue or return ? */
+            }
+            UA_ByteString_clear (&strCert);
+        }
+=======
+            if (UA_skCrls_Cert2X509 (&strCert, 1, ctx) != UA_STATUSCODE_GOOD) {
+                UA_LOG_INFO (ctx->cv->logging, UA_LOGCATEGORY_SERVER,
+                            "Failed to decode the revocation file %s", certFile);
+                UA_ByteString_clear (&strCert);
+                continue;  /* continue or return ? */
+            }
+            UA_ByteString_clear (&strCert);
+        }
+        UA_Certificate_freeDirList (&dirlist, numCertificates);
+>>>>>>> open62541-qnx
+@@ hunk
+<<<<<<< open62541 v1.4.10
+#ifdef __linux__ 
+    ret = UA_ReloadCertFromFolder(ctx);
+=======
+#if defined(__linux__) || defined(__QNXNTO__) /* qnx */
+    ret = UA_ReloadCertFromFolder(ctx);
+>>>>>>> open62541-qnx
+@@ hunk
+<<<<<<< open62541 v1.4.10
+#ifdef __linux__ /* Linux only so far */
+UA_StatusCode
+UA_CertificateVerification_CertFolders(UA_CertificateVerification *cv,
+=======
+#if defined(__linux__) || defined(__QNXNTO__) /* qnx: needs only scandir() */
+UA_StatusCode
+UA_CertificateVerification_CertFolders(UA_CertificateVerification *cv,
+>>>>>>> open62541-qnx
+@@ hunk
+<<<<<<< open62541 v1.4.10
+#ifndef __linux__
+    /* Currently not supported! */
+    (void)field;
+=======
+#if !defined(__linux__) && !defined(__QNXNTO__) /* qnx: supported with the port */
+    /* Currently not supported! */
+    (void)field;
+>>>>>>> open62541-qnx

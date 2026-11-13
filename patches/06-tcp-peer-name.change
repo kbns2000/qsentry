@@ -1,0 +1,26 @@
+# open62541-qnx change: tcp-peer-name
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Pass the real address length to getnameinfo() for a new connection
+# file: open62541.c
+# upstream: arch/eventloop_posix_tcp.c
+# test: core.connect.ipv4 (no "getnameinfo" warning in the log)
+#
+# For the log line of a new connection the code calls getnameinfo() with the
+# size of struct sockaddr_storage instead of the length that accept() has
+# returned. A getnameinfo() that compares the length with the address family
+# refuses that. The host string is then used without having been set.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.10
+    /* Log the name of the remote host */
+    char hoststr[UA_MAXHOSTNAME_LENGTH];
+    int get_res = UA_getnameinfo((struct sockaddr *)&remote, sizeof(remote),
+=======
+    /* Log the name of the remote host.
+     * qnx: with the length that accept() has returned, not the size of
+     * sockaddr_storage; and with a defined content if the lookup fails. */
+    char hoststr[UA_MAXHOSTNAME_LENGTH];
+    hoststr[0] = 0;
+    int get_res = UA_getnameinfo((struct sockaddr *)&remote, remote_size,
+>>>>>>> open62541-qnx

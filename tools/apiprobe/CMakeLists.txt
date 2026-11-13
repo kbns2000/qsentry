@@ -4,8 +4,9 @@
 #
 #   cmake -G Ninja -S tools/apiprobe -B <dir> -DCMAKE_TOOLCHAIN_FILE=cmake/qnx800.toolchain.cmake -DQNX_ARCH=x86_64
 #
-# Result: <dir>/qnx_api_matrix.txt (lines "O6Q_API <kind> <name> <yes|no>") and
-# the target program o6q_envprobe, which prints run-time facts on the target.
+# Result: <dir>/qnx_api_matrix.txt (lines "O6Q_API <kind> <name> <yes|no>").
+# What the system does at run time is measured on the target by o6q_envprobe
+# (src/o6q_envprobe.c, built by the top-level CMakeLists.txt).
 #
 # SPDX-License-Identifier: Apache-2.0
 cmake_minimum_required(VERSION 3.16)
@@ -185,12 +186,4 @@ if(O6Q_HAVE_H_sys_random_h)
 endif()
 if(O6Q_HAVE_H_execinfo_h)
   o6q_symbol(backtrace "execinfo.h")
-endif()
-
-# Run-time facts, printed on the target by vm/run.sh.
-add_executable(o6q_envprobe envprobe.c)
-target_link_libraries(o6q_envprobe PRIVATE ${_libs})
-if(OPENSSL_FOUND)
-  target_compile_definitions(o6q_envprobe PRIVATE O6Q_HAVE_OPENSSL=1)
-  target_link_libraries(o6q_envprobe PRIVATE OpenSSL::Crypto)
 endif()

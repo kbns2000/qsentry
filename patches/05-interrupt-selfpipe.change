@@ -1,0 +1,27 @@
+# open62541-qnx change: interrupt-selfpipe
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Fall back to a socket pair when pipe() is not available
+# file: open62541.c
+# upstream: arch/eventloop_posix_interrupt.c
+# test: nopipe.server nopipe.client
+#
+# Without epoll the interrupt manager uses the self-pipe trick, and the
+# default server configuration always contains an interrupt manager. On QNX
+# pipe() is served by a separate process, the pipe manager. A target image
+# that does not start it (many embedded images do not) makes pipe() fail, the
+# interrupt manager does not start, and with it the event loop and the server.
+#
+# A local socket pair does the same job and needs only the network stack,
+# which an OPC UA server needs in any case.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.10
+    int err = pipe(pipefd);
+=======
+    int err = pipe(pipefd);
+    /* qnx: pipe() is served by the pipe manager, which a small target image
+     * may not run. A local socket pair does the same job. */
+    if(err != 0)
+        err = socketpair(AF_UNIX, SOCK_STREAM, 0, pipefd);
+>>>>>>> open62541-qnx

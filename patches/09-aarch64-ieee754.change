@@ -1,0 +1,25 @@
+# open62541-qnx change: aarch64-ieee754
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Know AArch64 as an IEEE 754 CPU
+# file: open62541.h
+# upstream: include/open62541/config.h.in
+# test: core.float_wire
+#
+# The list of CPUs with IEEE 754 floating point has 32-bit ARM but not
+# AArch64. Other CPUs are only recognised if __STDC_IEC_559__ is defined,
+# which glibc does on Linux and the C library of QNX does not. Without it
+# Float and Double go through the portable conversion routine, which is slow
+# (long double arithmetic) and does not handle subnormal values: they arrive
+# as different numbers.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.10
+    defined(__ia64__) || defined(__powerpc__) || defined(__sparc__) || \
+    defined(__arm__)
+# define UA_FLOAT_IEEE754 1
+=======
+    defined(__ia64__) || defined(__powerpc__) || defined(__sparc__) || \
+    defined(__arm__) || defined(__aarch64__) /* qnx: aarch64le target */
+# define UA_FLOAT_IEEE754 1
+>>>>>>> open62541-qnx
