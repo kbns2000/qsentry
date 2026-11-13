@@ -126,14 +126,19 @@ set(O6Q_CHECK_SOURCES
     src/suite_core.c src/suite_security.c src/suite_pubsub.c src/suite_highfd.c
     src/suite_robust.c)
 
+# The header of the release is included as a system header in the programs:
+# -Wextra in our code must not report what is in open62541.h (the library
+# itself is compiled with its header as a normal include).
 add_executable(o6q_check ${O6Q_CHECK_SOURCES})
 target_include_directories(o6q_check PRIVATE src src/qnx)
+target_include_directories(o6q_check SYSTEM PRIVATE "${O6Q_TP}")
 target_compile_options(o6q_check PRIVATE ${O6Q_WARN})
 target_link_libraries(o6q_check PRIVATE open62541)
 
 if(O6Q_BUILD_UPSTREAM)
   add_executable(o6q_check_upstream ${O6Q_CHECK_SOURCES})
   target_include_directories(o6q_check_upstream PRIVATE src src/qnx)
+  target_include_directories(o6q_check_upstream SYSTEM PRIVATE "${O6Q_TP}/upstream")
   target_compile_definitions(o6q_check_upstream PRIVATE O6Q_VARIANT="upstream")
   target_compile_options(o6q_check_upstream PRIVATE ${O6Q_WARN})
   target_link_libraries(o6q_check_upstream PRIVATE open62541_upstream)
@@ -147,6 +152,7 @@ target_link_libraries(o6q_envprobe PRIVATE ${O6Q_SYSTEM_LIBS})
 add_executable(o6q_server src/o6q_server.c src/o6q_common.c src/o6q_model.c
                           src/qnx/o6q_sysinfo.c src/qnx/o6q_slog.c)
 target_include_directories(o6q_server PRIVATE src src/qnx)
+target_include_directories(o6q_server SYSTEM PRIVATE "${O6Q_TP}")
 target_compile_options(o6q_server PRIVATE ${O6Q_WARN})
 target_link_libraries(o6q_server PRIVATE open62541)
 if(CMAKE_SYSTEM_NAME STREQUAL "QNX")

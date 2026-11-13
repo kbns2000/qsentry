@@ -309,8 +309,8 @@ static UA_StatusCode make_certificate(const UA_Logger *logger, const char *hostn
     UA_StatusCode rc;
     if(!params)
         return UA_STATUSCODE_BADOUTOFMEMORY;
-    snprintf(cn, sizeof(cn), "CN=o6q_server@%s", hostname[0] ? hostname : "qnx");
-    snprintf(dns, sizeof(dns), "DNS:%s", hostname[0] ? hostname : "localhost");
+    snprintf(cn, sizeof(cn), "CN=o6q_server@%.64s", hostname[0] ? hostname : "qnx");
+    snprintf(dns, sizeof(dns), "DNS:%.64s", hostname[0] ? hostname : "localhost");
     subject[0] = UA_STRING("C=CA");
     subject[1] = UA_STRING("O=open62541-qnx");
     subject[2] = UA_STRING(cn);

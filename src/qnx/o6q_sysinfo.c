@@ -28,10 +28,13 @@
 #endif
 
 static void copy_str(char *dst, size_t n, const char *src) {
+    size_t len;
     if(n == 0)
         return;
-    strncpy(dst, src ? src : "", n - 1);
-    dst[n - 1] = 0;
+    len = src ? strnlen(src, n - 1) : 0;
+    if(len)
+        memcpy(dst, src, len);
+    dst[len] = 0;
 }
 
 #ifdef __QNXNTO__
