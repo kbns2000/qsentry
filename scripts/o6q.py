@@ -202,6 +202,7 @@ def make_host_identity(vmroot):
 
 def cmd_image(args):
     host, target = qnx_env()
+    made, failed = [], []
     for arch in args.arch:
         vm = os.path.join(args.vmroot, arch)
         snippets = os.path.join(vm, "local", "snippets")
@@ -245,8 +246,25 @@ def cmd_image(args):
         cmd = tool("mkqnximage") + ["--noprompt", "--force", "--type=qemu", "--arch=" + arch,
                                     "--hostname=o6q", "--ssh-ident=none", "--build"]
         cmd += args.mkqnximage_option
-        run(cmd, cwd=vm)
+        try:
+            run(cmd, cwd=vm)
+        except SystemExit as e:
+            # e.g. an SDP without the QEMU board support package for this CPU
+            # (startup-qemu-virt, devb-virtio): the other CPUs still get theirs,
+            # and 'run' skips a CPU without an image
+            ifs = os.path.join(vm, "output", "ifs.bin")
+            if os.path.exists(ifs):
+                os.remove(ifs)  # no stale image of an earlier build
+            failed.append(arch)
+            say(f"{arch}: no image ({e.code})")
+            continue
+        made.append(arch)
         say(f"{arch}: image in {os.path.join(vm, 'output')}")
+    if not made:
+        die("no image was made")
+    if failed:
+        say("no image for " + ", ".join(failed) + "; 'run' skips " +
+            ("it" if len(failed) == 1 else "them"))
 
 
 # --------------------------------------------------------------------- run
