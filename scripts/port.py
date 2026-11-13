@@ -26,26 +26,24 @@ FILES = {
 # (file, old, new, expected count, why)
 PATCHES = [
     ("open62541.h", "#define UA_ENABLE_ENCRYPTION_MBEDTLS\n",
-     "/* #undef UA_ENABLE_ENCRYPTION_MBEDTLS */ /* qnx: no TLS library in the base build */\n", 1,
-     "The release is configured for Mbed TLS, which QNX 8.0 does not ship. Security "
-     "policy None is used for the base port."),
-    ("open62541.h", "#define UA_ENABLE_ENCRYPTION\n",
-     "/* #undef UA_ENABLE_ENCRYPTION */ /* qnx: see above */\n", 1, "Follows from the above."),
+     "/* #undef UA_ENABLE_ENCRYPTION_MBEDTLS */ /* qnx: SDP 8.0 has no Mbed TLS */\n", 1,
+     "The release is configured for Mbed TLS, which QNX SDP 8.0 does not ship."),
+    ("open62541.h", "/* #undef UA_ENABLE_ENCRYPTION_OPENSSL */\n",
+     "#define UA_ENABLE_ENCRYPTION_OPENSSL /* qnx: use the OpenSSL 3 that is part of SDP 8.0 */\n", 1,
+     "QNX SDP 8.0 ships OpenSSL 3 (libssl.so.3 / libcrypto.so.3) for every target CPU, and "
+     "the release already contains the OpenSSL backend, so encryption needs no extra port."),
     ("open62541.h", "#define UA_ENABLE_PUBSUB_ENCRYPTION\n",
-     "/* #undef UA_ENABLE_PUBSUB_ENCRYPTION */ /* qnx: see above */\n", 1, "Follows from the above."),
-    ("open62541.h", "#define UA_ENABLE_PUBSUB\n",
-     "/* #undef UA_ENABLE_PUBSUB */ /* qnx: client/server port; PubSub needs the TLS library */\n", 1,
-     "The amalgamated PubSub code assumes PubSub encryption is enabled."),
-    ("open62541.h", "#define UA_ENABLE_PUBSUB_INFORMATIONMODEL\n",
-     "/* #undef UA_ENABLE_PUBSUB_INFORMATIONMODEL */ /* qnx: see above */\n", 1, "Follows from the above."),
+     "/* #undef UA_ENABLE_PUBSUB_ENCRYPTION */ /* qnx: upstream implements this on Mbed TLS only */\n", 1,
+     "PubSub message encryption (AES-CTR policies) exists upstream only for Mbed TLS."),
 ]
 
 
 # Amalgamated source sections (one per original file) removed from open62541.c.
-# The single-file release compiles PubSub unconditionally, so turning the
-# feature off in the header is not enough; the sections themselves must go.
-DROP_SECTIONS = ("/src/pubsub/",)
-DROP_EXPECTED = 19
+# Upstream's CMake build compiles this file only when PubSub encryption is on;
+# the single-file release has no preprocessor guard around it, so with PubSub
+# encryption off the section itself must go.
+DROP_SECTIONS = ("/src/pubsub/ua_pubsub_security.c",)
+DROP_EXPECTED = 1
 
 MARK = '/**** amalgamated original file "'
 
@@ -55,7 +53,7 @@ def drop_sections(text):
     keep, dropped = [parts[0]], []
     for p in parts[1:]:
         name = p.split('"', 1)[0]
-        if name.startswith(DROP_SECTIONS):
+        if name in DROP_SECTIONS:
             dropped.append(name)
         else:
             keep.append(p)
