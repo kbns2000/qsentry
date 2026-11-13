@@ -1,21 +1,19 @@
--- The C compiler identification is QCC 12.2.0
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Check for working C compiler: ~/qnx800/host/win64/x86_64/usr/bin/qcc.exe - skipped
--- Detecting C compile features
--- Detecting C compile features - done
--- Found Python3: C:/Program Files/Python313/python.exe (found version "3.13.5") found components: Interpreter
--- Found OpenSSL: ~/qnx800/target/qnx/aarch64le/usr/lib/libcrypto.so (found version "3.0.20")
 -- open62541-qnx: system=QNX processor=aarch64 compiler=QCC 12.2.0 OpenSSL=3.0.20 eventloop=auto upstream_comparison=ON
--- Configuring done (3.5s)
--- Generating done (0.1s)
+-- Configuring done (0.5s)
+-- Generating done (0.0s)
+CMake Warning (unused-cli):
+  Manually-specified variables were not used by the project:
+
+    CMAKE_TOOLCHAIN_FILE
+
+
 -- Build files have been written to: F:/Claude/o6q/open62541-qnx/build/aarch64le
 Change Dir: 'F:/Claude/o6q/open62541-qnx/build/aarch64le'
 
 Run Clean Command: F:/Claude/o6q/venv/Scripts/ninja.exe -v clean
 [0/2] F:\Claude\o6q\venv\Lib\site-packages\cmake\data\bin\cmake.exe -P F:\Claude\o6q\open62541-qnx\build\aarch64le\CMakeFiles\VerifyGlobs.cmake
 [1/2] F:\Claude\o6q\venv\Scripts\ninja.exe  -t clean 
-Cleaning... 4 files.
+Cleaning... 37 files.
 
 Run Build Command(s): F:/Claude/o6q/venv/Scripts/ninja.exe -v
 [0/2] F:\Claude\o6q\venv\Lib\site-packages\cmake\data\bin\cmake.exe -P F:\Claude\o6q\open62541-qnx\build\aarch64le\CMakeFiles\VerifyGlobs.cmake
@@ -36,27 +34,7 @@ change   aarch64-ieee754        Know AArch64 as an IEEE 754 CPU
 change   pki-folders            Certificate folders (trust list, issuers, revocation lists) on QNX
 ported   open62541 v1.4.10: 10 changes -> ..\..\third_party
 [3/34] C:\WINDOWS\system32\cmd.exe /C "cd . && ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -O2 -DNDEBUG -O2 -DNDEBUG  CMakeFiles/o6q_envprobe.dir/src/o6q_envprobe.c.o -o o6q_envprobe  ~/qnx800/target/qnx/aarch64le/usr/lib/libcrypto.so  -lm  -lsocket && cd ."
-[4/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\o6q_check.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/o6q_check.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\o6q_check.c.o.d -o CMakeFiles/o6q_check.dir/src/o6q_check.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_check.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/o6q_check.c:11:
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[5/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_highfd.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_highfd.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_highfd.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_highfd.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_highfd.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/suite_highfd.c:22:
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[6/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\qnx\o6q_sysinfo.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/qnx/o6q_sysinfo.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\qnx\o6q_sysinfo.c.o.d -o CMakeFiles/o6q_check.dir/src/qnx/o6q_sysinfo.c.o -c F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c
+[4/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\qnx\o6q_sysinfo.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/qnx/o6q_sysinfo.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\qnx\o6q_sysinfo.c.o.d -o CMakeFiles/o6q_check.dir/src/qnx/o6q_sysinfo.c.o -c F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c
 In function 'copy_str',
     inlined from 'copy_str' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:30:13,
     inlined from 'o6q_sys_static' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:86:9:
@@ -75,9 +53,28 @@ In function 'copy_str',
 F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:33:5: warning: 'strncpy' output may be truncated copying 31 bytes from a string of length 256 [-Wstringop-truncation]
    33 |     strncpy(dst, src ? src : "", n - 1);
       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[7/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_pubsub.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_pubsub.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_pubsub.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_pubsub.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_pubsub.c
+[5/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\qnx\o6q_sysinfo.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/qnx/o6q_sysinfo.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\qnx\o6q_sysinfo.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/qnx/o6q_sysinfo.c.o -c F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c
+In function 'copy_str',
+    inlined from 'copy_str' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:30:13,
+    inlined from 'o6q_sys_static' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:86:9:
+F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:33:5: warning: 'strncpy' output may be truncated copying 31 bytes from a string of length 256 [-Wstringop-truncation]
+   33 |     strncpy(dst, src ? src : "", n - 1);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'copy_str',
+    inlined from 'copy_str' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:30:13,
+    inlined from 'o6q_sys_static' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:87:9:
+F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:33:5: warning: 'strncpy' output may be truncated copying 31 bytes from a string of length 256 [-Wstringop-truncation]
+   33 |     strncpy(dst, src ? src : "", n - 1);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'copy_str',
+    inlined from 'copy_str' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:30:13,
+    inlined from 'o6q_sys_static' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:88:9:
+F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:33:5: warning: 'strncpy' output may be truncated copying 31 bytes from a string of length 256 [-Wstringop-truncation]
+   33 |     strncpy(dst, src ? src : "", n - 1);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[6/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\o6q_check.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/o6q_check.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\o6q_check.c.o.d -o CMakeFiles/o6q_check.dir/src/o6q_check.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_check.c
 In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/suite_pubsub.c:20:
+                 from F:/Claude/o6q/open62541-qnx/src/o6q_check.c:11:
 F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
 F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
   456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
@@ -85,9 +82,19 @@ F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused para
 F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
   456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
       |                               ~~~~^~~
-[8/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\o6q_check.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/o6q_check.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\o6q_check.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/o6q_check.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_check.c
+[7/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_highfd.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_highfd.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_highfd.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_highfd.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_highfd.c
 In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/o6q_check.c:11:
+                 from F:/Claude/o6q/open62541-qnx/src/suite_highfd.c:22:
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[8/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\o6q_common.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/o6q_common.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\o6q_common.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/o6q_common.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_common.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/o6q_common.c:9:
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
   451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
@@ -95,9 +102,9 @@ F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: un
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
   451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
       |                               ~~~~^~~
-[9/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_security.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_security.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_security.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_security.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_security.c
+[9/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\o6q_common.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/o6q_common.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\o6q_common.c.o.d -o CMakeFiles/o6q_check.dir/src/o6q_common.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_common.c
 In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/suite_security.c:11:
+                 from F:/Claude/o6q/open62541-qnx/src/o6q_common.c:9:
 F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
 F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
   456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
@@ -115,46 +122,47 @@ F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused para
 F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
   456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
       |                               ~~~~^~~
-[11/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\qnx\o6q_sysinfo.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/qnx/o6q_sysinfo.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\qnx\o6q_sysinfo.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/qnx/o6q_sysinfo.c.o -c F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c
-In function 'copy_str',
-    inlined from 'copy_str' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:30:13,
-    inlined from 'o6q_sys_static' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:86:9:
-F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:33:5: warning: 'strncpy' output may be truncated copying 31 bytes from a string of length 256 [-Wstringop-truncation]
-   33 |     strncpy(dst, src ? src : "", n - 1);
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'copy_str',
-    inlined from 'copy_str' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:30:13,
-    inlined from 'o6q_sys_static' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:87:9:
-F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:33:5: warning: 'strncpy' output may be truncated copying 31 bytes from a string of length 256 [-Wstringop-truncation]
-   33 |     strncpy(dst, src ? src : "", n - 1);
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'copy_str',
-    inlined from 'copy_str' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:30:13,
-    inlined from 'o6q_sys_static' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:88:9:
-F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:33:5: warning: 'strncpy' output may be truncated copying 31 bytes from a string of length 256 [-Wstringop-truncation]
-   33 |     strncpy(dst, src ? src : "", n - 1);
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[12/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_robust.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_robust.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_robust.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_robust.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_robust.c
+[11/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_pubsub.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_pubsub.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_pubsub.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_pubsub.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_pubsub.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/suite_pubsub.c:20:
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[12/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_security.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_security.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_security.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_security.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_security.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/suite_security.c:11:
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[13/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\o6q_model.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/o6q_model.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\o6q_model.c.o.d -o CMakeFiles/o6q_server.dir/src/o6q_model.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_model.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/o6q_model.c:3:
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[14/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_robust.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_robust.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_robust.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_robust.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_robust.c
 In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
                  from F:/Claude/o6q/open62541-qnx/src/suite_robust.c:27:
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
       |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
+  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
       |                               ~~~~^~~
-[13/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\o6q_common.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/o6q_common.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\o6q_common.c.o.d -o CMakeFiles/o6q_check.dir/src/o6q_common.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_common.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/o6q_common.c:9:
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[14/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\o6q_model.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/o6q_model.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\o6q_model.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/o6q_model.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_model.c
+[15/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\o6q_model.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/o6q_model.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\o6q_model.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/o6q_model.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_model.c
 In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
                  from F:/Claude/o6q/open62541-qnx/src/o6q_model.c:3:
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
@@ -164,7 +172,27 @@ F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: un
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
   451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
       |                               ~~~~^~~
-[15/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\qnx\o6q_sysinfo.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/qnx/o6q_sysinfo.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\qnx\o6q_sysinfo.c.o.d -o CMakeFiles/o6q_server.dir/src/qnx/o6q_sysinfo.c.o -c F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c
+[16/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_robust.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_robust.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_robust.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_robust.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_robust.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/suite_robust.c:27:
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[17/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\qnx\o6q_slog.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/qnx/o6q_slog.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\qnx\o6q_slog.c.o.d -o CMakeFiles/o6q_server.dir/src/qnx/o6q_slog.c.o -c F:/Claude/o6q/open62541-qnx/src/qnx/o6q_slog.c
+In file included from F:/Claude/o6q/open62541-qnx/src/qnx/o6q_slog.h:15,
+                 from F:/Claude/o6q/open62541-qnx/src/qnx/o6q_slog.c:6:
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[18/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\qnx\o6q_sysinfo.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/qnx/o6q_sysinfo.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\qnx\o6q_sysinfo.c.o.d -o CMakeFiles/o6q_server.dir/src/qnx/o6q_sysinfo.c.o -c F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c
 In function 'copy_str',
     inlined from 'copy_str' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:30:13,
     inlined from 'o6q_sys_static' at F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:86:9:
@@ -183,9 +211,9 @@ In function 'copy_str',
 F:/Claude/o6q/open62541-qnx/src/qnx/o6q_sysinfo.c:33:5: warning: 'strncpy' output may be truncated copying 31 bytes from a string of length 256 [-Wstringop-truncation]
    33 |     strncpy(dst, src ? src : "", n - 1);
       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[16/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\o6q_common.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/o6q_common.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\o6q_common.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/o6q_common.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_common.c
+[19/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\o6q_check.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/o6q_check.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\o6q_check.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/o6q_check.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_check.c
 In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/o6q_common.c:9:
+                 from F:/Claude/o6q/open62541-qnx/src/o6q_check.c:11:
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
   451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
@@ -193,17 +221,7 @@ F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: un
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
   451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
       |                               ~~~~^~~
-[17/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\o6q_common.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/o6q_common.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\o6q_common.c.o.d -o CMakeFiles/o6q_server.dir/src/o6q_common.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_common.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/o6q_common.c:9:
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[18/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_highfd.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_highfd.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_highfd.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_highfd.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_highfd.c
+[20/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_highfd.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_highfd.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_highfd.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_highfd.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_highfd.c
 In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
                  from F:/Claude/o6q/open62541-qnx/src/suite_highfd.c:22:
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
@@ -213,7 +231,57 @@ F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: un
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
   451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
       |                               ~~~~^~~
-[19/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\o6q_server.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/o6q_server.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\o6q_server.c.o.d -o CMakeFiles/o6q_server.dir/src/o6q_server.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_server.c
+[21/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_core.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_core.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_core.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_core.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_core.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/suite_core.c:10:
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
+  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[22/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\o6q_common.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/o6q_common.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\o6q_common.c.o.d -o CMakeFiles/o6q_server.dir/src/o6q_common.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_common.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/o6q_common.c:9:
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[23/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_core.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_core.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_core.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_core.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_core.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/suite_core.c:10:
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
+  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[24/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_pubsub.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_pubsub.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_pubsub.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_pubsub.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_pubsub.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/suite_pubsub.c:20:
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
+  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[25/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_security.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_security.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_security.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_security.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_security.c
+In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
+                 from F:/Claude/o6q/open62541-qnx/src/suite_security.c:11:
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
+  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                ~~~~~~~~~^~~~
+F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
+  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
+      |                               ~~~~^~~
+[26/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\o6q_server.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/o6q_server.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\o6q_server.c.o.d -o CMakeFiles/o6q_server.dir/src/o6q_server.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_server.c
 In file included from F:/Claude/o6q/open62541-qnx/src/o6q_server.c:52:
 F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
 F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
@@ -244,97 +312,7 @@ In function 'make_certificate',
 F:/Claude/o6q/open62541-qnx/src/o6q_server.c:313:5: note: 'snprintf' output between 5 and 29084 bytes into a destination of size 96
   313 |     snprintf(dns, sizeof(dns), "DNS:%s", hostname[0] ? hostname : "localhost");
       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[20/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_robust.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_robust.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_robust.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_robust.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_robust.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/suite_robust.c:27:
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
-  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[21/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\o6q_model.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/o6q_model.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\o6q_model.c.o.d -o CMakeFiles/o6q_server.dir/src/o6q_model.c.o -c F:/Claude/o6q/open62541-qnx/src/o6q_model.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/o6q_model.c:3:
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[22/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_core.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_core.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_core.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_core.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_core.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/suite_core.c:10:
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
-  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[23/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_security.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_security.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_security.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_security.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_security.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/suite_security.c:11:
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
-  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[24/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check.dir\src\suite_core.c.o.d -Wp,-MT,CMakeFiles/o6q_check.dir/src/suite_core.c.o -Wp,-MF,CMakeFiles\o6q_check.dir\src\suite_core.c.o.d -o CMakeFiles/o6q_check.dir/src/suite_core.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_core.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/suite_core.c:10:
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[25/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_VARIANT=\"upstream\" -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_check_upstream.dir\src\suite_pubsub.c.o.d -Wp,-MT,CMakeFiles/o6q_check_upstream.dir/src/suite_pubsub.c.o -Wp,-MF,CMakeFiles\o6q_check_upstream.dir\src\suite_pubsub.c.o.d -o CMakeFiles/o6q_check_upstream.dir/src/suite_pubsub.c.o -c F:/Claude/o6q/open62541-qnx/src/suite_pubsub.c
-In file included from F:/Claude/o6q/open62541-qnx/src/o6q_common.h:6,
-                 from F:/Claude/o6q/open62541-qnx/src/suite_pubsub.c:20:
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.h:451:35: warning: unused parameter 'num' [-Wunused-parameter]
-  451 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[26/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -DO6Q_HAVE_SLOG2=1 -IF:/Claude/o6q/open62541-qnx/src -IF:/Claude/o6q/open62541-qnx/src/qnx -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wshadow -Wformat=2 -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\o6q_server.dir\src\qnx\o6q_slog.c.o.d -Wp,-MT,CMakeFiles/o6q_server.dir/src/qnx/o6q_slog.c.o -Wp,-MF,CMakeFiles\o6q_server.dir\src\qnx\o6q_slog.c.o.d -o CMakeFiles/o6q_server.dir/src/qnx/o6q_slog.c.o -c F:/Claude/o6q/open62541-qnx/src/qnx/o6q_slog.c
-In file included from F:/Claude/o6q/open62541-qnx/src/qnx/o6q_slog.h:15,
-                 from F:/Claude/o6q/open62541-qnx/src/qnx/o6q_slog.c:6:
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h: In function 'UA_LOCK_ASSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:25: warning: unused parameter 'lock' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                ~~~~~~~~~^~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.h:456:35: warning: unused parameter 'num' [-Wunused-parameter]
-  456 | UA_LOCK_ASSERT(UA_Lock *lock, int num) {
-      |                               ~~~~^~~
-[27/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -std=gnu99 -fPIC -fno-strict-aliasing -Wall -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\open62541.dir\third_party\open62541.c.o.d -Wp,-MT,CMakeFiles/open62541.dir/third_party/open62541.c.o -Wp,-MF,CMakeFiles\open62541.dir\third_party\open62541.c.o.d -o CMakeFiles/open62541.dir/third_party/open62541.c.o -c F:/Claude/o6q/open62541-qnx/third_party/open62541.c
-F:/Claude/o6q/open62541-qnx/third_party/open62541.c: In function '__ZIP_INSERT':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.c:67611:11: warning: 'prev_order' may be used uninitialized [-Wmaybe-uninitialized]
-67611 |         if(prev_order == ZIP_CMP_MORE)
-      |           ^
-F:/Claude/o6q/open62541-qnx/third_party/open62541.c:67594:29: note: 'prev_order' was declared here
-67594 |     enum ZIP_CMP cur_order, prev_order;
-      |                             ^~~~~~~~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.c: In function 'UA_NetworkMessage_encodeJson_internal':
-F:/Claude/o6q/open62541-qnx/third_party/open62541.c:239580:15: warning: 'publisherIdType' may be used uninitialized [-Wmaybe-uninitialized]
-239580 |         rv |= encodeJsonJumpTable[publisherIdType->typeKind]
-       |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-239581 |             (ctx, &src->publisherId, publisherIdType);
-       |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-F:/Claude/o6q/open62541-qnx/third_party/open62541.c:239541:24: note: 'publisherIdType' was declared here
-239541 |     const UA_DataType *publisherIdType;
-       |                        ^~~~~~~~~~~~~~~
-[28/34] C:\WINDOWS\system32\cmd.exe /C "cd . && F:\Claude\o6q\venv\Lib\site-packages\cmake\data\bin\cmake.exe -E rm -f libopen62541.a && ~\qnx800\host\win64\x86_64\usr\bin\ntoaarch64-ar.exe qc libopen62541.a  CMakeFiles/open62541.dir/third_party/open62541.c.o && ~\qnx800\host\win64\x86_64\usr\bin\ntoaarch64-ranlib.exe libopen62541.a && cd ."
-[29/34] C:\WINDOWS\system32\cmd.exe /C "cd . && ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -O2 -DNDEBUG -O2 -DNDEBUG  CMakeFiles/o6q_server.dir/src/o6q_server.c.o CMakeFiles/o6q_server.dir/src/o6q_common.c.o CMakeFiles/o6q_server.dir/src/o6q_model.c.o CMakeFiles/o6q_server.dir/src/qnx/o6q_sysinfo.c.o CMakeFiles/o6q_server.dir/src/qnx/o6q_slog.c.o -o o6q_server  libopen62541.a  ~/qnx800/target/qnx/aarch64le/lib/libslog2.so  ~/qnx800/target/qnx/aarch64le/usr/lib/libcrypto.so  -lm  -lsocket && cd ."
-[30/34] C:\WINDOWS\system32\cmd.exe /C "cd . && ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -O2 -DNDEBUG -O2 -DNDEBUG  CMakeFiles/o6q_check.dir/src/o6q_check.c.o CMakeFiles/o6q_check.dir/src/o6q_common.c.o CMakeFiles/o6q_check.dir/src/o6q_model.c.o CMakeFiles/o6q_check.dir/src/qnx/o6q_sysinfo.c.o CMakeFiles/o6q_check.dir/src/suite_core.c.o CMakeFiles/o6q_check.dir/src/suite_security.c.o CMakeFiles/o6q_check.dir/src/suite_pubsub.c.o CMakeFiles/o6q_check.dir/src/suite_highfd.c.o CMakeFiles/o6q_check.dir/src/suite_robust.c.o -o o6q_check  libopen62541.a  ~/qnx800/target/qnx/aarch64le/usr/lib/libcrypto.so  -lm  -lsocket && cd ."
-[31/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -std=gnu99 -fPIC -fno-strict-aliasing -Wall -Wp,-MD,CMakeFiles\open62541_upstream.dir\third_party\upstream\open62541.c.o.d -Wp,-MT,CMakeFiles/open62541_upstream.dir/third_party/upstream/open62541.c.o -Wp,-MF,CMakeFiles\open62541_upstream.dir\third_party\upstream\open62541.c.o.d -o CMakeFiles/open62541_upstream.dir/third_party/upstream/open62541.c.o -c F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.c
+[27/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/third_party/upstream -O2 -DNDEBUG -O2 -DNDEBUG -std=gnu99 -fPIC -fno-strict-aliasing -Wall -Wp,-MD,CMakeFiles\open62541_upstream.dir\third_party\upstream\open62541.c.o.d -Wp,-MT,CMakeFiles/open62541_upstream.dir/third_party/upstream/open62541.c.o -Wp,-MF,CMakeFiles\open62541_upstream.dir\third_party\upstream\open62541.c.o.d -o CMakeFiles/open62541_upstream.dir/third_party/upstream/open62541.c.o -c F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.c
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.c: In function '__ZIP_INSERT':
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.c:67611:11: warning: 'prev_order' may be used uninitialized [-Wmaybe-uninitialized]
 67611 |         if(prev_order == ZIP_CMP_MORE)
@@ -351,6 +329,26 @@ F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.c:239580:15: warning:
 F:/Claude/o6q/open62541-qnx/third_party/upstream/open62541.c:239541:24: note: 'publisherIdType' was declared here
 239541 |     const UA_DataType *publisherIdType;
        |                        ^~~~~~~~~~~~~~~
-[32/34] C:\WINDOWS\system32\cmd.exe /C "cd . && F:\Claude\o6q\venv\Lib\site-packages\cmake\data\bin\cmake.exe -E rm -f libopen62541_upstream.a && ~\qnx800\host\win64\x86_64\usr\bin\ntoaarch64-ar.exe qc libopen62541_upstream.a  CMakeFiles/open62541_upstream.dir/third_party/upstream/open62541.c.o && ~\qnx800\host\win64\x86_64\usr\bin\ntoaarch64-ranlib.exe libopen62541_upstream.a && cd ."
-[33/34] C:\WINDOWS\system32\cmd.exe /C "cd . && ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -O2 -DNDEBUG -O2 -DNDEBUG  CMakeFiles/o6q_check_upstream.dir/src/o6q_check.c.o CMakeFiles/o6q_check_upstream.dir/src/o6q_common.c.o CMakeFiles/o6q_check_upstream.dir/src/o6q_model.c.o CMakeFiles/o6q_check_upstream.dir/src/qnx/o6q_sysinfo.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_core.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_security.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_pubsub.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_highfd.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_robust.c.o -o o6q_check_upstream  libopen62541_upstream.a  ~/qnx800/target/qnx/aarch64le/usr/lib/libcrypto.so  -lm  -lsocket && cd ."
+[28/34] C:\WINDOWS\system32\cmd.exe /C "cd . && F:\Claude\o6q\venv\Lib\site-packages\cmake\data\bin\cmake.exe -E rm -f libopen62541_upstream.a && ~\qnx800\host\win64\x86_64\usr\bin\ntoaarch64-ar.exe qc libopen62541_upstream.a  CMakeFiles/open62541_upstream.dir/third_party/upstream/open62541.c.o && ~\qnx800\host\win64\x86_64\usr\bin\ntoaarch64-ranlib.exe libopen62541_upstream.a && cd ."
+[29/34] C:\WINDOWS\system32\cmd.exe /C "cd . && ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -O2 -DNDEBUG -O2 -DNDEBUG  CMakeFiles/o6q_check_upstream.dir/src/o6q_check.c.o CMakeFiles/o6q_check_upstream.dir/src/o6q_common.c.o CMakeFiles/o6q_check_upstream.dir/src/o6q_model.c.o CMakeFiles/o6q_check_upstream.dir/src/qnx/o6q_sysinfo.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_core.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_security.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_pubsub.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_highfd.c.o CMakeFiles/o6q_check_upstream.dir/src/suite_robust.c.o -o o6q_check_upstream  libopen62541_upstream.a  ~/qnx800/target/qnx/aarch64le/usr/lib/libcrypto.so  -lm  -lsocket && cd ."
+[30/34] ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx  -IF:/Claude/o6q/open62541-qnx/third_party -O2 -DNDEBUG -O2 -DNDEBUG -std=gnu99 -fPIC -fno-strict-aliasing -Wall -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types -Wp,-MD,CMakeFiles\open62541.dir\third_party\open62541.c.o.d -Wp,-MT,CMakeFiles/open62541.dir/third_party/open62541.c.o -Wp,-MF,CMakeFiles\open62541.dir\third_party\open62541.c.o.d -o CMakeFiles/open62541.dir/third_party/open62541.c.o -c F:/Claude/o6q/open62541-qnx/third_party/open62541.c
+F:/Claude/o6q/open62541-qnx/third_party/open62541.c: In function '__ZIP_INSERT':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.c:67611:11: warning: 'prev_order' may be used uninitialized [-Wmaybe-uninitialized]
+67611 |         if(prev_order == ZIP_CMP_MORE)
+      |           ^
+F:/Claude/o6q/open62541-qnx/third_party/open62541.c:67594:29: note: 'prev_order' was declared here
+67594 |     enum ZIP_CMP cur_order, prev_order;
+      |                             ^~~~~~~~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.c: In function 'UA_NetworkMessage_encodeJson_internal':
+F:/Claude/o6q/open62541-qnx/third_party/open62541.c:239580:15: warning: 'publisherIdType' may be used uninitialized [-Wmaybe-uninitialized]
+239580 |         rv |= encodeJsonJumpTable[publisherIdType->typeKind]
+       |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+239581 |             (ctx, &src->publisherId, publisherIdType);
+       |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+F:/Claude/o6q/open62541-qnx/third_party/open62541.c:239541:24: note: 'publisherIdType' was declared here
+239541 |     const UA_DataType *publisherIdType;
+       |                        ^~~~~~~~~~~~~~~
+[31/34] C:\WINDOWS\system32\cmd.exe /C "cd . && F:\Claude\o6q\venv\Lib\site-packages\cmake\data\bin\cmake.exe -E rm -f libopen62541.a && ~\qnx800\host\win64\x86_64\usr\bin\ntoaarch64-ar.exe qc libopen62541.a  CMakeFiles/open62541.dir/third_party/open62541.c.o && ~\qnx800\host\win64\x86_64\usr\bin\ntoaarch64-ranlib.exe libopen62541.a && cd ."
+[32/34] C:\WINDOWS\system32\cmd.exe /C "cd . && ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -O2 -DNDEBUG -O2 -DNDEBUG  CMakeFiles/o6q_server.dir/src/o6q_server.c.o CMakeFiles/o6q_server.dir/src/o6q_common.c.o CMakeFiles/o6q_server.dir/src/o6q_model.c.o CMakeFiles/o6q_server.dir/src/qnx/o6q_sysinfo.c.o CMakeFiles/o6q_server.dir/src/qnx/o6q_slog.c.o -o o6q_server  libopen62541.a  ~/qnx800/target/qnx/aarch64le/lib/libslog2.so  ~/qnx800/target/qnx/aarch64le/usr/lib/libcrypto.so  -lm  -lsocket && cd ."
+[33/34] C:\WINDOWS\system32\cmd.exe /C "cd . && ~\qnx800\host\win64\x86_64\usr\bin\qcc.exe -Vgcc_ntoaarch64le -Wc,-isysroot,~/qnx800/target/qnx -O2 -DNDEBUG -O2 -DNDEBUG  CMakeFiles/o6q_check.dir/src/o6q_check.c.o CMakeFiles/o6q_check.dir/src/o6q_common.c.o CMakeFiles/o6q_check.dir/src/o6q_model.c.o CMakeFiles/o6q_check.dir/src/qnx/o6q_sysinfo.c.o CMakeFiles/o6q_check.dir/src/suite_core.c.o CMakeFiles/o6q_check.dir/src/suite_security.c.o CMakeFiles/o6q_check.dir/src/suite_pubsub.c.o CMakeFiles/o6q_check.dir/src/suite_highfd.c.o CMakeFiles/o6q_check.dir/src/suite_robust.c.o -o o6q_check  libopen62541.a  ~/qnx800/target/qnx/aarch64le/usr/lib/libcrypto.so  -lm  -lsocket && cd ."
 
