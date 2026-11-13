@@ -1,3 +1,5 @@
 third_party/
 out/
 results/serial.log
+__pycache__/
+*.pyc

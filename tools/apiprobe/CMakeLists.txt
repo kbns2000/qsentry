@@ -12,6 +12,7 @@ cmake_minimum_required(VERSION 3.16)
 project(o6q_apiprobe C)
 
 include(CheckIncludeFile)
+include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckStructHasMember)
 
@@ -34,6 +35,14 @@ function(o6q_header h)
   o6q_record(header "${h}" "${${var}}")
 endfunction()
 
+# Network headers are not self-contained on BSD-derived stacks: include the
+# usual prerequisites first, as real code does.
+function(o6q_net_header h)
+  string(MAKE_C_IDENTIFIER "O6Q_HAVE_H_${h}" var)
+  check_include_files("sys/types.h;sys/socket.h;net/if.h;netinet/in.h;${h}" ${var})
+  o6q_record(header "${h}" "${${var}}")
+endfunction()
+
 function(o6q_symbol sym headers)
   string(MAKE_C_IDENTIFIER "O6Q_HAVE_${sym}" var)
   check_symbol_exists(${sym} "${headers}" ${var})
@@ -43,7 +52,8 @@ endfunction()
 function(o6q_member struct member headers)
   string(MAKE_C_IDENTIFIER "O6Q_HAVE_${struct}_${member}" var)
   check_struct_has_member("${struct}" ${member} "${headers}" ${var} LANGUAGE C)
-  o6q_record(member "${struct}.${member}" "${${var}}")
+  string(REPLACE "struct " "" _sname "${struct}")
+  o6q_record(member "${_sname}.${member}" "${${var}}")
 endfunction()
 
 # The BSD socket API lives in libsocket on QNX.
@@ -72,10 +82,13 @@ find_package(OpenSSL QUIET)
 o6q_record(package "OpenSSL-${OPENSSL_VERSION}" "${OPENSSL_FOUND}")
 message(STATUS "OpenSSL: found=${OPENSSL_FOUND} version=${OPENSSL_VERSION} include=${OPENSSL_INCLUDE_DIR} ssl=${OPENSSL_SSL_LIBRARY} crypto=${OPENSSL_CRYPTO_LIBRARY}")
 
+foreach(h net/if_dl.h net/bpf.h net/ethernet.h netinet/if_ether.h netpacket/packet.h
+          linux/if_packet.h net/if_types.h net/route.h netinet/ip.h netinet6/in6.h)
+  o6q_net_header(${h})
+endforeach()
 foreach(h
     stdatomic.h sys/epoll.h sys/event.h sys/eventfd.h sys/timerfd.h sys/signalfd.h
-    sys/select.h poll.h ifaddrs.h net/if.h net/if_dl.h net/bpf.h net/ethernet.h
-    netinet/if_ether.h netpacket/packet.h linux/if_packet.h sys/sockio.h sys/ioctl.h
+    sys/select.h poll.h ifaddrs.h net/if.h sys/sockio.h sys/ioctl.h
     sys/un.h netinet/tcp.h sys/random.h execinfo.h syslog.h sys/slog2.h
     endian.h sys/endian.h byteswap.h gulliver.h sys/neutrino.h sys/syspage.h
     sys/procfs.h sys/dcmd_proc.h devctl.h
