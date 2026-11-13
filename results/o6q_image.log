@@ -1,4 +1,4 @@
-o6q.py image --interop at 2026-11-13 17:28:48
+o6q.py image --interop at 2026-11-13 18:07:57
 $ C:\WINDOWS\system32\cmd.exe /c ~/qnx800/host/common/bin\mkqnximage.BAT --noprompt --force --type=qemu --arch=x86_64 --hostname=o6q --ssh-ident=none --build
 Generating output/build/mount_fs.sh
 Generating output/build/expandfs.sh
