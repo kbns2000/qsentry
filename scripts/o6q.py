@@ -319,11 +319,18 @@ def qemu_command(args, arch, vm, interop):
     common = ["-smp", "2", "-m", "1G", "-display", "none", "-no-reboot",
               "-kernel", kernel, "-serial", "file:serial.log"]
     if arch == "x86_64":
-        nic = "user,model=virtio-net-pci"
+        netdev = "user,id=net0"
         if interop:
-            nic += f",hostfwd=tcp:127.0.0.1:{INTEROP_PORT}-:4840"
+            netdev += f",hostfwd=tcp:127.0.0.1:{INTEROP_PORT}-:4840"
+        # The NIC sits in PCI slot 0x17, the slot for which the image's
+        # pci_hw.cfg (made by mkqnximage) has an interrupt entry. In the first
+        # slot that QEMU picks by itself the guest sent packets but received
+        # none (netstat -in: Ipkts 0, Opkts 19; no DHCP lease, no reply from
+        # 10.0.2.2): its interrupt never arrived [assumption, checked by the
+        # network check of vm/run.sh].
         return [qemu, "-accel", "tcg", "-cpu", "max"] + common + [
-            "-drive", f"file={disk},if=ide,id=drv0", "-nic", nic,
+            "-drive", f"file={disk},if=ide,id=drv0",
+            "-netdev", netdev, "-device", "virtio-net-pci,netdev=net0,addr=0x17",
             # as mkqnximage: an entropy source for the random service, which
             # OpenSSL and the security suite depend on (rng-builtin: Windows
             # has no /dev/urandom for rng-random)
