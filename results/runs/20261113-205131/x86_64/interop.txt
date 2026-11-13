@@ -3,7 +3,7 @@ O6Q PASS host.endpoints 7 endpoints: Aes128_Sha256_RsaOaep/Sign, Aes128_Sha256_R
 ServiceFault (BadIdentityTokenInvalid, diagnostics: DiagnosticInfo(SymbolicId=None, NamespaceURI=None, Locale=None, LocalizedText=None, AdditionalInfo=None, InnerStatusCode=None, InnerDiagnosticInfo=None)) from server received  in response to ActivateSessionRequest
 close_secure_channel was called but connection is closed
 O6Q PASS host.anonymous anonymous session refused: BadIdentityTokenInvalid: The user identity token is not valid.(BadIdentityTokenInvalid)
-certificate does not contain the hostname in DNSNames DESKTOP-L1ES2HT. Some applications will check this.
+certificate does not contain the hostname in DNSNames <host>. Some applications will check this.
 O6Q PASS host.browse_read Basic256Sha256 SignAndEncrypt as 'operator' (connect 0.5 s): 17 variables below Objects/QNX
 O6Q HOST value Release=8.0.0
 O6Q HOST value OpcUaSessions=0
@@ -25,15 +25,15 @@ O6Q HOST value CyclesPerSecond=3698009479
 Revised values returned differ from subscription values: CreateSubscriptionResult(SubscriptionId=1, RevisedPublishingInterval=500.0, RevisedLifetimeCount=10000, RevisedMaxKeepAliveCount=100)
 ServiceFault (BadNoSubscription, diagnostics: DiagnosticInfo(SymbolicId=None, NamespaceURI=None, Locale=None, LocalizedText=None, AdditionalInfo=None, InnerStatusCode=None, InnerDiagnosticInfo=None)) from server received  in response to PublishRequest
 O6Q PASS host.subscription 15 changes of Uptime and 15 of CpuLoadAverage in 15 s; last Uptime 224.17372569, CpuLoadAverage 4.251187438329734
-certificate does not contain the hostname in DNSNames DESKTOP-L1ES2HT. Some applications will check this.
+certificate does not contain the hostname in DNSNames <host>. Some applications will check this.
 O6Q PASS host.Aes128Sha256RsaOaep SignAndEncrypt, user name; Uptime 225.177176533 s
-certificate does not contain the hostname in DNSNames DESKTOP-L1ES2HT. Some applications will check this.
+certificate does not contain the hostname in DNSNames <host>. Some applications will check this.
 O6Q PASS host.Aes256Sha256RsaPss SignAndEncrypt, user name; Uptime 225.177176533 s
-certificate does not contain the hostname in DNSNames DESKTOP-L1ES2HT. Some applications will check this.
+certificate does not contain the hostname in DNSNames <host>. Some applications will check this.
 ServiceFault (BadUserAccessDenied, diagnostics: DiagnosticInfo(SymbolicId=None, NamespaceURI=None, Locale=None, LocalizedText=None, AdditionalInfo=None, InnerStatusCode=None, InnerDiagnosticInfo=None)) from server received  in response to ActivateSessionRequest
 close_secure_channel was called but connection is closed
 O6Q PASS host.wrong_password wrong password refused: BadUserAccessDenied: User does not have permission to perform the requested operation.(BadUserAccessDenied)
-certificate does not contain the hostname in DNSNames DESKTOP-L1ES2HT. Some applications will check this.
+certificate does not contain the hostname in DNSNames <host>. Some applications will check this.
 Received an error: ErrorMessage(Error=StatusCode(value=2148728832), Reason=None)
 Received an error: ErrorMessage(Error=StatusCode(value=2148728832), Reason=None)
 Got error status from server: An error occurred verifying security.(BadSecurityChecksFailed)

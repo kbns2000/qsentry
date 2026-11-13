@@ -33,6 +33,7 @@ import datetime
 import glob
 import os
 import re
+import socket
 import secrets
 import shutil
 import subprocess
@@ -81,11 +82,17 @@ def tool(name):
 HOME = os.path.expanduser("~")
 
 
+HOSTNAME = socket.gethostname()
+
+
 def scrub(text):
-    """The home directory as ~ in what goes into results/ (no user names there)."""
+    """The home directory as ~ and the host name as <host> in what goes into
+    results/ (no user or machine names there)."""
     for home in {HOME, HOME.replace("\\", "/")}:
         if len(home) > 3:
             text = re.sub(re.escape(home), "~", text, flags=re.I)
+    if len(HOSTNAME) > 2:
+        text = re.sub(r"\b" + re.escape(HOSTNAME) + r"\b", "<host>", text, flags=re.I)
     return text
 
 
