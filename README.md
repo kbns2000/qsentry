@@ -1,5 +1,7 @@
 # open62541-qnx: OPC UA on QNX 8.0, with the evidence
 
+Demo video (under 2 min): https://youtu.be/KiwMC7GKt-Q
+
 [open62541](https://www.open62541.org/) is the open-source C implementation of
 OPC UA (IEC 62541), the protocol that PLCs, robots, drives and SCADA/MES
 systems use to exchange data. QNX runs many of the controllers underneath
