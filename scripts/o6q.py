@@ -78,16 +78,35 @@ def tool(name):
     return [path]
 
 
+HOME = os.path.expanduser("~")
+
+
+def scrub(text):
+    """The home directory as ~ in what goes into results/ (no user names there)."""
+    for home in {HOME, HOME.replace("\\", "/")}:
+        if len(home) > 3:
+            text = re.sub(re.escape(home), "~", text, flags=re.I)
+    return text
+
+
+def scrub_file(path):
+    if os.path.exists(path):
+        text = read_text(path)
+        with open(path, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(scrub(text))
+
+
 def run(cmd, cwd=None, log=None):
     """Runs cmd, shows its output and appends it to log. Stops on failure."""
     print("$ " + " ".join(cmd), flush=True)
     with subprocess.Popen(cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as p:
-        out = open(log, "ab") if log else None
+        out = open(log, "a", encoding="utf-8", newline="\n") if log else None
         try:
             for line in p.stdout:
-                sys.stdout.write(line.decode("utf-8", "replace"))
+                text = line.decode("utf-8", "replace").replace("\r\n", "\n")
+                sys.stdout.write(text)
                 if out:
-                    out.write(line)
+                    out.write(scrub(text))
         finally:
             if out:
                 out.close()
@@ -298,6 +317,7 @@ def run_interop(args, rundir):
             code = "timeout"
     with open(out, "ab") as fh:
         fh.write(f"O6Q HOST EXIT {code}\n".encode())
+    scrub_file(out)
     say(f"interop client finished ({code}): {out}")
 
 
@@ -312,7 +332,7 @@ def cmd_run(args):
         interop = args.interop and arch == "x86_64"
         cmd = qemu_command(args, arch, vm, interop)
         with open(os.path.join(adir, "qemu_command.txt"), "w") as fh:
-            fh.write(" ".join(cmd) + "\n")
+            fh.write(scrub(" ".join(cmd)) + "\n")
         qlog = open(os.path.join(adir, "qemu.log"), "wb")
         say(f"{arch}: starting QEMU")
         procs[arch] = (subprocess.Popen(cmd, cwd=adir, stdout=qlog, stderr=subprocess.STDOUT),
@@ -354,6 +374,8 @@ def cmd_run(args):
     with open(os.path.join(rundir, "qemu_status.txt"), "w") as fh:
         for arch, s in status.items():
             fh.write(f"{arch} {s}\n")
+    for arch in procs:
+        scrub_file(os.path.join(rundir, arch, "qemu.log"))
     report(rundir)
 
 
@@ -599,7 +621,7 @@ class Tee:
 
     def write(self, text):
         self.stream.write(text)
-        self.log.write(text)
+        self.log.write(scrub(text))
         self.log.flush()
         return len(text)
 
