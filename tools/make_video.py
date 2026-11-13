@@ -192,7 +192,7 @@ def main():
     d.rectangle([40, 110, W - 40, H - 110], fill=PANEL)
     for i, l in enumerate(shown):
         colour = BAD if " FAIL " in l else GOOD if " PASS " in l else DIM
-        d.text((56, 122 + 21 * i), l[:118], font=F_MONO, fill=colour)
+        d.text((56, 122 + 21 * i), l.expandtabs(4)[:118], font=F_MONO, fill=colour)
     caption(d, "One line per test. The report on the host is made from these lines only.")
     scenes.append((im, 10))
 
@@ -309,7 +309,8 @@ def main():
             y += 19
     y += 10
     for l in slog:
-        d.text((56, y), l[:120], font=F_MONO_S, fill=DIM)
+        # slog2info pads its columns with blanks and tabs: one blank is enough
+        d.text((56, y), " ".join(l.split())[:120], font=F_MONO_S, fill=DIM)
         y += 19
     caption(d, "CPU load, memory, processes and uptime once per second; trust folder re-read "
                "for every connection; stack messages in slog2info.")
