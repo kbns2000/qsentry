@@ -45,6 +45,14 @@ sleep 1
 # The demo server for the host client (only in the image made with --interop)
 if [ -f $D/demo.conf ]; then
     . $D/demo.conf
+    # QEMU's user network forwards the host port to 10.0.2.15:4840
+    echo "O6Q GUEST network:"
+    ifconfig
+    case "$(ifconfig vtnet0 2>&1)" in
+        *"inet "*) ;;
+        *) echo "O6Q GUEST vtnet0 has no IPv4 address; setting 10.0.2.15"
+           ifconfig vtnet0 10.0.2.15 netmask 255.255.255.0 up ;;
+    esac
     echo "O6Q GUEST demo server for the host client"
     ./o6q_server -p 4840 -s 420 --secure --trust $D/pki/trusted \
         --user "$O6Q_DEMO_USER:$O6Q_DEMO_PASS" &
