@@ -35,7 +35,7 @@ that question to the first customer. We wanted answers measured on QNX.
   does on the same QNX guest and what the port does.
 - **An operating system probe** (no open62541 in it) measures the behaviours
   the changes depend on and prints them next to Linux reference values.
-- **The port is seven small changes**, each a file with the reason, the
+- **The port is six small changes**, each a file with the reason, the
   upstream source file it belongs to, and the tests that show it. A script
   downloads the release, checks its SHA-256 and applies them. Changes that the
   measurements could not show were removed.

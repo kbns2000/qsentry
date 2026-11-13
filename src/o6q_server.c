@@ -153,7 +153,8 @@ static void update_process_list(UA_Server *server, Demo *d) {
                  d->procs[i].name, d->procs[i].threads);
         list[i] = UA_STRING(text[i]);
     }
-    UA_Variant_setArray(&var, list, n, &UA_TYPES[UA_TYPES_STRING]);
+    UA_Variant_setArray(&var, n ? (void *)list : UA_EMPTY_ARRAY_SENTINEL, n,
+                        &UA_TYPES[UA_TYPES_STRING]);
     UA_Server_writeValue(server, var_id(d, V_PROCLIST), var);
 }
 
@@ -182,7 +183,8 @@ static void sample_cb(UA_Server *server, void *data) {
     write_scalar(server, d, V_THREADS, &threads, &UA_TYPES[UA_TYPES_UINT32]);
     write_scalar(server, d, V_CPULOADAVG, &avg, &UA_TYPES[UA_TYPES_DOUBLE]);
     write_scalar(server, d, V_SESSIONS, &sessions, &UA_TYPES[UA_TYPES_UINT32]);
-    UA_Variant_setArray(&var, loads, n, &UA_TYPES[UA_TYPES_DOUBLE]);
+    UA_Variant_setArray(&var, n ? (void *)loads : UA_EMPTY_ARRAY_SENTINEL, n,
+                        &UA_TYPES[UA_TYPES_DOUBLE]);
     UA_Server_writeValue(server, var_id(d, V_CPULOAD), var);
     if(d->samples % PROCLIST_EVERY == 0)
         update_process_list(server, d);
@@ -199,17 +201,32 @@ static void sample_cb(UA_Server *server, void *data) {
 static UA_StatusCode add_var(UA_Server *server, const Demo *d, int v, const UA_Variant *value,
                              const UA_DataType *type, UA_Int32 rank, const char *description) {
     UA_VariableAttributes attr = UA_VariableAttributes_default;
+    UA_UInt32 any_length = 0;
     UA_NodeId id = var_id(d, v);
     attr.displayName = UA_LOCALIZEDTEXT("en", (char *)(uintptr_t)var_names[v]);
     attr.description = UA_LOCALIZEDTEXT("en", (char *)(uintptr_t)description);
     attr.value = *value; /* copied by the server */
     attr.dataType = type->typeId;
     attr.valueRank = rank;
+    if(rank == UA_VALUERANK_ONE_DIMENSION) {
+        /* A positive ValueRank needs as many ArrayDimensions, else the node is
+         * refused with BadTypeMismatch (logged at INFO only); 0 = any length */
+        attr.arrayDimensionsSize = 1;
+        attr.arrayDimensions = &any_length;
+    }
     attr.accessLevel = UA_ACCESSLEVELMASK_READ;
-    return UA_Server_addVariableNode(
+    UA_StatusCode rc = UA_Server_addVariableNode(
         server, id, UA_NODEID_STRING(d->ns, "QNX"), UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
         UA_QUALIFIEDNAME(d->ns, (char *)(uintptr_t)var_names[v]),
         UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr, NULL, NULL);
+    if(rc != UA_STATUSCODE_GOOD) {
+        /* not fatal: the server runs without this variable, and the log says
+         * which one it is */
+        printf("O6Q DEMO WARN variable %s not added: %s\n", var_names[v],
+               UA_StatusCode_name(rc));
+        fflush(stdout);
+    }
+    return UA_STATUSCODE_GOOD;
 }
 
 static UA_StatusCode add_string(UA_Server *server, const Demo *d, int v, const char *text,
@@ -279,12 +296,13 @@ static UA_StatusCode add_model(UA_Server *server, Demo *d) {
     rc |= add_number(server, d, V_THREADS, &zero32, &UA_TYPES[UA_TYPES_UINT32],
                      "Number of threads in all processes");
     update_load(d, loads, &n);
-    UA_Variant_setArray(&var, loads, n, &UA_TYPES[UA_TYPES_DOUBLE]);
+    UA_Variant_setArray(&var, n ? (void *)loads : UA_EMPTY_ARRAY_SENTINEL, n,
+                        &UA_TYPES[UA_TYPES_DOUBLE]);
     rc |= add_var(server, d, V_CPULOAD, &var, &UA_TYPES[UA_TYPES_DOUBLE],
                   UA_VALUERANK_ONE_DIMENSION, "Percent of time each CPU was busy");
     rc |= add_number(server, d, V_CPULOADAVG, &zero, &UA_TYPES[UA_TYPES_DOUBLE],
                      "Percent of time all CPUs were busy");
-    UA_Variant_setArray(&var, NULL, 0, &UA_TYPES[UA_TYPES_STRING]);
+    UA_Variant_setArray(&var, UA_EMPTY_ARRAY_SENTINEL, 0, &UA_TYPES[UA_TYPES_STRING]);
     rc |= add_var(server, d, V_PROCLIST, &var, &UA_TYPES[UA_TYPES_STRING],
                   UA_VALUERANK_ONE_DIMENSION, "Processes: pid, name, number of threads");
     rc |= add_number(server, d, V_SESSIONS, &zero32, &UA_TYPES[UA_TYPES_UINT32],
@@ -407,7 +425,7 @@ int main(int argc, char **argv) {
 #if defined(__linux__) || defined(__QNXNTO__)
         if(rc == UA_STATUSCODE_GOOD && trust) {
             /* the trust list is a directory, read again for every connection
-             * (patches/10-pki-folders.change brings this to QNX) */
+             * (patches/06-pki-folders.change brings this to QNX) */
             rc = UA_CertificateVerification_CertFolders(&cfg.secureChannelPKI, trust, NULL,
                                                         NULL);
             if(rc == UA_STATUSCODE_GOOD)
@@ -450,13 +468,18 @@ int main(int argc, char **argv) {
         status = 1;
         goto out;
     }
+    const char *stage = "the QNX object";
     rc = add_model(server, d);
-    if(rc == UA_STATUSCODE_GOOD)
+    if(rc == UA_STATUSCODE_GOOD) {
+        stage = "the sampling callback";
         rc = UA_Server_addRepeatedCallback(server, sample_cb, d, SAMPLE_MS, NULL);
-    if(rc == UA_STATUSCODE_GOOD)
+    }
+    if(rc == UA_STATUSCODE_GOOD) {
+        stage = "UA_Server_run_startup";
         rc = UA_Server_run_startup(server);
+    }
     if(rc != UA_STATUSCODE_GOOD) {
-        fprintf(stderr, "o6q_server: start failed: %s\n", UA_StatusCode_name(rc));
+        fprintf(stderr, "o6q_server: start failed at %s: %s\n", stage, UA_StatusCode_name(rc));
         status = 1;
         goto out;
     }

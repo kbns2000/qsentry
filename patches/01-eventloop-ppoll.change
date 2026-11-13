@@ -4,7 +4,7 @@
 # title: Wait in ppoll() instead of select()
 # file: open62541.c
 # upstream: arch/eventloop_posix.h arch/eventloop_posix_select.c
-# test: highfd.client highfd.sessions highfd.idle robust.idle_client
+# test: highfd.client highfd.sessions robust.idle_client
 #
 # open62541 waits in epoll on Linux. On every other POSIX system its event
 # loop calls select(), and that code puts every registered descriptor into an

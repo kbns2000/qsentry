@@ -18,6 +18,25 @@ run() {
 
 echo "O6Q GUEST START"
 uname -a
+
+# QEMU's user network answers DHCP with 10.0.2.15 and forwards the host port of
+# the demo to that address. A guest without the lease (in one run it had only
+# a 169.254 address) gets the address set here, before the probes and checks,
+# so that multicast and the demo have an IPv4 interface.
+i=0
+while [ $i -lt 15 ]; do
+    case "$(ifconfig vtnet0 2>&1)" in *"inet 10.0.2."*) break ;; esac
+    sleep 1
+    i=$((i + 1))
+done
+case "$(ifconfig vtnet0 2>&1)" in
+    *"inet 10.0.2."*) echo "O6Q GUEST vtnet0 has its DHCP address" ;;
+    *) echo "O6Q GUEST vtnet0 has no DHCP address after 15 s; setting 10.0.2.15"
+       slay -f dhcpcd >/dev/null 2>&1
+       ifconfig vtnet0 inet 10.0.2.15 netmask 255.255.255.0 up
+       route add default 10.0.2.2 >/dev/null 2>&1 ;;
+esac
+ifconfig vtnet0
 pidin info
 ls -l $D $D/lib
 
@@ -48,14 +67,10 @@ if [ -f $D/demo.conf ]; then
     . $D/demo.conf
     # QEMU's user network forwards the host port to 10.0.2.15:4840
     echo "O6Q GUEST network:"
-    ifconfig
-    case "$(ifconfig vtnet0 2>&1)" in
-        *"inet "*) ;;
-        *) echo "O6Q GUEST vtnet0 has no IPv4 address; setting 10.0.2.15"
-           ifconfig vtnet0 10.0.2.15 netmask 255.255.255.0 up ;;
-    esac
+    ifconfig vtnet0
     echo "O6Q GUEST demo server for the host client"
-    ./o6q_server -p 4840 -s 420 --secure --trust $D/pki/trusted \
+    # -v: messages of level info in slog2 as well (why a node was not added)
+    ./o6q_server -v -p 4840 -s 420 --secure --trust $D/pki/trusted \
         --user "$O6Q_DEMO_USER:$O6Q_DEMO_PASS" &
     srv=$!
     wait $srv

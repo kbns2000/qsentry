@@ -16,7 +16,7 @@ of the 1.4 line, **open62541 v1.4.22**, on **QNX 8.0**, with **encryption**
 - **A test program that runs on QNX** twice: built from the unchanged release,
   and built from the port. The report puts the two side by side for every
   change.
-- **Seven small changes** to the release, each one file with the reason, the
+- **Six small changes** to the release, each one file with the reason, the
   upstream source file it belongs to, and the test that shows it
   ([`patches/`](patches/)). A change stays only where the test on QNX shows
   the difference.
@@ -24,7 +24,7 @@ of the 1.4 line, **open62541 v1.4.22**, on **QNX 8.0**, with **encryption**
   QNX behaviours the changes depend on, next to Linux reference values.
 - **A demo server**: the live QNX system (CPU load, memory, processes, uptime)
   as OPC UA nodes, encrypted, with user login, a certificate trust folder that
-  is re-read while it runs, and log messages in **slog2**.
+  is re-read for every connection, and log messages in **slog2**.
 - **One command** cross-compiles for x86_64 and aarch64le, makes a QEMU image
   with `mkqnximage`, boots it, lets an independent OPC UA client (python
   asyncua) talk to the demo server, and writes the report.
@@ -35,13 +35,12 @@ of the 1.4 line, **open62541 v1.4.22**, on **QNX 8.0**, with **encryption**
 
 | # | Change | Why (short) | Shown by |
 |---|---|---|---|
-| 01 | [Wait in `ppoll()` instead of `select()`](patches/01-eventloop-ppoll.change) | Outside Linux the event loop uses `select()` and never compares a descriptor with `FD_SETSIZE`: a descriptor ≥ `FD_SETSIZE` makes `FD_SET()` write past the `fd_set` on the stack. | `highfd.*`, `robust.idle_client` |
+| 01 | [Wait in `ppoll()` instead of `select()`](patches/01-eventloop-ppoll.change) | Outside Linux the event loop uses `select()` and never compares a descriptor with `FD_SETSIZE`: a descriptor ≥ `FD_SETSIZE` makes `FD_SET()` write past the `fd_set` on the stack. | `highfd.client`, `highfd.sessions`, `robust.idle_client` |
 | 02 | [Keep the listen socket when `accept()` finds an aborted connection](patches/02-tcp-accept-aborted.change) | Any `accept()` error but `EINTR` closes the listen socket: the server stops accepting connections. A BSD network stack reports a connection reset in the listen queue as `ECONNABORTED`. | `robust.aborted_connect` |
 | 03 | [Take `recv() == 0` as the end of the connection](patches/03-tcp-recv-eof.change) | The code also looks at `errno` when `recv()` returns 0; a stale `EAGAIN` keeps a closed connection registered and the event loop spinning. | `robust.peer_close` |
 | 04 | [Do not close a UDP socket because of an empty datagram](patches/04-udp-empty-datagram.change) | `recvfrom() == 0` is a valid empty datagram, not an error; one such datagram leaves a PubSub subscriber without a socket. | `pubsub.unicast.empty_datagram` |
 | 05 | [Fall back to a socket pair when `pipe()` is not available](patches/05-interrupt-selfpipe.change) | On QNX `pipe()` needs the pipe manager process; images without it cannot start the server. | `nopipe.*` |
-| 06 | [Pass the real address length to `getnameinfo()`](patches/06-tcp-peer-name.change) | The size of `sockaddr_storage` is passed instead of the length from `accept()`. | `core.connect.ipv4` |
-| 10 | [Certificate folders on QNX](patches/10-pki-folders.change) | The trust list folders are "Linux only" in the release although they need only `scandir()`. The change also refuses folder names of `PATH_MAX` or more, which overflow a stack buffer in the release (on Linux as well). | `security.certfolder.*` |
+| 06 | [Certificate folders on QNX](patches/06-pki-folders.change) | The trust list folders are "Linux only" in the release although they need only `scandir()`. The change also refuses folder names of `PATH_MAX` or more, which overflow a stack buffer in the release (on Linux as well). | `security.certfolder.*` |
 
 [`patches/README.md`](patches/README.md) explains the format of a change.
 `scripts/port.py` also sets the build configuration of the release header:
@@ -128,7 +127,7 @@ UaExpert or [`scripts/o6q_client.py`](scripts/o6q_client.py).
 - `--secure`: encrypted endpoints with a self-signed RSA-2048 certificate made
   at start.
 - `--trust DIR`: only client certificates that are files in `DIR` are
-  accepted. The folder is read again for every connection (change 10), so a
+  accepted. The folder is read again for every connection (change 06), so a
   client is admitted or locked out by copying or deleting one file, without a
   restart.
 - `--user name:password`: anonymous sessions are refused.

@@ -4,5 +4,4 @@
 03-tcp-recv-eof.change
 04-udp-empty-datagram.change
 05-interrupt-selfpipe.change
-06-tcp-peer-name.change
-10-pki-folders.change
+06-pki-folders.change

@@ -890,6 +890,20 @@ static void test_restart(Core *t) {
         rc_again = o6q_read_i32(t->client, "answer", &v);
     CHECK("restart.reconnect", rc_again == UA_STATUSCODE_GOOD && v == 42,
           "the same client object connects again -> %s, answer=%d", SC(rc_again), (int)v);
+
+    /* Tells a server that is not reachable apart from a client that does not
+     * connect again by itself: disconnect first, then connect. */
+    o6q_step("restart.reconnect_after_disconnect");
+    v = 0;
+    UA_Client_disconnect(t->client);
+    o6q_expect_errors(1);
+    rc_again = UA_Client_connect(t->client, t->url);
+    o6q_expect_errors(0);
+    if(rc_again == UA_STATUSCODE_GOOD)
+        rc_again = o6q_read_i32(t->client, "answer", &v);
+    CHECK("restart.reconnect_after_disconnect", rc_again == UA_STATUSCODE_GOOD && v == 42,
+          "UA_Client_disconnect(), then UA_Client_connect() -> %s, answer=%d", SC(rc_again),
+          (int)v);
 }
 
 /* Start, use and stop a server several times: the port must be free again at

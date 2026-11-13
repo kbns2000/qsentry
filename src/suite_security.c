@@ -19,7 +19,7 @@
 #include <unistd.h>
 
 /* The release has UA_CertificateVerification_CertFolders() for Linux only;
- * the port adds QNX (patches/10-pki-folders.change). */
+ * the port adds QNX (patches/06-pki-folders.change). */
 #if defined(__linux__) || (defined(__QNXNTO__) && !defined(O6Q_VARIANT))
 #define O6Q_HAVE_CERTFOLDERS 1
 #endif
