@@ -1,0 +1,51 @@
+# open62541-qnx change: udp-multicast-if
+# SPDX-License-Identifier: MPL-2.0
+#
+# title: Give IP_MULTICAST_IF the interface address, not the multicast group
+# file: open62541.c
+# upstream: arch/eventloop_posix_udp.c
+# test: pubsub.multicast.setup pubsub.multicast.flow pubsub.multicast_anyif.setup pubsub.multicast_anyif.flow
+#
+# The UDP code keeps a multicast request in a union whose IPv4 member is
+# struct ip_mreqn only "#if defined(ip_mreqn)". ip_mreqn is a structure tag,
+# never a macro, so on every system the member is struct ip_mreq: the group
+# first, then the interface address.
+#
+# For sending, the code passes that whole struct ip_mreq to IP_MULTICAST_IF.
+# Linux reads an ip_mreq there and takes its second field. A BSD network
+# stack (QNX 8.0 io-sock, FreeBSD, and macOS, for which the code has a
+# special case) reads a struct in_addr: the first four bytes, which are the
+# multicast group. No interface has that address, and setsockopt() fails with
+# EADDRNOTAVAIL ("Cannot set socket for multicast sending. Error: Can't
+# assign requested address"). Every multicast PubSub connection then fails to
+# start with BadInternalError, with or without a named interface.
+# o6q_envprobe shows the system call alone (multicast.if_mreq_group_first).
+#
+# Also, a named interface is written into the request only for macOS (as its
+# address) and for ip_mreqn (never compiled). On QNX the interface name was
+# looked up and then dropped. The change uses the macOS code on QNX in both
+# places: the interface address goes into imr_interface, and IP_MULTICAST_IF
+# gets that struct in_addr.
+#
+@@ hunk
+<<<<<<< open62541 v1.4.22
+#if defined(ip_mreqn)
+        req->ipv4.imr_ifindex = idx;
+#elif defined(__APPLE__)
+        struct sockaddr_in *sin = (struct sockaddr_in*)ifa->ifa_addr;
+=======
+#if defined(ip_mreqn)
+        req->ipv4.imr_ifindex = idx;
+#elif defined(__APPLE__) || defined(__QNXNTO__) /* qnx: struct ip_mreq takes the address */
+        struct sockaddr_in *sin = (struct sockaddr_in*)ifa->ifa_addr;
+>>>>>>> open62541-qnx
+@@ hunk
+<<<<<<< open62541 v1.4.22
+#elif defined(__APPLE__)
+                            &req.ipv4.imr_interface, sizeof(struct in_addr));
+=======
+#elif defined(__APPLE__) || defined(__QNXNTO__)
+                            /* qnx: a BSD stack reads a struct in_addr here; given an
+                             * ip_mreq it would read the group as the interface */
+                            &req.ipv4.imr_interface, sizeof(struct in_addr));
+>>>>>>> open62541-qnx

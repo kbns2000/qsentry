@@ -16,7 +16,7 @@ of the 1.4 line, **open62541 v1.4.22**, on **QNX 8.0**, with **encryption**
 - **A test program that runs on QNX** twice: built from the unchanged release,
   and built from the port. The report puts the two side by side for every
   change.
-- **Six small changes** to the release, each one file with the reason, the
+- **Seven small changes** to the release, each one file with the reason, the
   upstream source file it belongs to, and the test that shows it
   ([`patches/`](patches/)). A change stays only where the test on QNX shows
   the difference.
@@ -41,6 +41,7 @@ of the 1.4 line, **open62541 v1.4.22**, on **QNX 8.0**, with **encryption**
 | 04 | [Do not close a UDP socket because of an empty datagram](patches/04-udp-empty-datagram.change) | `recvfrom() == 0` is a valid empty datagram, not an error; one such datagram leaves a PubSub subscriber without a socket. | `pubsub.unicast.empty_datagram` |
 | 05 | [Fall back to a socket pair when `pipe()` is not available](patches/05-interrupt-selfpipe.change) | On QNX `pipe()` needs the pipe manager process; images without it cannot start the server. | `nopipe.*` |
 | 06 | [Certificate folders on QNX](patches/06-pki-folders.change) | The trust list folders are "Linux only" in the release although they need only `scandir()`. The change also refuses folder names of `PATH_MAX` or more, which overflow a stack buffer in the release (on Linux as well). | `security.certfolder.*` |
+| 07 | [Give `IP_MULTICAST_IF` the interface address](patches/07-udp-multicast-if.change) | The code passes a whole `struct ip_mreq` (group first) to `IP_MULTICAST_IF`. A BSD stack such as QNX's io-sock reads the first four bytes as the interface address, finds no interface with the group's address and fails with `EADDRNOTAVAIL`: no multicast PubSub connection can start. | `pubsub.multicast*` |
 
 [`patches/README.md`](patches/README.md) explains the format of a change.
 `scripts/port.py` also sets the build configuration of the release header:

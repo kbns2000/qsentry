@@ -820,7 +820,9 @@ static void multicast(const char *group, const char *tag) {
     if(!g_mc_if[0])
         return;
 
-    /* the forms that open62541 uses: struct ip_mreqn with an interface index */
+    /* joining: struct ip_mreqn with an interface index, and struct ip_mreq with
+     * an interface address (the form that open62541 v1.4 compiles everywhere,
+     * because its "#if defined(ip_mreqn)" tests a structure tag) */
     fd = socket(AF_INET, SOCK_DGRAM, 0);
     if(fd < 0)
         return;
@@ -870,6 +872,16 @@ static void multicast(const char *group, const char *tag) {
     try_opt("multicast.if_mreqn_index0", fd, IPPROTO_IP, IP_MULTICAST_IF, &mn, sizeof(mn));
     try_opt("multicast.if_address", fd, IPPROTO_IP, IP_MULTICAST_IF, &g_mc_addr,
             sizeof(g_mc_addr));
+    /* what open62541 v1.4 passes outside macOS and Windows: the whole struct
+     * ip_mreq, group first. A stack that reads a struct in_addr here takes the
+     * group for the interface address. */
+    memset(&mr, 0, sizeof(mr));
+    inet_pton(AF_INET, group, &mr.imr_multiaddr);
+    mr.imr_interface = g_mc_addr;
+    try_opt("multicast.if_mreq_group_first", fd, IPPROTO_IP, IP_MULTICAST_IF, &mr, sizeof(mr));
+    mr.imr_interface.s_addr = htonl(INADDR_ANY);
+    try_opt("multicast.if_mreq_group_first_any", fd, IPPROTO_IP, IP_MULTICAST_IF, &mr,
+            sizeof(mr));
     try_opt("multicast.loop_int", fd, IPPROTO_IP, IP_MULTICAST_LOOP, &one, sizeof(one));
     try_opt("multicast.loop_char", fd, IPPROTO_IP, IP_MULTICAST_LOOP, &one_c, sizeof(one_c));
     try_opt("multicast.ttl_int", fd, IPPROTO_IP, IP_MULTICAST_TTL, &one, sizeof(one));

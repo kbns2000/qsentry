@@ -8,6 +8,17 @@ cd $D || exit 1
 LD_LIBRARY_PATH=$D/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH
 
+# Packet counters, ARP and a ping of QEMU's gateway: does the guest receive
+# anything from QEMU's user network (DHCP and the host port forward need it)?
+netdiag() {
+    echo "O6Q GUEST network check ($1):"
+    netstat -in 2>&1
+    netstat -rn 2>&1
+    ping -c 3 10.0.2.2 2>&1
+    arp -an 2>&1
+    netstat -in 2>&1
+}
+
 run() {
     name=$1
     shift
@@ -37,6 +48,7 @@ case "$(ifconfig vtnet0 2>&1)" in
        route add default 10.0.2.2 >/dev/null 2>&1 ;;
 esac
 ifconfig vtnet0
+netdiag boot
 pidin info
 ls -l $D $D/lib
 
@@ -75,6 +87,7 @@ if [ -f $D/demo.conf ]; then
     srv=$!
     wait $srv
     echo "O6Q EXIT demo $?"
+    netdiag "after the demo"
     echo "O6Q GUEST slog2 messages of the demo server:"
     slog2info -b o6q_server
 fi
