@@ -25,6 +25,7 @@ static struct {
     unsigned log_warnings, log_errors; /* unexpected ones only */
     unsigned log_lines, log_suppressed;
     unsigned log_getnameinfo; /* warnings that name getnameinfo() */
+    unsigned log_trust_reload; /* "Reloading the trust-list" (any level) */
     double t0_us;
     int expect_errors;
     int verbose;
@@ -143,8 +144,8 @@ void o6q_begin(const char *suite, unsigned watchdog_seconds) {
     static const int fatal[] = {SIGALRM, SIGSEGV, SIGBUS, SIGFPE, SIGILL, SIGABRT};
     struct sigaction sa;
 
-    setvbuf(stdout, NULL, _IOLBF, 0);
-
+    /* stdout is line-buffered since main(); setvbuf() is allowed only before
+     * the first output */
     pthread_mutex_lock(&g.lock);
 #ifdef O6Q_VARIANT
     snprintf(g.suite, sizeof(g.suite), "%s@%s", suite, O6Q_VARIANT);
@@ -241,6 +242,13 @@ static void log_cb(void *context, UA_LogLevel level, UA_LogCategory category,
     char buf[1024];
     (void)context;
 
+    /* The certificate folders announce every reload at INFO level; the
+     * format string has no arguments, so no formatting is needed here. */
+    if(msg && strstr(msg, "Reloading the trust-list") != NULL) {
+        pthread_mutex_lock(&g.lock);
+        g.log_trust_reload++;
+        pthread_mutex_unlock(&g.lock);
+    }
     if((int)level < (int)UA_LOGLEVEL_WARNING && !g.verbose)
         return;
     if((int)level >= (int)UA_LOGLEVEL_FATAL)
@@ -289,6 +297,14 @@ unsigned o6q_log_getnameinfo(void) {
     unsigned n;
     pthread_mutex_lock(&g.lock);
     n = g.log_getnameinfo;
+    pthread_mutex_unlock(&g.lock);
+    return n;
+}
+
+unsigned o6q_log_trust_reload(void) {
+    unsigned n;
+    pthread_mutex_lock(&g.lock);
+    n = g.log_trust_reload;
     pthread_mutex_unlock(&g.lock);
     return n;
 }

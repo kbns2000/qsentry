@@ -163,8 +163,13 @@ UA_StatusCode o6q_model_add(UA_Server *server, O6QModel *m) {
     UA_StatusCode rc;
     UA_Variant v;
 
+    /* The models are static and added again for every server: the mutex of
+     * the previous one (stopped and joined by now) is destroyed first. */
+    if(m->lock_ready)
+        pthread_mutex_destroy(&m->lock);
     memset(m, 0, sizeof(*m));
     pthread_mutex_init(&m->lock, NULL);
+    m->lock_ready = 1;
 
     { /* Objects/o6q */
         UA_ObjectAttributes attr = UA_ObjectAttributes_default;

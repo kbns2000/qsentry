@@ -3,10 +3,13 @@
  *
  * The program knows nothing about open62541.  It asks the operating system
  * directly and prints one fact per line, "O6Q ENV <key>=<value>".  The port
- * rests on these facts (see docs/PORTING.md); the same program on Linux gives
- * the column to compare with.
+ * rests on these facts (see the files in patches/ and README.md); the same
+ * program on Linux gives the column to compare with.
  *
- * It opens sockets on the loopback address and changes no system state.
+ * It opens sockets on the loopback address and changes no system state. Each
+ * group of probes runs in a child process of its own, so that a crash or a hang
+ * loses only that group. "o6q_envprobe nopipe" runs only the probes for a
+ * system without the pipe manager (vm/run.sh stops it for that).
  *
  * SPDX-License-Identifier: Apache-2.0 */
 #ifndef _QNX_SOURCE
@@ -42,7 +45,13 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/wait.h>
+/* what open62541.h includes before its IEEE 754 test (see float_config()) */
+#include <assert.h>
+#include <float.h>
+#include <inttypes.h>
 #ifdef __QNXNTO__
+#include <gulliver.h>
 #include <sys/neutrino.h>
 #include <sys/syspage.h>
 #endif
@@ -170,8 +179,13 @@ static int tcp_listener(unsigned *port, int nonblocking) {
         close(fd);
         return -1;
     }
-    if(nonblocking)
-        fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
+    if(nonblocking) {
+        int fl = fcntl(fd, F_GETFL);
+        if(fl < 0 || fcntl(fd, F_SETFL, fl | O_NONBLOCK) != 0) {
+            close(fd); /* accept() on it could block */
+            return -1;
+        }
+    }
     *port = ntohs(a.sin_port);
     return fd;
 }
@@ -482,6 +496,32 @@ static void poll_semantics(void) {
         env("poll.events0_peer_closed", "returns %d, revents %s", rc, revents_name(p[0].revents));
         close(sp[0]);
     }
+
+    /* events == 0 on a TCP connection that the peer has reset: does the
+     * network stack report what the change eventloop-ppoll says it does? */
+    {
+        unsigned port = 0;
+        int ls = tcp_listener(&port, 1), c = -1, s = -1;
+        short re = 0;
+        if(ls >= 0) {
+            c = tcp_client(port);
+            (void)poll_one(ls, POLLIN, 500, &re);
+            s = accept(ls, NULL, NULL);
+        }
+        if(c >= 0 && s >= 0) {
+            tcp_reset(c);
+            c = -1;
+            sleep_ms(300);
+            rc = poll_one(s, 0, 20, &re);
+            env("poll.events0_tcp_reset", "returns %d, revents %s", rc, revents_name(re));
+        }
+        if(s >= 0)
+            close(s);
+        if(c >= 0)
+            close(c);
+        if(ls >= 0)
+            close(ls);
+    }
 }
 
 /* ---------------------------------------------------- errno after success */
@@ -494,8 +534,10 @@ static void errno_semantics(void) {
     char byte;
 
     g_probe = "errno_semantics";
-    if(socketpair(AF_UNIX, SOCK_STREAM, 0, sp) != 0)
+    if(socketpair(AF_UNIX, SOCK_STREAM, 0, sp) != 0) {
+        env("errno", "socketpair FAILED(%s): no errno.* probes", ename(errno));
         return;
+    }
 
     p.fd = sp[0];
     p.events = POLLIN;
@@ -599,7 +641,7 @@ static void tcp_semantics(void) {
         env("tcp.buffers", "SO_SNDBUF=%d SO_RCVBUF=%d", snd, rcv);
         fcntl(s, F_SETFL, fcntl(s, F_GETFL) | O_NONBLOCK);
         while(total < 64u * 1024u * 1024u) {
-            k = send(s, chunk, sizeof(chunk), 0);
+            k = send(s, chunk, sizeof(chunk), MSG_DONTWAIT); /* also if O_NONBLOCK did not take */
             if(k < 0)
                 break;
             total += (size_t)k;
@@ -654,7 +696,7 @@ static void tcp_semantics(void) {
     c = tcp_client(port);
     if(c >= 0) {
         tcp_reset(c);
-        sleep_ms(50);
+        sleep_ms(300); /* time for the reset to arrive, also on an emulated CPU */
         rc = poll_one(ls, POLLIN, 200, &re);
         errno = 0;
         s = accept(ls, NULL, NULL);
@@ -663,6 +705,8 @@ static void tcp_semantics(void) {
                 revents_name(re), ename(errno));
         } else {
             int k;
+            short re2 = 0;
+            (void)poll_one(s, POLLIN, 1000, &re2); /* a reset that is late still arrives */
             errno = 0;
             k = (int)recv(s, &byte, 1, MSG_DONTWAIT);
             env("tcp.reset_before_accept",
@@ -722,6 +766,9 @@ static void udp_semantics(void) {
             close(w);
         return;
     }
+    /* non-blocking as open62541's UDP sockets: recvfrom() cannot block even
+     * if MSG_DONTWAIT were ignored */
+    fcntl(r, F_SETFL, fcntl(r, F_GETFL) | O_NONBLOCK);
 
     /* a datagram without payload */
     errno = 0;
@@ -762,6 +809,14 @@ static void multicast(const char *group, const char *tag) {
     int fd, one = 1;
     unsigned char one_c = 1;
 
+    g_probe = "multicast";
+    if(strcmp(tag, "group") == 0) {
+        if(g_mc_if[0])
+            env("multicast.interface", "%s index=%u", g_mc_if, g_mc_index);
+        else
+            env("multicast", "skipped: no interface that is up, can multicast, is not the "
+                             "loopback and has an IPv4 address (yet)");
+    }
     if(!g_mc_if[0])
         return;
 
@@ -867,6 +922,16 @@ static void misc(void) {
         struct sigaction cur;
         g_signals = 0;
         signal(SIGUSR1, on_signal);
+        memset(&cur, 0, sizeof(cur));
+        sigaction(SIGUSR1, NULL, &cur);
+        env("signal.sa_flags", "0x%x%s%s%s", (unsigned)cur.sa_flags,
+#ifdef SA_RESTART
+            (cur.sa_flags & SA_RESTART) ? " SA_RESTART" : "",
+#else
+            "",
+#endif
+            (cur.sa_flags & SA_RESETHAND) ? " SA_RESETHAND" : "",
+            (cur.sa_flags & SA_NODEFER) ? " SA_NODEFER" : "");
         raise(SIGUSR1);
         memset(&cur, 0, sizeof(cur));
         sigaction(SIGUSR1, NULL, &cur);
@@ -895,13 +960,16 @@ static int cmp_double(const void *a, const void *b) {
     return (x > y) - (x < y);
 }
 
-static void timing_line(const char *key, double *v, int n) {
+static void timing_line(const char *key, double *v, int n, int failed) {
     double sum = 0;
+    char note[32] = "";
     qsort(v, (size_t)n, sizeof(double), cmp_double);
     for(int i = 0; i < n; i++)
         sum += v[i];
-    env(key, "n=%d overshoot_us min=%.0f p50=%.0f p99=%.0f max=%.0f mean=%.0f", n, v[0],
-        v[n / 2], v[(n * 99) / 100], v[n - 1], sum / n);
+    if(failed)
+        snprintf(note, sizeof(note), " FAILED=%d", failed);
+    env(key, "n=%d overshoot_us min=%.0f p50=%.0f p99=%.0f max=%.0f mean=%.0f%s", n, v[0],
+        v[n / 2], v[(n * 99) / 100], v[n - 1], sum / n, note);
 }
 
 #define TIMING_N 200
@@ -910,72 +978,469 @@ static void timing_line(const char *key, double *v, int n) {
  * its next timer. */
 static void timing(void) {
     static double v[TIMING_N];
+    struct pollfd none[1]; /* as in the port: an array with no entry in use */
     struct timespec ts;
     struct timeval tv;
     double t0;
+    int failed;
 
     g_probe = "timing";
+    failed = 0;
     for(int i = 0; i < TIMING_N; i++) {
         ts.tv_sec = 0;
         ts.tv_nsec = 1000000L;
         t0 = now_us();
-        ppoll(NULL, 0, &ts, NULL);
+        failed += ppoll(none, 0, &ts, NULL) != 0;
         v[i] = now_us() - t0 - 1000.0;
     }
-    timing_line("wait_1ms.ppoll", v, TIMING_N);
+    timing_line("wait_1ms.ppoll", v, TIMING_N, failed);
+    failed = 0;
     for(int i = 0; i < TIMING_N; i++) {
         tv.tv_sec = 0;
         tv.tv_usec = 1000;
         t0 = now_us();
-        select(0, NULL, NULL, NULL, &tv);
+        failed += select(0, NULL, NULL, NULL, &tv) != 0;
         v[i] = now_us() - t0 - 1000.0;
     }
-    timing_line("wait_1ms.select", v, TIMING_N);
+    timing_line("wait_1ms.select", v, TIMING_N, failed);
+    failed = 0;
     for(int i = 0; i < TIMING_N; i++) {
         t0 = now_us();
-        poll(NULL, 0, 1);
+        failed += poll(none, 0, 1) != 0;
         v[i] = now_us() - t0 - 1000.0;
     }
-    timing_line("wait_1ms.poll", v, TIMING_N);
+    timing_line("wait_1ms.poll", v, TIMING_N, failed);
+    failed = 0;
     for(int i = 0; i < TIMING_N; i++) {
         ts.tv_sec = 0;
         ts.tv_nsec = 1000000L;
         t0 = now_us();
-        nanosleep(&ts, NULL);
+        failed += nanosleep(&ts, NULL) != 0;
         v[i] = now_us() - t0 - 1000.0;
     }
-    timing_line("wait_1ms.nanosleep", v, TIMING_N);
+    timing_line("wait_1ms.nanosleep", v, TIMING_N, failed);
 }
 
 /* ------------------------------------------------------------------ main */
 
 static void on_alarm(int sig) {
-    static const char msg[] = "\nO6Q ENV watchdog=a probe did not return: ";
+    static const char head[] = "\nO6Q ENV watchdog.", tail[] = "=did not return\n";
     (void)sig;
-    if(write(STDOUT_FILENO, msg, sizeof(msg) - 1) > 0 &&
-       write(STDOUT_FILENO, g_probe, strlen(g_probe)) > 0 && write(STDOUT_FILENO, "\n", 1) > 0)
+    if(write(STDOUT_FILENO, head, sizeof(head) - 1) > 0 &&
+       write(STDOUT_FILENO, g_probe, strlen(g_probe)) > 0 &&
+       write(STDOUT_FILENO, tail, sizeof(tail) - 1) > 0)
         _exit(3);
     _exit(3);
 }
 
-int main(void) {
+/* ------------------------------------------- change 02: after an abort */
+
+/* accept() delay_ms after the peer has reset its connection in the listen
+ * queue, on a listen socket of its own (robust.aborted_connect waits 20 ms) */
+static const char *reset_then_accept(long delay_ms) {
+    static char out[64];
+    unsigned port = 0;
+    int ls = tcp_listener(&port, 1), c, s;
+    if(ls < 0)
+        return "no listening socket";
+    c = tcp_client(port);
+    if(c < 0) {
+        close(ls);
+        return "no connection";
+    }
+    tcp_reset(c);
+    if(delay_ms > 0)
+        sleep_ms(delay_ms);
+    errno = 0;
+    s = accept(ls, NULL, NULL);
+    snprintf(out, sizeof(out), "%s", s < 0 ? ename(errno) : "a socket");
+    if(s >= 0)
+        close(s);
+    close(ls);
+    return out;
+}
+
+/* accept() on a non-blocking listen socket when nothing waits, and what is
+ * left after a connection that was reset in the listen queue: is the listen
+ * socket still readable (the port returns and the EventLoop polls it again),
+ * and does the next connection get through? */
+static void accept_after_abort(void) {
+    unsigned port = 0;
+    int ls, c, s, rc, k;
+    short re = 0;
+    char byte, first[80], again[48];
+
+    g_probe = "accept_after_abort";
+    ls = tcp_listener(&port, 1);
+    if(ls < 0) {
+        env("tcp.accept_empty_queue", "no listening socket: %s", ename(errno));
+        return;
+    }
+
+    /* nothing waits */
+    errno = 0;
+    s = accept(ls, NULL, NULL);
+    env("tcp.accept_empty_queue", "accept returns %d%s%s", s, s < 0 ? " " : "",
+        s < 0 ? ename(errno) : "");
+    if(s >= 0)
+        close(s);
+
+    /* a connection that is reset in the listen queue */
+    c = tcp_client(port);
+    if(c < 0) {
+        env("tcp.reset_before_accept_after", "no connection: %s", ename(errno));
+        close(ls);
+        return;
+    }
+    tcp_reset(c);
+    sleep_ms(300);
+    errno = 0;
+    s = accept(ls, NULL, NULL);
+    if(s < 0) {
+        snprintf(first, sizeof(first), "accept fails with %s", ename(errno));
+    } else {
+        (void)poll_one(s, POLLIN, 1000, &re);
+        errno = 0;
+        k = (int)recv(s, &byte, 1, MSG_DONTWAIT);
+        snprintf(first, sizeof(first), "accept returns a socket, recv %d%s%s", k,
+                 k < 0 ? " " : "", k < 0 ? ename(errno) : "");
+        close(s);
+    }
+
+    /* what is left in the queue */
+    rc = poll_one(ls, POLLIN, 0, &re);
+    errno = 0;
+    s = accept(ls, NULL, NULL);
+    snprintf(again, sizeof(again), "%s", s < 0 ? ename(errno) : "a socket");
+    if(s >= 0)
+        close(s);
+    env("tcp.reset_before_accept_after",
+        "%s; then the listen socket: poll returns %d, revents %s; accept again: %s", first, rc,
+        revents_name(re), again);
+
+    /* the next connection */
+    c = tcp_client(port);
+    rc = poll_one(ls, POLLIN, 1000, &re);
+    errno = 0;
+    s = accept(ls, NULL, NULL);
+    env("tcp.accept_after_abort_next", "poll returns %d, revents %s; accept %s", rc,
+        revents_name(re), s >= 0 ? "returns a socket" : ename(errno));
+    if(s >= 0)
+        close(s);
+    if(c >= 0)
+        close(c);
+    close(ls);
+
+    { /* how soon the reset is seen */
+        char at0[64], at20[64];
+        snprintf(at0, sizeof(at0), "%s", reset_then_accept(0));
+        snprintf(at20, sizeof(at20), "%s", reset_then_accept(20));
+        env("tcp.reset_before_accept_by_delay", "accept 0 ms after the reset: %s; 20 ms: %s; "
+            "300 ms: %s", at0, at20, reset_then_accept(300));
+    }
+}
+
+/* The change keeps closing the listen socket after EMFILE because "the
+ * connection stays in the queue then". The soft limit is lowered to the
+ * descriptors in use for one accept() and restored at once. */
+static void accept_emfile(void) {
+    struct rlimit rl, low;
+    unsigned port = 0;
+    int ls, c, s, next, rc, e;
+    short re = 0;
+
+    g_probe = "accept_emfile";
+    if(getrlimit(RLIMIT_NOFILE, &rl) != 0) {
+        env("tcp.accept_emfile", "getrlimit FAILED(%s)", ename(errno));
+        return;
+    }
+    ls = tcp_listener(&port, 1);
+    if(ls < 0)
+        return;
+    c = tcp_client(port);
+    next = dup(ls); /* the lowest free descriptor, the one accept() would take */
+    if(c < 0 || next < 0) {
+        env("tcp.accept_emfile", "no connection: %s", ename(errno));
+        if(c >= 0)
+            close(c);
+        close(ls);
+        return;
+    }
+    close(next);
+    (void)poll_one(ls, POLLIN, 500, &re);
+    low = rl;
+    low.rlim_cur = (rlim_t)next;
+    if(setrlimit(RLIMIT_NOFILE, &low) != 0) {
+        env("tcp.accept_emfile", "setrlimit FAILED(%s)", ename(errno));
+        close(c);
+        close(ls);
+        return;
+    }
+    errno = 0;
+    s = accept(ls, NULL, NULL);
+    e = errno;
+    setrlimit(RLIMIT_NOFILE, &rl);
+    if(s >= 0) {
+        env("tcp.accept_emfile", "accept returns a socket although the soft limit is %d", next);
+        close(s);
+    } else {
+        rc = poll_one(ls, POLLIN, 500, &re);
+        s = accept(ls, NULL, NULL);
+        env("tcp.accept_emfile",
+            "accept fails with %s; with the limit restored: poll returns %d, revents %s; "
+            "accept %s",
+            ename(e), rc, revents_name(re), s >= 0 ? "returns the connection" : ename(errno));
+        if(s >= 0)
+            close(s);
+    }
+    close(c);
+    close(ls);
+}
+
+/* ----------------------------------------------- change 03: errno on TCP */
+
+/* Whether an accepted socket behaves as non-blocking (not only what F_GETFL
+ * says), errno after a poll() and a send() that succeed while errno holds
+ * EAGAIN (the retry in TCP_sendWithConnection), and errno after recv() == 0
+ * on TCP. */
+static void tcp_errno(void) {
+    unsigned port = 0;
+    int ls, c, s, rc;
+    short re = 0;
+    char byte = 0;
+    ssize_t k;
+    struct pollfd p;
+
+    g_probe = "tcp_errno";
+    ls = tcp_listener(&port, 1);
+    if(ls < 0)
+        return;
+    c = tcp_client(port);
+    (void)poll_one(ls, POLLIN, 500, &re);
+    s = accept(ls, NULL, NULL);
+    if(c < 0 || s < 0) {
+        env("errno.tcp", "no connection: %s", ename(errno));
+    } else {
+        struct timeval tv;
+        double ms;
+        tv.tv_sec = 0;
+        tv.tv_usec = 200000; /* the bound if recv() blocks */
+        if(setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) != 0) {
+            env("tcp.accept_inherits_nonblock_behaviour", "SO_RCVTIMEO FAILED(%s)",
+                ename(errno));
+        } else {
+            ms = now_us();
+            errno = 0;
+            k = recv(s, &byte, 1, 0);
+            ms = (now_us() - ms) / 1000.0;
+            env("tcp.accept_inherits_nonblock_behaviour",
+                "recv without data returns %d %s after %.1f ms: %s", (int)k,
+                k < 0 ? ename(errno) : "", ms, ms < 100.0 ? "non-blocking" : "blocking");
+        }
+
+        p.fd = s;
+        p.events = POLLOUT;
+        p.revents = 0;
+        errno = EAGAIN;
+        rc = poll(&p, 1, 100);
+        k = send(s, "x", 1, MSG_NOSIGNAL);
+        env("errno.after_poll_send_ok", "%s (was EAGAIN before; poll returned %d, send %d)",
+            ename(errno), rc, (int)k);
+
+        shutdown(c, SHUT_WR);
+        (void)poll_one(s, POLLIN, 500, &re);
+        errno = EAGAIN;
+        k = recv(s, &byte, 1, MSG_DONTWAIT);
+        env("errno.after_tcp_recv_eof", "%s (was EAGAIN before; recv returned %d after FIN)",
+            ename(errno), (int)k);
+    }
+    if(s >= 0)
+        close(s);
+    if(c >= 0)
+        close(c);
+    close(ls);
+}
+
+/* ------------------------------------------- change 05: no pipe manager */
+
+/* "o6q_envprobe nopipe", run by vm/run.sh while the pipe manager is stopped:
+ * what pipe() says then, and whether a socket pair does the job of the
+ * self-pipe of the interrupt manager (non-blocking, a byte written is
+ * reported readable and read back, then EAGAIN). */
+static void nopipe(void) {
+    int p[2], k, ok, rc, r1, r2;
+    short re = 0;
+    char buf[8];
+
+    g_probe = "nopipe";
+    errno = 0;
+    if(pipe(p) == 0) {
+        env("nopipe.pipe", "ok");
+        close(p[0]);
+        close(p[1]);
+    } else {
+        env("nopipe.pipe", "FAILED(%s)", ename(errno));
+    }
+    if(socketpair(AF_UNIX, SOCK_STREAM, 0, p) != 0) {
+        env("nopipe.socketpair", "FAILED(%s)", ename(errno));
+        return;
+    }
+    ok = fcntl(p[0], F_SETFL, fcntl(p[0], F_GETFL) | O_NONBLOCK) == 0 &&
+         fcntl(p[1], F_SETFL, fcntl(p[1], F_GETFL) | O_NONBLOCK) == 0;
+    k = (int)write(p[1], ".", 1);
+    rc = poll_one(p[0], POLLIN, 500, &re);
+    r1 = (int)read(p[0], buf, sizeof(buf));
+    errno = 0;
+    r2 = (int)read(p[0], buf, sizeof(buf));
+    env("nopipe.socketpair",
+        "ok; O_NONBLOCK %s; write %d; poll returns %d, revents %s; read %d, then %d %s",
+        ok ? "set" : "FAILED", k, rc, revents_name(re), r1, r2, r2 < 0 ? ename(errno) : "");
+    close(p[0]);
+    close(p[1]);
+}
+
+/* ---------------------------------------------- floating point encoding */
+
+/* What the IEEE 754 test of open62541.h v1.4.10 (without the port) decides
+ * here. The headers that open62541.h includes before the test are included
+ * above; the exact value of the release is "float_ieee754=" in the BUILD line
+ * of o6q_check_upstream. */
+static void float_config(void) {
+    const char *release;
+#if defined(_WIN32)
+    release = "1 (_WIN32)";
+#elif defined(__i386__) || defined(__x86_64__) || defined(__amd64__) || \
+    defined(__ia64__) || defined(__powerpc__) || defined(__sparc__) || defined(__arm__)
+    release = "1 (CPU list)";
+#elif defined(__STDC_IEC_559__)
+    release = "1 (__STDC_IEC_559__)";
+#elif defined(ESP_PLATFORM)
+    release = "1 (ESP_PLATFORM)";
+#else
+    release = "0 (portable conversion)";
+#endif
+    g_probe = "float_config";
+    env("float.release_ua_float_ieee754", "%s", release);
+#ifdef __GCC_IEC_559
+    env("macro.__GCC_IEC_559", "%d", (int)__GCC_IEC_559);
+#else
+    env("macro.__GCC_IEC_559", "not defined");
+#endif
+}
+
+/* ------------------------------------------- change 01: FD_SET() overflow */
+
+/* What FD_SET() does with a descriptor of FD_SETSIZE or more: write past the
+ * fd_set (here into guard bytes), ignore it, or stop the program (glibc with
+ * _FORTIFY_SOURCE aborts). In a child process, so that an abort ends only the
+ * child. */
+static void fdset_above_setsize(void) {
+    pid_t pid;
+    int st = 0;
+
+    g_probe = "fdset_above_setsize";
+    fflush(stdout);
+    pid = fork();
+    if(pid == 0) {
+        /* the fd_set and 64 guard bytes behind it; the pointer is opaque to
+         * the compiler, which could otherwise assume that a store into the
+         * fd_set leaves the guard bytes alone */
+        static long area[sizeof(fd_set) / sizeof(long) + 64 / sizeof(long)];
+        fd_set *volatile set = (fd_set *)(void *)area;
+        const unsigned char *guard = (const unsigned char *)(void *)area + sizeof(fd_set);
+        volatile int fd = FD_SETSIZE + 8; /* not a constant: no check at compile time */
+        size_t changed = 0;
+        FD_ZERO(set);
+        FD_SET(fd, set);
+        for(size_t i = 0; i < 64; i++)
+            changed += guard[i] != 0;
+        _exit(changed ? 10 : 11);
+    }
+    if(pid < 0) {
+        env("fd.FD_SET_above_setsize", "fork FAILED(%s)", ename(errno));
+        return;
+    }
+    while(waitpid(pid, &st, 0) < 0 && errno == EINTR) {
+    }
+    if(WIFEXITED(st) && WEXITSTATUS(st) == 10)
+        env("fd.FD_SET_above_setsize", "writes past the fd_set");
+    else if(WIFEXITED(st) && WEXITSTATUS(st) == 11)
+        env("fd.FD_SET_above_setsize", "writes nothing past the fd_set");
+    else if(WIFSIGNALED(st))
+        env("fd.FD_SET_above_setsize", "stops the program (signal %d)", WTERMSIG(st));
+    else
+        env("fd.FD_SET_above_setsize", "child status 0x%x", (unsigned)st);
+}
+
+/* ------------------------------------------------------------------ main */
+
+static void multicast_groups(void) {
+    multicast("239.192.41.62", "group");
+    multicast("224.0.0.22", "examples");
+}
+
+static int g_failed; /* probes that crashed or hung */
+
+/* Runs one probe in a child process with its own watchdog: a crash or a
+ * hang ends that probe only, the others still report. */
+static void isolated(const char *name, void (*probe)(void)) {
+    char key[64];
+    pid_t pid;
+    int st = 0;
+
+    fflush(stdout);
+    pid = fork();
+    if(pid < 0) {
+        probe();
+        return;
+    }
+    if(pid == 0) {
+        alarm(60);
+        probe();
+        fflush(stdout);
+        _exit(0);
+    }
+    while(waitpid(pid, &st, 0) < 0 && errno == EINTR) {
+    }
+    snprintf(key, sizeof(key), "probe_failed.%s", name);
+    if(WIFSIGNALED(st)) {
+        env(key, "signal %d", WTERMSIG(st));
+        g_failed++;
+    } else if(WIFEXITED(st) && WEXITSTATUS(st) != 0) {
+        env(key, "exit %d", WEXITSTATUS(st));
+        g_failed++;
+    }
+}
+
+int main(int argc, char **argv) {
     setvbuf(stdout, NULL, _IOLBF, 0);
     signal(SIGPIPE, SIG_IGN);
     signal(SIGALRM, on_alarm);
+
+    if(argc > 1 && strcmp(argv[1], "nopipe") == 0) {
+        alarm(60);
+        nopipe();
+        env("nopipe.done", "1");
+        return 0;
+    }
+
     alarm(120);
-
-    basics();
-    high_descriptors();
-    poll_semantics();
-    errno_semantics();
-    tcp_semantics();
-    udp_semantics();
-    multicast("239.192.41.62", "group");
-    multicast("224.0.0.22", "examples");
-    misc();
-    timing();
-
+    basics(); /* in this process: interfaces() finds the interface for multicast() */
+    float_config();
     alarm(0);
+    isolated("high_descriptors", high_descriptors);
+    isolated("fdset_above_setsize", fdset_above_setsize);
+    isolated("poll_semantics", poll_semantics);
+    isolated("errno_semantics", errno_semantics);
+    isolated("tcp_semantics", tcp_semantics);
+    isolated("accept_after_abort", accept_after_abort);
+    isolated("accept_emfile", accept_emfile);
+    isolated("tcp_errno", tcp_errno);
+    isolated("udp_semantics", udp_semantics);
+    isolated("multicast", multicast_groups);
+    isolated("misc", misc);
+    isolated("timing", timing);
     env("done", "1");
-    return 0;
+    return g_failed ? 3 : 0; /* as the watchdog: vm/run.sh reports the exit status */
 }
+

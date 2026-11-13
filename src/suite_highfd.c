@@ -120,17 +120,21 @@ int o6q_suite_highfd(unsigned port, int n) {
     CHECK("client", rc == UA_STATUSCODE_GOOD && good == HF_READS,
           "connect -> %s, %d of %d reads returned the value", SC(rc), good, HF_READS);
 
-    /* More connections: more descriptors for both event loops to wait on. */
+    /* More connections: more descriptors for both event loops to wait on.
+     * No more attempts after the first failure: each one costs the whole
+     * client timeout (30 s), and the watchdog would end the suite before the
+     * step "idle". */
     o6q_step("sessions");
     good = 0;
-    for(int i = 1; i <= HF_CLIENTS; i++) {
+    first_error = rc; /* the connect of the step "client" */
+    for(int i = 1; i <= HF_CLIENTS && first_error == UA_STATUSCODE_GOOD; i++) {
         rc = UA_STATUSCODE_BADOUTOFMEMORY;
         c[i] = o6q_client_new();
         if(c[i])
             rc = UA_Client_connect(c[i], url);
         if(rc == UA_STATUSCODE_GOOD)
             connected++;
-        else if(first_error == UA_STATUSCODE_GOOD)
+        else
             first_error = rc;
     }
     for(int round = 0; round < 10; round++) {

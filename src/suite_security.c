@@ -11,6 +11,7 @@
 #include "o6q_common.h"
 
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -263,6 +264,8 @@ static void test_certfolders(unsigned port, const Identity *server_id, const Ide
     UA_ServerConfig cfg;
     UA_StatusCode rc;
     char url[64];
+    unsigned reloads0 = 0;
+    int verifications = 0;
 
     memset(&srv, 0, sizeof(srv));
     snprintf(url, sizeof(url), "opc.tcp://127.0.0.1:%u", port);
@@ -314,7 +317,9 @@ static void test_certfolders(unsigned port, const Identity *server_id, const Ide
         goto out;
 
     o6q_step("certfolder.trusted");
+    reloads0 = o6q_log_trust_reload();
     rc = connect_read(client_id, server_id, CLIENT_URI, url);
+    verifications++;
     CHECK("certfolder.trusted", rc == UA_STATUSCODE_GOOD,
           "client whose certificate is a file in the directory -> %s", SC(rc));
 
@@ -322,6 +327,7 @@ static void test_certfolders(unsigned port, const Identity *server_id, const Ide
     o6q_expect_errors(1);
     rc = connect_read(rogue_id, server_id, ROGUE_URI, url);
     o6q_expect_errors(0);
+    verifications++;
     CHECK("certfolder.untrusted", rc != UA_STATUSCODE_GOOD,
           "client whose certificate is not in the directory -> %s", SC(rc));
 
@@ -330,6 +336,7 @@ static void test_certfolders(unsigned port, const Identity *server_id, const Ide
         CHECK("certfolder.added", 0, "cannot write %s: %s", dirs.rogue_file, strerror(errno));
     } else {
         rc = connect_read(rogue_id, server_id, ROGUE_URI, url);
+        verifications++;
         CHECK("certfolder.added", rc == UA_STATUSCODE_GOOD,
               "the same client after its certificate was copied into the directory, server "
               "not restarted -> %s",
@@ -341,6 +348,7 @@ static void test_certfolders(unsigned port, const Identity *server_id, const Ide
     o6q_expect_errors(1);
     rc = connect_read(rogue_id, server_id, ROGUE_URI, url);
     o6q_expect_errors(0);
+    verifications++;
     CHECK("certfolder.removed", rc != UA_STATUSCODE_GOOD,
           "the same client after the file was deleted again -> %s", SC(rc));
 
@@ -352,16 +360,56 @@ static void test_certfolders(unsigned port, const Identity *server_id, const Ide
         for(int i = 0; i < rounds; i++) {
             if(connect_read(client_id, server_id, CLIENT_URI, url) == UA_STATUSCODE_GOOD)
                 good++;
+            verifications++;
         }
         CHECK("certfolder.repeat", good == rounds,
               "%d of %d further encrypted connections of the trusted client, %.0f ms each",
               good, rounds, (o6q_now_us() - t0) / 1000.0 / rounds);
     }
 
+    /* The folders log every reload. The messages reach the server's logger
+     * only if the PKI context points at the configuration in use: the
+     * release keeps a pointer to the structure that UA_Server_newWithConfig()
+     * has zeroed. */
+    o6q_step("certfolder.log");
+    {
+        unsigned reloads = o6q_log_trust_reload() - reloads0;
+        CHECK("certfolder.log", reloads > 0,
+              "%u messages \"Reloading the trust-list\" of the server's PKI for %d client "
+              "connections",
+              reloads, verifications);
+    }
+
 out:
     o6q_step("certfolder.shutdown");
     o6q_server_stop(&srv);
     pki_dirs_remove(&dirs);
+
+    /* A folder name longer than PATH_MAX: the reload copies the names into
+     * char[PATH_MAX] on the stack. */
+    o6q_step("certfolder.long_name");
+    {
+        static char name[PATH_MAX + 64];
+        UA_CertificateVerification cv;
+        memset(&cv, 0, sizeof(cv));
+        cv.logging = o6q_logger();
+        memset(name, 'a', sizeof(name) - 1);
+        name[0] = '/';
+        name[sizeof(name) - 1] = 0;
+        rc = UA_CertificateVerification_CertFolders(&cv, name, "", "");
+        if(rc == UA_STATUSCODE_GOOD) {
+            rc = cv.verifyCertificate(&cv, &client_id->cert);
+            CHECK("certfolder.long_name", rc != UA_STATUSCODE_GOOD,
+                  "trust list folder with a name of %u bytes (PATH_MAX %d): verification -> %s",
+                  (unsigned)strlen(name), (int)PATH_MAX, SC(rc));
+        } else {
+            CHECK("certfolder.long_name", 1,
+                  "trust list folder with a name of %u bytes (PATH_MAX %d) refused at setup: %s",
+                  (unsigned)strlen(name), (int)PATH_MAX, SC(rc));
+        }
+        if(cv.clear)
+            cv.clear(&cv);
+    }
 }
 
 #endif /* O6Q_HAVE_CERTFOLDERS */
@@ -568,8 +616,14 @@ int o6q_suite_security(unsigned port, int n) {
 #ifdef O6Q_HAVE_CERTFOLDERS
     test_certfolders(port + 1, &server_id, &client_id, &rogue_id);
 #else
-    o6q_skip("certfolder.trusted",
-             "UA_CertificateVerification_CertFolders() of the release is for Linux only");
+    /* The release has no certificate folders on this system: what the port
+     * adds is reported as missing. */
+    CHECK("certfolder.trusted", 0,
+          "UA_CertificateVerification_CertFolders() of the release is for Linux only");
+    CHECK("certfolder.added", 0, "not available (see certfolder.trusted)");
+    CHECK("certfolder.removed", 0, "not available (see certfolder.trusted)");
+    CHECK("certfolder.log", 0, "not available (see certfolder.trusted)");
+    CHECK("certfolder.long_name", 0, "not available (see certfolder.trusted)");
 #endif
 
 done:

@@ -163,6 +163,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "QNX")
   endif()
 endif()
 
+# The programs are C99 like the library (gnu99: with the extensions that the
+# system headers offer).
+set_target_properties(o6q_check o6q_envprobe o6q_server PROPERTIES C_STANDARD 99
+                                                                 C_EXTENSIONS ON)
+if(O6Q_BUILD_UPSTREAM)
+  set_target_properties(o6q_check_upstream PROPERTIES C_STANDARD 99 C_EXTENSIONS ON)
+endif()
+
 # -------------------------------------------------------------------- install
 include(GNUInstallDirs)
 install(TARGETS open62541 ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")

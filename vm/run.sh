@@ -37,6 +37,7 @@ done
 echo "O6Q GUEST stopping the pipe manager"
 slay -f pipe
 sleep 1
+run envprobe.nopipe ./o6q_envprobe nopipe
 run check.nopipe ./o6q_check nopipe
 run upstream.nopipe ./o6q_check_upstream nopipe
 pipe &

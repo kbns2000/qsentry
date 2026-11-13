@@ -83,6 +83,9 @@ int o6q_open_fds(void);
 UA_Logger *o6q_logger(void);
 /* Warnings of the stack so far that name getnameinfo() */
 unsigned o6q_log_getnameinfo(void);
+/* Messages "Reloading the trust-list" of the certificate folders so far, of
+ * every level: they reach the logger only if the PKI's logger is valid */
+unsigned o6q_log_trust_reload(void);
 void o6q_expect_errors(int on);
 
 /* -------------------------------------------------------- server harness */
@@ -116,6 +119,7 @@ void o6q_server_stop(O6QServer *s);
 
 typedef struct {
     pthread_mutex_t lock;
+    int lock_ready;                        /* lock initialised (models are static) */
     UA_Int32 counter;
     unsigned ticks;                        /* timer callbacks so far */
     double tick_err_us[O6Q_TICK_HISTORY];  /* |interval - 10 ms| per tick */

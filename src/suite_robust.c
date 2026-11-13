@@ -164,7 +164,9 @@ static void test_aborted_connect(unsigned port) {
         } else {
             refused++;
         }
-        o6q_sleep_ms(20); /* the reset arrives while the server still cannot accept */
+        /* the reset arrives while the server still cannot accept; the network
+         * stack is another process, and the CPU may be emulated */
+        o6q_sleep_ms(200);
         el->unlock(el);
         o6q_sleep_ms(50); /* now the server looks at its listen socket */
     }
@@ -441,6 +443,7 @@ int o6q_suite_nopipe(unsigned port, int n) {
         close(p[1]);
         o6q_skip("server", "pipe() works here, so the pipe manager is running; the suite is for "
                            "a system without it");
+        o6q_skip("client", "pipe() works here");
         return o6q_end();
     }
     pipe_errno = errno;
@@ -452,8 +455,10 @@ int o6q_suite_nopipe(unsigned port, int n) {
     CHECK("server", rc == UA_STATUSCODE_GOOD,
           "server start while pipe() fails (%s) -> %s in %.0f ms", strerror(pipe_errno), SC(rc),
           (o6q_now_us() - t0) / 1000.0);
-    if(rc != UA_STATUSCODE_GOOD)
+    if(rc != UA_STATUSCODE_GOOD) {
+        CHECK("client", 0, "not run: the server did not start (%s)", SC(rc));
         return o6q_end();
+    }
 
     o6q_step("client");
     c = o6q_client_new();
