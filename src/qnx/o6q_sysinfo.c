@@ -186,8 +186,14 @@ size_t o6q_sys_processes(O6QProc *out, size_t max, unsigned *total_threads) {
                     const char *base = "?";
                     memset(&name, 0, sizeof(name));
                     if(devctl(fd, DCMD_PROC_MAPDEBUG_BASE, &name, sizeof(name), NULL) == EOK) {
-                        const char *slash = strrchr(name.info.path, '/');
-                        base = slash ? slash + 1 : name.info.path;
+                        /* info.path is declared with one byte and continues
+                         * into buff; address it through the whole structure */
+                        const char *image =
+                            (const char *)&name + offsetof(procfs_debuginfo, path);
+                        const char *slash;
+                        name.buff[sizeof(name.buff) - 1] = 0;
+                        slash = strrchr(image, '/');
+                        base = slash ? slash + 1 : image;
                     }
                     out[count].pid = (int)info.pid;
                     out[count].threads = (unsigned)info.num_threads;

@@ -66,6 +66,9 @@ int main(int argc, char **argv) {
 #ifdef O6Q_VARIANT
            " variant=" O6Q_VARIANT
 #endif
+#ifdef O6Q_COMMIT
+           " commit=" O6Q_COMMIT
+#endif
            " float_ieee754=%d compiler=%s os=%s release=%s machine=%s\n",
            UA_OPEN62541_VERSION, O6Q_EVENTLOOP, UA_FLOAT_IEEE754, __VERSION__, un.sysname,
            un.release, un.machine);

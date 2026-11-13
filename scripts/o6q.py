@@ -123,8 +123,24 @@ def arches(text):
 
 
 # ------------------------------------------------------------------- build
+def source_commit():
+    """The git commit of the sources, with "+changes" when files outside
+    results/ (which this script writes) differ from it."""
+    try:
+        head = subprocess.run(["git", "-C", ROOT, "rev-parse", "--short=12", "HEAD"],
+                              capture_output=True, text=True, check=True).stdout.strip()
+        changed = subprocess.run(["git", "-C", ROOT, "status", "--porcelain",
+                                  "--untracked-files=no", "--", ".", ":(exclude)results"],
+                                 capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return "unknown"
+    return head + ("+changes" if changed else "")
+
+
 def cmd_build(args):
     qnx_env()
+    commit = source_commit()
+    say(f"sources: commit {commit}")
     run([sys.executable, os.path.join(ROOT, "scripts", "port.py")])
     os.makedirs(os.path.join(ROOT, "results"), exist_ok=True)
     for arch in args.arch:
@@ -135,7 +151,8 @@ def cmd_build(args):
         run(tool("cmake") + ["-G", "Ninja", "-S", ROOT, "-B", bdir,
                              "-DCMAKE_TOOLCHAIN_FILE=" +
                              os.path.join(ROOT, "cmake", "qnx800.toolchain.cmake"),
-                             "-DQNX_ARCH=" + arch, "-DCMAKE_BUILD_TYPE=Release"], log=log)
+                             "-DQNX_ARCH=" + arch, "-DCMAKE_BUILD_TYPE=Release",
+                             "-DO6Q_SOURCE_COMMIT=" + commit], log=log)
         # -v: every compiler command line goes into the log, with its output
         run(tool("cmake") + ["--build", bdir, "--clean-first", "-v"], log=log)
         dest = os.path.join(ROOT, "out", arch)

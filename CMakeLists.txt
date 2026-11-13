@@ -30,6 +30,8 @@ option(O6Q_BUILD_UPSTREAM "Also build the unchanged release and o6q_check_upstre
 set(O6Q_EVENTLOOP "auto" CACHE STRING
     "Event loop of the port: auto (ppoll on QNX, epoll on Linux), ppoll, select")
 set_property(CACHE O6Q_EVENTLOOP PROPERTY STRINGS auto ppoll select)
+set(O6Q_SOURCE_COMMIT "" CACHE STRING
+    "git commit of the sources, printed in the BUILD line of o6q_check (scripts/o6q.py sets it)")
 
 set(O6Q_TP "${CMAKE_CURRENT_SOURCE_DIR}/third_party")
 
@@ -169,6 +171,12 @@ set_target_properties(o6q_check o6q_envprobe o6q_server PROPERTIES C_STANDARD 99
                                                                  C_EXTENSIONS ON)
 if(O6Q_BUILD_UPSTREAM)
   set_target_properties(o6q_check_upstream PROPERTIES C_STANDARD 99 C_EXTENSIONS ON)
+endif()
+if(O6Q_SOURCE_COMMIT)
+  target_compile_definitions(o6q_check PRIVATE O6Q_COMMIT="${O6Q_SOURCE_COMMIT}")
+  if(O6Q_BUILD_UPSTREAM)
+    target_compile_definitions(o6q_check_upstream PRIVATE O6Q_COMMIT="${O6Q_SOURCE_COMMIT}")
+  endif()
 endif()
 
 # -------------------------------------------------------------------- install
