@@ -296,7 +296,8 @@ static void test_certfolders(unsigned port, const Identity *server_id, const Ide
     if(rc == UA_STATUSCODE_GOOD)
         rc = UA_CertificateVerification_CertFolders(&cfg.sessionPKI, dirs.trusted, dirs.issuers,
                                                     dirs.crl);
-    /* The function clears the whole structure, its logger included. */
+    /* The function of the release leaves the structure without its logger
+     * (the port keeps it); set it again in any case. */
     cfg.secureChannelPKI.logging = cfg.logging;
     cfg.sessionPKI.logging = cfg.logging;
     if(rc == UA_STATUSCODE_GOOD) {
@@ -367,10 +368,10 @@ static void test_certfolders(unsigned port, const Identity *server_id, const Ide
               good, rounds, (o6q_now_us() - t0) / 1000.0 / rounds);
     }
 
-    /* The folders log every reload. The messages reach the server's logger
-     * only if the PKI context points at the configuration in use: the
-     * release keeps a pointer to the structure that UA_Server_newWithConfig()
-     * has zeroed. */
+    /* The folders log every reload. In the release the messages are lost:
+     * the function clears the PKI that the default configuration has set up,
+     * and the new context takes its logger from the cleared structure, NULL.
+     * The port keeps the logger. */
     o6q_step("certfolder.log");
     {
         unsigned reloads = o6q_log_trust_reload() - reloads0;

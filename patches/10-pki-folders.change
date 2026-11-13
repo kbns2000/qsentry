@@ -4,7 +4,7 @@
 # title: Certificate folders (trust list, issuers, revocation lists) on QNX
 # file: open62541.c
 # upstream: plugins/crypto/openssl/ua_pki_openssl.c plugins/include/open62541/plugin/pki_default.h plugins/ua_config_json.c
-# test: security.certfolder.trusted security.certfolder.added security.certfolder.removed security.certfolder.long_name
+# test: security.certfolder.trusted security.certfolder.added security.certfolder.removed security.certfolder.log security.certfolder.long_name
 #
 # UA_CertificateVerification_CertFolders() reads the trusted certificates,
 # the issuer certificates and the revocation lists from three directories,
@@ -12,9 +12,18 @@
 # trusted or withdrawn while the server runs. The release has the function
 # "for Linux only so far". It needs nothing but scandir(), which QNX has.
 #
-# The reload copies the folder names into char[PATH_MAX] without a length
-# check, so a longer name overflows the stack with every verification (on
-# Linux as well). With the folders on QNX the change refuses such a name.
+# Two faults of the function come along with it, on Linux as well; the change
+# fixes them for the folders on QNX:
+#
+# - The reload copies the folder names into char[PATH_MAX] without a length
+#   check, so a longer name overflows the stack with every verification. The
+#   change refuses such a name.
+# - Called on a PKI that is already set up (the default server configuration
+#   sets one up), the function clears it first. The clear function zeroes the
+#   whole structure, logger included, and the new context takes its logger
+#   from there: NULL. Every message of the PKI is lost, among them "Failed to
+#   load the certificate file" for a bad file in the trust folder. The change
+#   keeps the logger.
 #
 @@ hunk open62541.h
 <<<<<<< open62541 v1.4.22
@@ -73,10 +82,50 @@ static int UA_Certificate_Filter_der_pem (const struct dirent * entry) {
 #ifdef __linux__ /* Linux only so far */
 UA_StatusCode
 UA_CertificateVerification_CertFolders(UA_CertificateVerification *cv,
+                                       const char *trustListFolder,
+                                       const char *issuerListFolder,
+                                       const char *revocationListFolder
+#ifdef UA_ENABLE_CERT_REJECTED_DIR
+                                       , const char *rejectedListFolder
+#endif
+                                       ) {
+    UA_StatusCode ret;
+    if (cv == NULL) {
+        return UA_STATUSCODE_BADINTERNALERROR;
+    }
+    if (cv->logging == NULL) {
+        return UA_STATUSCODE_BADINTERNALERROR;
+    }
+
+    /* Clear if the plugin is already initialized */
+    if(cv->clear)
+        cv->clear(cv);
 =======
 #if defined(__linux__) || defined(__QNXNTO__) /* qnx: needs only scandir() */
 UA_StatusCode
 UA_CertificateVerification_CertFolders(UA_CertificateVerification *cv,
+                                       const char *trustListFolder,
+                                       const char *issuerListFolder,
+                                       const char *revocationListFolder
+#ifdef UA_ENABLE_CERT_REJECTED_DIR
+                                       , const char *rejectedListFolder
+#endif
+                                       ) {
+    UA_StatusCode ret;
+    if (cv == NULL) {
+        return UA_STATUSCODE_BADINTERNALERROR;
+    }
+    if (cv->logging == NULL) {
+        return UA_STATUSCODE_BADINTERNALERROR;
+    }
+
+    /* Clear if the plugin is already initialized.
+     * qnx: clear() zeroes *cv, the logger included, and the new context
+     * takes its logger from cv: keep it, or the PKI logs nothing */
+    const UA_Logger *logging = cv->logging;
+    if(cv->clear)
+        cv->clear(cv);
+    cv->logging = logging;
 >>>>>>> open62541-qnx
 @@ hunk
 <<<<<<< open62541 v1.4.22

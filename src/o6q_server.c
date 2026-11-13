@@ -412,7 +412,8 @@ int main(int argc, char **argv) {
                                                         NULL);
             if(rc == UA_STATUSCODE_GOOD)
                 rc = UA_CertificateVerification_CertFolders(&cfg.sessionPKI, trust, NULL, NULL);
-            /* The function clears the whole structure, its logger included. */
+            /* The function of the release leaves the structure without its
+             * logger (the port keeps it); set it again in any case. */
             cfg.secureChannelPKI.logging = cfg.logging;
             cfg.sessionPKI.logging = cfg.logging;
         }
