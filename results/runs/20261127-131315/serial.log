@@ -1,0 +1,304 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+# ---> Starting devb
+---> Mounting file systems
+Path=0 - Intel 82371SB---> Mounting file systems
+
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Starting Networking
+---> Starting sshd
+/usr/libexec/sshd-auth does not exist or is not executable
+---> Starting misc
+QV GUEST START
+QNX qvcan 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+CPU:X86_64 Release:8.0.0  FreeMem:877MB/1023MB BootTime:Nov 27 04:13:16 UTC 2026
+
+To exit QEMU, type <ctrl>a x
+
+[?7hProcesses: 20, Threads: 105
+Processor1: 686 AMD 686 F6M6S3 3719MHz FPU 
+Processor2: 686 AMD 686 F6M6S3 3719MHz FPU 
+devvcan: 2 buses /dev/vcan0 .. at 500000 bit/s, queues rx 256 tx 32: ready
+Process count:23
+Startup complete
+crw-rw-rw-  1 root root 0,   1 2026-11-27 04:13 /dev/vcan0
+crw-rw-rw-  1 root root 0,   1 2026-11-27 04:13 /dev/vcan1
+QNX qvcan 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+     pid tid name                         prio STATE          Blocked                     
+  307220   1 ./devvcan                     10r RECEIVE        1                           
+QV RUN tests
+QV BEGIN basic.fanout
+QV PASS basic.fanout 2 receivers, own frame only with VCAN_OPT_RECV_OWN, 48 bits
+QV BEGIN nodes.many
+QV PASS nodes.many 100 nodes on one bus (100 open), every other node got the frame
+QV BEGIN filter.mask
+QV PASS filter.mask 5 of 19 frames passed two id/mask filters (11-bit and 29-bit)
+QV BEGIN arbitration
+QV PASS arbitration.order lowest id first: 100 R100 4000000 200 300 (data before remote, 11-bit before 29-bit)
+QV PASS arbitration.fifo one node's queue keeps its order: 100 300 50
+QV BEGIN timing.bitrate
+QV PASS timing.bitrate 50 frames of 8 bytes at 125000 bit/s: each frame 888..1080 us apart as its bits say; 45.7 ms bus time, 74.9 ms wall time
+QV BEGIN timing.stuffing
+QV PASS timing.stuffing id 000 data 00*8: 127 bits; id 555 data 55*8: 112 bits (nominal 111, stuff bits make the difference)
+QV BEGIN read.nonblock
+QV PASS read.nonblock empty queue: EAGAIN; buffer below one frame: EINVAL
+QV BEGIN select.wakeup
+QV LAT select_wakeup_1Mbit n=20 p50=778.7us p90=1570.6us p99=1695.5us max=1695.5us
+QV PASS select.wakeup 20 of 20 select() calls woke up for a frame from another thread
+QV BEGIN unblock.signal
+QV PASS unblock.signal a blocked read() ended with EINTR after 203 ms (SIGALRM at 200 ms)
+QV BEGIN unblock.timeout
+QV PASS unblock.timeout TimerTimeout(150 ms) on a blocked read(): the kernel's unblock pulse reached devvcan, read() ended with EINTR after 152 ms
+QV BEGIN write.backpressure
+QV PASS write.backpressure queue of 4: non-blocking 5th write EAGAIN; blocking write of 12 returned after 42.6 ms (8 frames of 50 bits at 10000 bit/s: 40.0 ms)
+QV BEGIN rx.overflow
+QV PASS rx.overflow queue of 8, 20 frames: 8 kept (oldest first), 12 counted as overflow
+QV BEGIN error.busoff
+QV PASS error.busoff every frame destroyed: 32 error frames, error passive at the 16th (tec 128), bus off at tec 256; write() EIO; after reset the node sends again
+QV BEGIN error.recover
+QV PASS error.recover 16 errors (tec 128, error passive), then one good frame: tec 127, error active again
+QV BEGIN close.cleanup
+QV PASS close.cleanup 500 open/close leave the node count at 1; a read blocked while another thread closes the fd ends with EBADF
+QV BEGIN bus.isolation
+QV PASS bus.isolation a frame on vcan0 reaches vcan0 nodes only
+QV BEGIN perf
+QV LAT write_to_read_no_timing n=2000 p50=294.6us p90=501.9us p99=968.9us max=2322.2us
+QV LAT write_to_read_1Mbit n=300 p50=327.6us p90=606.6us p99=1052.2us max=1460.2us
+QV LAT throughput_no_timing frames_per_s=101259
+QV PASS perf.latency write-to-read latency and throughput measured (QV LAT lines)
+QV SUMMARY pass=17 fail=0
+QV EXIT tests 0
+QV GUEST vtnet0 has its DHCP address
+vtnet0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
+	options=80028<VLAN_MTU,JUMBO_MTU,LINKSTATE>
+	ether 52:54:00:12:34:56
+	inet6 fe80::5054:ff:fe12:3456%vtnet0 prefixlen 64 scopeid 0x5
+	inet6 fec0::f0fc:e6a9:eeee:4142 prefixlen 64 autoconf
+	inet 10.0.2.15 netmask 0xffffff00 broadcast 10.0.2.255
+	media: Ethernet autoselect (10Gbase-T <full-duplex>)
+	status: active
+	nd6 options=1<PERFORMNUD>
+QV BRIDGE /dev/vcan0 <-> udp 10.0.2.2:47002 (local port 47001): running
+QV RUN bridge
+QV LAT bridge_round_trip_host n=50 p50=3377.2us p90=5063.3us p99=14257.3us max=14257.3us
+QV PASS bridge.udp 50 of 50 frames went to the host over UDP and came back changed
+QV SUMMARY pass=1 fail=0
+QV EXIT bridge 0
+QV BRIDGE END to_udp=50 to_bus=50 dropped=0
+QV DEMO four nodes on /dev/vcan1 at 125 kbit/s, 0x2B0 is faulty
+QV RUN demo.dump
+QV DUMP    14.480261       1A0  [4]  34 00 00 00              bits=86 node=6 seq=246
+QV DUMP    14.484853       0C0  [8]  69 00 00 00 00 00 00 00  bits=124 node=5 seq=247
+QV DUMP    14.488435       2B0  [8]  34 00 00 00 00 00 00 00  bits=125 node=7 seq=249
+QV DUMP    14.493594       0C0  [8]  6A 00 00 00 00 00 00 00  bits=123 node=5 seq=250
+QV DUMP    14.499222       1A0  [4]  35 00 00 00              bits=85 node=6 seq=251
+QV DUMP    14.503920       0C0  [8]  6B 00 00 00 00 00 00 00  bits=123 node=5 seq=252
+QV DUMP    14.506637       2B0  [8]  35 00 00 00 00 00 00 00  bits=124 node=7 seq=253
+QV DUMP    14.514313       0C0  [8]  6C 00 00 00 00 00 00 00  bits=124 node=5 seq=254
+QV DUMP    14.519706       1A0  [4]  36 00 00 00              bits=85 node=6 seq=255
+QV DUMP    14.524382       0C0  [8]  6D 00 00 00 00 00 00 00  bits=123 node=5 seq=256
+QV DUMP    14.528035       2B0  [8]  36 00 00 00 00 00 00 00  bits=125 node=7 seq=258
+QV DUMP    14.533503       0C0  [8]  6E 00 00 00 00 00 00 00  bits=123 node=5 seq=259
+QV DUMP    14.540068       1A0  [4]  37 00 00 00              bits=85 node=6 seq=260
+QV DUMP    14.543573       0C0  [8]  6F 00 00 00 00 00 00 00  bits=123 node=5 seq=261
+QV DUMP    14.547688       2B0  [8]  37 00 00 00 00 00 00 00  bits=124 node=7 seq=262
+QV DUMP    14.548856  18FEF100  [8]  0B 00 00 00 00 00 00 00  bits=146 node=8 seq=263
+QV DUMP    14.553485       0C0  [8]  70 00 00 00 00 00 00 00  bits=125 node=5 seq=264
+QV DUMP    14.559582       1A0  [4]  38 00 00 00              bits=85 node=6 seq=265
+QV DUMP    14.564989       0C0  [8]  71 00 00 00 00 00 00 00  bits=124 node=5 seq=266
+QV DUMP    14.568345       2B0  [8]  38 00 00 00 00 00 00 00  bits=124 node=7 seq=268
+QV DUMP    14.574537       0C0  [8]  72 00 00 00 00 00 00 00  bits=124 node=5 seq=269
+QV DUMP    14.579532       1A0  [4]  39 00 00 00              bits=85 node=6 seq=270
+QV DUMP    14.584817       0C0  [8]  73 00 00 00 00 00 00 00  bits=123 node=5 seq=271
+QV DUMP    14.587539       2B0  [8]  39 00 00 00 00 00 00 00  bits=124 node=7 seq=272
+QV DUMP    14.593226       0C0  [8]  74 00 00 00 00 00 00 00  bits=123 node=5 seq=273
+QV DUMP    14.599912       1A0  [4]  3A 00 00 00              bits=86 node=6 seq=274
+QV DUMP    14.603341       0C0  [8]  75 00 00 00 00 00 00 00  bits=123 node=5 seq=275
+QV DUMP    14.608631       2B0  [8]  3A 00 00 00 00 00 00 00  bits=124 node=7 seq=277
+QV DUMP    14.613782       0C0  [8]  76 00 00 00 00 00 00 00  bits=123 node=5 seq=278
+QV DUMP    14.618948       1A0  [4]  3B 00 00 00              bits=84 node=6 seq=279
+QV DUMP    14.624645       0C0  [8]  77 00 00 00 00 00 00 00  bits=123 node=5 seq=280
+QV DUMP    14.627271       2B0  [8]  3B 00 00 00 00 00 00 00  bits=124 node=7 seq=281
+QV DUMP    14.634532       0C0  [8]  78 00 00 00 00 00 00 00  bits=123 node=5 seq=282
+QV DUMP    14.639636       1A0  [4]  3C 00 00 00              bits=85 node=6 seq=283
+QV DUMP    14.643200       0C0  [8]  79 00 00 00 00 00 00 00  bits=123 node=5 seq=284
+QV DUMP    14.648448       2B0  [8]  3C 00 00 00 00 00 00 00  bits=125 node=7 seq=286
+QV DUMP    14.649616  18FEF100  [8]  0C 00 00 00 00 00 00 00  bits=146 node=8 seq=287
+QV DUMP    14.653794       0C0  [8]  7A 00 00 00 00 00 00 00  bits=124 node=5 seq=288
+QV DUMP    14.659645       1A0  [4]  3D 00 00 00              bits=86 node=6 seq=289
+QV DUMP    14.664084       0C0  [8]  7B 00 00 00 00 00 00 00  bits=123 node=5 seq=290
+QV DUMP    14.668239       2B0  [8]  3D 00 00 00 00 00 00 00  bits=127 node=7 seq=291
+QV DUMP    14.673868       0C0  [8]  7C 00 00 00 00 00 00 00  bits=125 node=5 seq=292
+QV DUMP    14.679606       1A0  [4]  3E 00 00 00              bits=86 node=6 seq=293
+QV DUMP    14.684325       0C0  [8]  7D 00 00 00 00 00 00 00  bits=125 node=5 seq=294
+QV DUMP    14.688973       2B0  [8]  3E 00 00 00 00 00 00 00  bits=125 node=7 seq=296
+QV DUMP    14.693501       0C0  [8]  7E 00 00 00 00 00 00 00  bits=124 node=5 seq=297
+QV DUMP    14.700656       1A0  [4]  3F 00 00 00              bits=86 node=6 seq=298
+QV DUMP    14.703689       0C0  [8]  7F 00 00 00 00 00 00 00  bits=125 node=5 seq=299
+QV DUMP    14.706993       2B0  [8]  3F 00 00 00 00 00 00 00  bits=126 node=7 seq=300
+QV DUMP    14.714511       0C0  [8]  80 00 00 00 00 00 00 00  bits=124 node=5 seq=301
+QV DUMP    14.719076       1A0  [4]  40 00 00 00              bits=86 node=6 seq=302
+QV DUMP    14.723961       0C0  [8]  81 00 00 00 00 00 00 00  bits=126 node=5 seq=303
+QV DUMP    14.728059       2B0  [8]  40 00 00 00 00 00 00 00  bits=124 node=7 seq=305
+QV DUMP    14.733206       0C0  [8]  82 00 00 00 00 00 00 00  bits=124 node=5 seq=306
+QV DUMP    14.739013       1A0  [4]  41 00 00 00              bits=86 node=6 seq=307
+QV DUMP    14.743833       0C0  [8]  83 00 00 00 00 00 00 00  bits=126 node=5 seq=308
+QV DUMP    14.747489       2B0  [8]  41 00 00 00 00 00 00 00  bits=126 node=7 seq=309
+QV DUMP    14.748665  18FEF100  [8]  0D 00 00 00 00 00 00 00  bits=147 node=8 seq=310
+QV DUMP    14.753831       0C0  [8]  84 00 00 00 00 00 00 00  bits=123 node=5 seq=311
+QV DUMP    14.760313       1A0  [4]  42 00 00 00              bits=85 node=6 seq=312
+QV DUMP END 60 frames
+QV EXIT demo.dump 0
+QV RUN demo.stat
+QV STAT bitrate=125000 nodes=6 paused=0 frames=286 errors=33 bits=38012 busy_ms=304.096 up_ms=9534.407 load=3.19%
+QV EXIT demo.stat 0
+     pid tid name                         prio STATE          Blocked                     
+  307220   1 ./devvcan                     10r RECEIVE        1                           
+QV GEN C0 sent 500 failed 0
+QV GEN 1A0 sent 250 failed 0
+QV GEN 18FEF100 sent 50 failed 0
+QV GEN 2B0 bus-off after 87 frames: reset
+QV GEN 2B0 bus-off after 174 frames: reset
+QV GEN 2B0 sent 248 failed 2
+QV DEMO error frames seen by the error-only node:
+QV DUMP    13.487769  ERROR  frame destroyed  node=7 tec=8 state=active seq=13
+QV DUMP    13.527216  ERROR  frame destroyed  node=7 tec=14 state=active seq=22
+QV DUMP    13.566679  ERROR  frame destroyed  node=7 tec=20 state=active seq=32
+QV DUMP    13.607015  ERROR  frame destroyed  node=7 tec=26 state=active seq=41
+QV DUMP    13.648470  ERROR  frame destroyed  node=7 tec=32 state=active seq=51
+QV DUMP    13.687152  ERROR  frame destroyed  node=7 tec=38 state=active seq=60
+QV DUMP    13.728509  ERROR  frame destroyed  node=7 tec=44 state=active seq=69
+QV DUMP    13.767775  ERROR  frame destroyed  node=7 tec=50 state=active seq=79
+QV DUMP    13.807547  ERROR  frame destroyed  node=7 tec=56 state=active seq=88
+QV DUMP    13.848608  ERROR  frame destroyed  node=7 tec=62 state=active seq=98
+QV DUMP    13.887151  ERROR  frame destroyed  node=7 tec=68 state=active seq=107
+QV DUMP    13.927012  ERROR  frame destroyed  node=7 tec=74 state=active seq=116
+QV DUMP    13.968725  ERROR  frame destroyed  node=7 tec=80 state=active seq=126
+QV DUMP    14.006959  ERROR  frame destroyed  node=7 tec=86 state=active seq=135
+QV DUMP    14.047987  ERROR  frame destroyed  node=7 tec=92 state=active seq=145
+QV DUMP    14.086601  ERROR  frame destroyed  node=7 tec=98 state=active seq=154
+QV DUMP    14.127551  ERROR  frame destroyed  node=7 tec=104 state=active seq=163
+QV DUMP    14.167426  ERROR  frame destroyed  node=7 tec=110 state=active seq=173
+QV DUMP    14.207629  ERROR  frame destroyed  node=7 tec=116 state=active seq=182
+QV DUMP    14.248881  ERROR  frame destroyed  node=7 tec=122 state=active seq=192
+QV DUMP    14.286750  ERROR  frame destroyed  node=7 tec=128 state=passive seq=201
+QV DUMP    14.326804  ERROR  frame destroyed  node=7 tec=134 state=passive seq=210
+QV DUMP    14.367410  ERROR  frame destroyed  node=7 tec=140 state=passive seq=220
+QV DUMP    14.407053  ERROR  frame destroyed  node=7 tec=146 state=passive seq=229
+QV DUMP    14.447314  ERROR  frame destroyed  node=7 tec=152 state=passive seq=238
+QV DUMP    14.487435  ERROR  frame destroyed  node=7 tec=158 state=passive seq=248
+QV DUMP    14.527035  ERROR  frame destroyed  node=7 tec=164 state=passive seq=257
+QV DUMP    14.567353  ERROR  frame destroyed  node=7 tec=170 state=passive seq=267
+QV DUMP    14.607639  ERROR  frame destroyed  node=7 tec=176 state=passive seq=276
+QV DUMP    14.647448  ERROR  frame destroyed  node=7 tec=182 state=passive seq=285
+QV DUMP    14.687973  ERROR  frame destroyed  node=7 tec=188 state=passive seq=295
+QV DUMP    14.727067  ERROR  frame destroyed  node=7 tec=194 state=passive seq=304
+QV DUMP    14.766433  ERROR  frame destroyed  node=7 tec=200 state=passive seq=314
+QV DUMP    14.806807  ERROR  frame destroyed  node=7 tec=206 state=passive seq=323
+QV DUMP    14.848160  ERROR  frame destroyed  node=7 tec=212 state=passive seq=333
+QV DUMP    14.887408  ERROR  frame destroyed  node=7 tec=218 state=passive seq=342
+QV DUMP    14.927207  ERROR  frame destroyed  node=7 tec=224 state=passive seq=351
+QV DUMP    14.967432  ERROR  frame destroyed  node=7 tec=230 state=passive seq=361
+QV DUMP    15.007338  ERROR  frame destroyed  node=7 tec=236 state=passive seq=370
+QV DUMP    15.047274  ERROR  frame destroyed  node=7 tec=242 state=passive seq=379
+QV DUMP    15.086627  ERROR  frame destroyed  node=7 tec=248 state=passive seq=389
+QV DUMP    15.127139  ERROR  frame destroyed  node=7 tec=254 state=passive seq=398
+QV DUMP    15.167512  ERROR  bus-off  node=7 tec=260 state=bus-off seq=408
+QV DUMP    15.248918  ERROR  frame destroyed  node=7 tec=8 state=active seq=424
+QV DUMP    15.287357  ERROR  frame destroyed  node=7 tec=14 state=active seq=433
+QV DUMP    15.327281  ERROR  frame destroyed  node=7 tec=20 state=active seq=442
+QV DUMP    15.368216  ERROR  frame destroyed  node=7 tec=26 state=active seq=452
+QV DUMP    15.406498  ERROR  frame destroyed  node=7 tec=32 state=active seq=461
+QV DUMP    15.446632  ERROR  frame destroyed  node=7 tec=38 state=active seq=470
+QV DUMP    15.486839  ERROR  frame destroyed  node=7 tec=44 state=active seq=480
+QV DUMP    15.527297  ERROR  frame destroyed  node=7 tec=50 state=active seq=489
+QV DUMP    15.566911  ERROR  frame destroyed  node=7 tec=56 state=active seq=499
+QV DUMP    15.606716  ERROR  frame destroyed  node=7 tec=62 state=active seq=508
+QV DUMP    15.648131  ERROR  frame destroyed  node=7 tec=68 state=active seq=518
+QV DUMP    15.687461  ERROR  frame destroyed  node=7 tec=74 state=active seq=527
+QV DUMP    15.727467  ERROR  frame destroyed  node=7 tec=80 state=active seq=536
+QV DUMP    15.766505  ERROR  frame destroyed  node=7 tec=86 state=active seq=546
+QV DUMP    15.807188  ERROR  frame destroyed  node=7 tec=92 state=active seq=555
+QV DUMP    15.847313  ERROR  frame destroyed  node=7 tec=98 state=active seq=564
+QV DUMP    15.886913  ERROR  frame destroyed  node=7 tec=104 state=active seq=574
+QV DUMP    15.927616  ERROR  frame destroyed  node=7 tec=110 state=active seq=583
+QV DUMP    15.967704  ERROR  frame destroyed  node=7 tec=116 state=active seq=593
+QV DUMP    16.006936  ERROR  frame destroyed  node=7 tec=122 state=active seq=602
+QV DUMP    16.048123  ERROR  frame destroyed  node=7 tec=128 state=passive seq=611
+QV DUMP    16.087232  ERROR  frame destroyed  node=7 tec=134 state=passive seq=621
+QV DUMP    16.126538  ERROR  frame destroyed  node=7 tec=140 state=passive seq=630
+QV DUMP    16.167272  ERROR  frame destroyed  node=7 tec=146 state=passive seq=640
+QV DUMP    16.207568  ERROR  frame destroyed  node=7 tec=152 state=passive seq=649
+QV DUMP    16.248733  ERROR  frame destroyed  node=7 tec=158 state=passive seq=659
+QV DUMP    16.286765  ERROR  frame destroyed  node=7 tec=164 state=passive seq=668
+QV DUMP    16.327563  ERROR  frame destroyed  node=7 tec=170 state=passive seq=677
+QV DUMP    16.367324  ERROR  frame destroyed  node=7 tec=176 state=passive seq=687
+QV DUMP    16.407778  ERROR  frame destroyed  node=7 tec=182 state=passive seq=696
+QV DUMP    16.446456  ERROR  frame destroyed  node=7 tec=188 state=passive seq=705
+QV DUMP    16.487000  ERROR  frame destroyed  node=7 tec=194 state=passive seq=715
+QV DUMP    16.526783  ERROR  frame destroyed  node=7 tec=200 state=passive seq=724
+QV DUMP    16.566409  ERROR  frame destroyed  node=7 tec=206 state=passive seq=734
+QV DUMP    16.607653  ERROR  frame destroyed  node=7 tec=212 state=passive seq=743
+QV DUMP    16.647955  ERROR  frame destroyed  node=7 tec=218 state=passive seq=753
+QV DUMP    16.686727  ERROR  frame destroyed  node=7 tec=224 state=passive seq=762
+QV DUMP    16.726646  ERROR  frame destroyed  node=7 tec=230 state=passive seq=771
+QV DUMP    16.767489  ERROR  frame destroyed  node=7 tec=236 state=passive seq=781
+QV DUMP    16.806845  ERROR  frame destroyed  node=7 tec=242 state=passive seq=790
+QV DUMP    16.847119  ERROR  frame destroyed  node=7 tec=248 state=passive seq=799
+QV DUMP    16.887004  ERROR  frame destroyed  node=7 tec=254 state=passive seq=809
+QV DUMP    16.926514  ERROR  bus-off  node=7 tec=260 state=bus-off seq=818
+QV DUMP    17.007486  ERROR  frame destroyed  node=7 tec=8 state=active seq=834
+QV DUMP    17.047789  ERROR  frame destroyed  node=7 tec=14 state=active seq=843
+QV DUMP    17.087000  ERROR  frame destroyed  node=7 tec=20 state=active seq=853
+QV DUMP    17.127279  ERROR  frame destroyed  node=7 tec=26 state=active seq=862
+QV DUMP    17.166902  ERROR  frame destroyed  node=7 tec=32 state=active seq=872
+QV DUMP    17.207738  ERROR  frame destroyed  node=7 tec=38 state=active seq=881
+QV DUMP    17.248096  ERROR  frame destroyed  node=7 tec=44 state=active seq=891
+QV DUMP    17.287667  ERROR  frame destroyed  node=7 tec=50 state=active seq=900
+QV DUMP    17.327213  ERROR  frame destroyed  node=7 tec=56 state=active seq=909
+QV DUMP    17.366557  ERROR  frame destroyed  node=7 tec=62 state=active seq=919
+QV DUMP    17.407465  ERROR  frame destroyed  node=7 tec=68 state=active seq=928
+QV DUMP    17.447363  ERROR  frame destroyed  node=7 tec=74 state=active seq=937
+QV DUMP    17.487280  ERROR  frame destroyed  node=7 tec=80 state=active seq=947
+QV DUMP    17.526619  ERROR  frame destroyed  node=7 tec=86 state=active seq=956
+QV DUMP    17.566969  ERROR  frame destroyed  node=7 tec=92 state=active seq=966
+QV DUMP    17.606967  ERROR  frame destroyed  node=7 tec=98 state=active seq=975
+QV DUMP    17.648561  ERROR  frame destroyed  node=7 tec=104 state=active seq=985
+QV DUMP    17.686919  ERROR  frame destroyed  node=7 tec=110 state=active seq=994
+QV DUMP    17.727240  ERROR  frame destroyed  node=7 tec=116 state=active seq=1003
+QV DUMP    17.767092  ERROR  frame destroyed  node=7 tec=122 state=active seq=1013
+QV DUMP    17.807000  ERROR  frame destroyed  node=7 tec=128 state=passive seq=1022
+QV DUMP    17.847325  ERROR  frame destroyed  node=7 tec=134 state=passive seq=1031
+QV DUMP    17.886993  ERROR  frame destroyed  node=7 tec=140 state=passive seq=1041
+QV DUMP    17.928244  ERROR  frame destroyed  node=7 tec=146 state=passive seq=1050
+QV DUMP    17.967906  ERROR  frame destroyed  node=7 tec=152 state=passive seq=1060
+QV DUMP    18.007921  ERROR  frame destroyed  node=7 tec=158 state=passive seq=1069
+QV DUMP    18.048929  ERROR  frame destroyed  node=7 tec=164 state=passive seq=1079
+QV DUMP    18.087145  ERROR  frame destroyed  node=7 tec=170 state=passive seq=1088
+QV DUMP    18.126606  ERROR  frame destroyed  node=7 tec=176 state=passive seq=1097
+QV DUMP    18.167345  ERROR  frame destroyed  node=7 tec=182 state=passive seq=1107
+QV DUMP    18.207784  ERROR  frame destroyed  node=7 tec=188 state=passive seq=1116
+QV DUMP    18.246379  ERROR  frame destroyed  node=7 tec=194 state=passive seq=1125
+QV DUMP    18.287021  ERROR  frame destroyed  node=7 tec=200 state=passive seq=1135
+QV DUMP    18.327050  ERROR  frame destroyed  node=7 tec=206 state=passive seq=1144
+QV DUMP    18.366760  ERROR  frame destroyed  node=7 tec=212 state=passive seq=1154
+QV DUMP    18.408390  ERROR  frame destroyed  node=7 tec=218 state=passive seq=1163
+QV DUMP END 122 frames
+QV DEMO error frames in total: 122, bus-off events: 2
+QV RUN demo.stat.end
+QV STAT bitrate=125000 nodes=1 paused=0 frames=1046 errors=122 bits=138473 busy_ms=1107.784 up_ms=15447.322 load=7.17%
+QV EXIT demo.stat.end 0
+QV RUN demo.stat.bus0
+QV STAT bitrate=500000 nodes=1 paused=0 frames=103854 errors=48 bits=12183114 busy_ms=195.642 up_ms=15477.297 load=1.26%
+QV EXIT demo.stat.bus0 0
+QV GUEST DONE
+
+# 
