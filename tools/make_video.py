@@ -132,20 +132,27 @@ def main():
     npass, nfail = len(data["pass"]), len(data["fail"])
     scenes = []
 
-    # 1 title
+    # 1 title: the measured result first
     im, d = frame()
-    d.text((60, 180), "qvcan", font=F_BIG, fill=ACC)
-    d.text((60, 262), "A virtual CAN bus for QNX 8.0", font=F_H1, fill=FG)
-    d.text((60, 320), "A resource manager: /dev/vcan0, /dev/vcan1 ... every open() is a node.",
-           font=F_TXT, fill=FG)
-    d.text((60, 356), "Arbitration, bit timing with stuffing and CRC, error counters and bus-off,",
-           font=F_TXT, fill=FG)
-    d.text((60, 390), "so CAN software can be developed and tested on QNX without hardware.",
-           font=F_TXT, fill=FG)
-    d.text((60, 460), "Everything on screen is parsed from the console log of a QNX 8.0 guest in QEMU.",
+    d.text((60, 70), "qvcan: test CAN software on QNX 8.0 without CAN hardware", font=F_H1, fill=FG)
+    d.text((60, 118), "Measured on a QNX 8.0 guest in QEMU; every number is parsed from its console log",
            font=F_SMALL, fill=DIM)
-    d.text((60, 486), uname, font=F_MONO_S, fill=DIM)
-    scenes.append((im, 7))
+    nbus = sum(1 for e in errors if "bus-off" in e[1])
+    healthy = [g for g in gens if "2B0" not in g]
+    lost = sum(int(re.search(r"failed (\d+)", g).group(1)) for g in healthy if "failed" in g)
+    sent = sum(int(re.search(r"sent (\d+)", g).group(1)) for g in healthy if "sent" in g)
+    w2r = next((m for m in (LAT.search(x) for x in data["lat"]) if m and m.group(1) == "write_to_read_no_timing"), None)
+    big = [(f"{npass + nfail - nfail}/{npass + nfail}", "test results PASS on QNX 8.0", GOOD if not nfail else BAD),
+           (f"{nbus}x bus-off", f"for the faulty node; healthy nodes lost {lost} of {sent} frames", ACC),
+           (f"{float(w2r.group(3)):.0f} us" if w2r else "-", "p50 write() to read() through the resource manager", ACC)]
+    for i, (num, lab, col) in enumerate(big):
+        y = 190 + 120 * i
+        d.text((60, y), num, font=F_BIG, fill=col)
+        d.text((460, y + 22), lab, font=F_TXT, fill=FG)
+    d.text((60, 560), "A resource manager: /dev/vcan0 ... every open() is a CAN node, with arbitration, "
+                      "bit timing and bus-off.", font=F_SMALL, fill=FG)
+    d.text((60, 590), uname, font=F_MONO_S, fill=DIM)
+    scenes.append((im, 8))
 
     # 2 how it works
     im, d = frame()

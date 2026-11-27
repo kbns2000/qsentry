@@ -1,5 +1,16 @@
 # qvcan: a virtual CAN bus for QNX 8.0
 
+**Test CAN software on QNX 8.0 without CAN hardware.** Measured on a QNX 8.0
+guest (QEMU x86_64, run `20261127-131315`, raw log in `results/`):
+
+| | |
+|---|---|
+| Tests on QNX 8.0 | **18 of 18 pass** (arbitration, bit timing, error confinement, unblocking, 500 open/close, UDP bridge) |
+| Frame timing | 50 frames at 125 kbit/s arrive **888..1080 us** apart, exactly as their bits (with stuff bits) say |
+| Faulty node | destroys every 3rd frame: **bus-off twice in 5 s** (122 error frames), the 3 healthy nodes lose **0 of 800** frames |
+| `write()` to `read()` latency | **p50 295 us, p99 969 us** on an emulated CPU; **~101,000 frames/s** |
+| Guest to host over UDP | **50 of 50** frames round-tripped, p50 3.4 ms |
+
 qvcan is a resource manager for QNX 8.0 that provides virtual CAN buses as
 `/dev/vcan0`, `/dev/vcan1`, ... Every `open()` is one node on the bus;
 `write()` queues frames and `read()` returns the frames other nodes sent.
