@@ -162,8 +162,7 @@ def captions(steps, events):
     f = lambda k: f"{L[k][0]:.2f} seconds" if k in L else "a moment"
     reset_state = kv.get(6, {}).get("state", "")
     m7 = re.match(r"p50 (\d+)\s+p99 (\d+)", kv.get(7, {}).get("pipeline_us", ""))
-    load = (f"{m7.group(1)} microseconds median, {m7.group(2)} at the 99th percentile"
-            if m7 else "bounded time")
+    load = f"a median of {m7.group(1)} microseconds" if m7 else "bounded time"
     reset_cap = ("An operator reset after the window was flushed: back to nominal."
                  if reset_state == "NOMINAL" else
                  "An operator reset while the window still holds faulty samples: safe stop latches "
@@ -203,13 +202,13 @@ def main(log, out):
         (f"{L['speed stuck'][0]:.2f} s", "stuck wheel-speed sensor detected on QNX 8.0", ACC),
         (f"{L['watchdog'][0] * 1000:.0f} ms", "dead sensor process -> SAFE_STOP (deadline watchdog)", WARN),
     ], s0 := "On QNX 8.0, qsentry caught a stuck sensor in half a second. In simulated drives it "
-             "found all 800 injected faults, with zero false alarms."), 12, s0))
+             "found all 800 faults, with no false alarms."), 12, s0))
     frames.append((card("The problem", [
         "Braking, stability control and path planning trust their sensors.",
         "A frozen wheel-speed sensor or a slowly drifting gyro feeds them wrong numbers.",
         "Per-signal thresholds miss slow drifts or raise false alarms."],
-        cap=(s1 := "Brakes and stability control trust their sensors. A frozen or slowly drifting "
-                   "sensor feeds them wrong numbers.")), 8, s1))
+        cap=(s1 := "Brakes and stability control trust their sensors. A frozen or drifting sensor "
+                   "feeds them wrong numbers.")), 8, s1))
     frames.append((card("How qsentry works on QNX", [
         "qsensord (prio 30) MsgSend()s every 100 Hz sample to qsentryd; the reply can carry a command.",
         "qsentryd (SCHED_FIFO 40): sliding window -> features incl. physics residuals -> tiny MLP "
@@ -226,9 +225,9 @@ def main(log, out):
     y = 55
     for l in boot[-24:]:
         d.text((42, y), l[:120], font=F_MONO, fill=FG if "QNX" not in l else (255, 230, 120)); y += 21
-    s3 = "A real QNX 8.0 target in QEMU. Everything on screen comes from its log."
+    s3 = "A real QNX 8.0 target in QEMU. Everything shown comes from its log."
     caption(d, s3)
-    frames.append((im, 7, s3))
+    frames.append((im, 8, s3))
 
     order = steps
     for s in order:
@@ -240,8 +239,8 @@ def main(log, out):
             # one spoken line per step, over its three frames (14 s)
             frames.append((dash(s, evs, CAPS[s["n"]], r), dur, CAPS[s["n"]] if k == 0 else ""))
 
-    sr = ("On QNX: gyro drift in %.1f seconds, stuck sensor in %.2f, noise in %.2f, watchdog in %.0f "
-          "milliseconds. Offline: 800 of 800 faults, zero false alarms." %
+    sr = ("On QNX: drift in %.1f seconds, stuck sensor in %.2f, noise in %.2f, watchdog in %.0f "
+          "milliseconds." %
           (L["yaw drift"][0], L["speed stuck"][0], L["accel noise"][0], L["watchdog"][0] * 1000))
     frames.append((card("Results", [
         "On QNX 8.0 (QEMU, software-emulated CPU): gyro drift %.1f s, wheel speed stuck %.2f s, "
@@ -250,11 +249,11 @@ def main(log, out):
         "Offline, held-out seed: 800 / 800 injected faults found with the right sensor and fault type; "
         "0 false alarms in 200 clean drives (3.3 simulated hours).",
         "Detector: 3.5 us per tick on an x86-64 host, no allocation, bounded time."], cap=sr), 14, sr))
-    se = "qsentry is open source under Apache 2.0. The sensor data is simulated: retrain on recorded data before real use."
+    se = "qsentry is open source, Apache 2.0. The data is simulated: retrain on real data first."
     frames.append((card("qsentry", [
         "Open source, Apache-2.0: github.com/kbns2000/qsentry",
         "Simulated sensor data; retrain on recorded data before real use. Not a certified safety component."],
-        sub="Built with QNX SDP 8.0, C11, numpy", cap=se), 9, se))
+        sub="Built with QNX SDP 8.0, C11, numpy", cap=se), 10, se))
 
     total = sum(t for _, t, _ in frames)
     # narration: a line starts with its frame and may run until the next spoken line
