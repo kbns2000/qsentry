@@ -2,14 +2,20 @@
 
 **Project name:** open62541-qnx
 
-**Tagline:** OPC UA on QNX 8.0: the newest open62541 1.4 release, tested on QNX
-against itself, with a small port for what QNX shows to be broken.
+**Tagline:** OPC UA (open62541 v1.4.22) that behaves on QNX 8.0 as on Linux: 7 small changes, 17/17 of their tests pass on QNX where the unchanged release fails 15. Encrypted client: 8/8.
 
 **Category:** Open-source port
 
 **Video:** https://youtu.be/KaLh60HXepY
 
 **Repository:** https://github.com/kbns2000/open62541-qnx
+
+## Measured on QNX 8.0 (QEMU x86_64; raw logs in the repository)
+
+- Tests named by the seven changes: **17 of 17 pass** with the port; the unchanged release: **15 fail, 2 cannot run**.
+- Whole suite, port vs unchanged release: **80 pass / 2 fail** vs **57 / 17**.
+- Independent client (python asyncua on the host, encrypted, user login): **8 of 8** checks pass.
+- Read latency on the emulated CPU, p50: **2.1 ms** plain, **2.6 ms** Basic256Sha256 SignAndEncrypt; PubSub UDP **1.8 ms**.
 
 ## Inspiration
 
