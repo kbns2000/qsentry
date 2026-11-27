@@ -2,15 +2,20 @@
 
 **Project name:** qvcan
 
-**Tagline:** A virtual CAN bus for QNX 8.0: a resource manager with real
-arbitration, bit timing and error confinement, so CAN software can be
-developed and tested without hardware.
+**Tagline:** Test CAN software on QNX 8.0 without hardware: a virtual CAN bus with real arbitration, bit timing and bus-off. 18/18 tests pass on QNX; frames arrive 888..1080 µs apart, as their bits say.
 
 **Category:** the low-level / system software category of the form
 
 **Video:** (YouTube link)
 
 **Repository:** https://github.com/kbns2000/qvcan
+
+## Measured on QNX 8.0 (QEMU x86_64; raw logs in the repository)
+
+- **18 of 18** tests pass on the target: arbitration, bit timing, error confinement, unblocking, 500 open/close, UDP bridge.
+- 50 frames at 125 kbit/s arrive **888..1080 µs** apart, exactly as their bits (with stuff bits) say.
+- A faulty node destroying every 3rd frame goes **bus-off twice in 5 s**; the 3 healthy nodes lose **0 of 800** frames.
+- `write()` to `read()` latency on the emulated CPU: **p50 295 µs, p99 969 µs**; about **101,000 frames/s**.
 
 ## Inspiration
 
