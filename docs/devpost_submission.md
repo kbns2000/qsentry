@@ -1,11 +1,19 @@
 # Devpost submission text (copy into the form)
 
 **Project name:** qsentry
-**Tagline:** A 1.2 KB neural network and a hard-deadline watchdog that catch lying sensors on QNX 8.0.
+**Tagline:** Tells a car or robot which sensor is lying, on QNX 8.0: 800/800 simulated faults found with 0 false alarms, and SAFE_STOP 55 ms after the sensor stream dies.
 **Category:** Automotive
 **Video:** https://youtu.be/_vI-nU5w7Q4
 
 **Built with:** c, qnx, qnx-neutrino, qemu, python, numpy
+
+## Measured (raw logs in the repository)
+
+- Simulated drives on the host, held-out seed: **800 of 800** faults found with the right sensor and type, **0** false alarms in 200 clean drives.
+- Reaction on QNX 8.0 (QEMU x86_64): stuck speed **0.48 s**, accelerometer noise **0.18 s**, slow yaw drift **2.79 s**.
+- Sensor stream dies (`slay qsensord`): watchdog to `SAFE_STOP` in **55 ms**.
+- Detector per sample, p50 / p99: **119 / 218 µs** idle, **144 / 286 µs** with the CPU saturated at lower priority.
+- Honest limit: the sensors are simulated; on one real drive the model does not transfer yet.
 
 ## Inspiration
 Modern vehicles and robots make safety decisions from sensors that can silently fail: a frozen
