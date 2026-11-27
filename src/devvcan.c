@@ -17,7 +17,7 @@
  * A read() with no frame waiting, and a write() with a full transmit queue,
  * are not answered until there is a frame or room: the client stays
  * REPLY-blocked on devvcan. A signal or a kernel timeout (TimerTimeout) ends
- * the wait with EINTR or ETIMEDOUT (unblock handler below).
+ * the wait with EINTR (unblock handler below; a TimerTimeout() also arrives as an unblock pulse).
  *
  * SPDX-License-Identifier: Apache-2.0
  */

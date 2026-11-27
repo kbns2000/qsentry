@@ -430,10 +430,13 @@ static void t_unblock_timeout(void)
     int e = errno;
     double dt = now_s() - t0;
     close(a);
-    EXPECT(n == -1 && e == ETIMEDOUT, "read gave %zd (%s)", n, strerror(e));
-    EXPECT(dt > 0.1 && dt < 1.5, "after %.3f s", dt);
-    printf("QV PASS unblock.timeout TimerTimeout(150 ms) on a blocked read(): ETIMEDOUT after %.0f ms\n",
-           dt * 1e3);
+    /* devvcan's channel has _NTO_CHF_UNBLOCK: the kernel does not end the
+     * call itself but sends devvcan an unblock pulse, and the client gets
+     * devvcan's reply, EINTR (as for a signal) */
+    EXPECT(n == -1 && e == EINTR, "read gave %zd (%s)", n, strerror(e));
+    EXPECT(dt > 0.14 && dt < 1.5, "after %.3f s", dt);
+    printf("QV PASS unblock.timeout TimerTimeout(150 ms) on a blocked read(): the kernel's unblock "
+           "pulse reached devvcan, read() ended with EINTR after %.0f ms\n", dt * 1e3);
 }
 
 static void t_backpressure(void)

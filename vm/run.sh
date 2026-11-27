@@ -68,7 +68,7 @@ g3=$!
 ./vcan gen /dev/vcan1 -I 2B0 -L 8 -g 20 -n 250 -F 3 > /tmp/qv_g4.txt &
 g4=$!
 sleep 1
-run demo.dump ./vcan dump /dev/vcan1 -n 24
+run demo.dump ./vcan dump /dev/vcan1 -n 60
 run demo.stat ./vcan stat /dev/vcan1
 pidin -p devvcan
 wait $g1
@@ -77,8 +77,8 @@ wait $g3
 wait $g4
 wait $e
 cat /tmp/qv_g1.txt /tmp/qv_g2.txt /tmp/qv_g3.txt /tmp/qv_g4.txt
-echo "QV DEMO error frames seen by the error-only node (first 12):"
-head -n 12 /tmp/qv_err.txt
+echo "QV DEMO error frames seen by the error-only node:"
+cat /tmp/qv_err.txt
 echo "QV DEMO error frames in total: $(grep -c ERROR /tmp/qv_err.txt), bus-off events: $(grep -c bus-off /tmp/qv_err.txt)"
 run demo.stat.end ./vcan stat /dev/vcan1
 run demo.stat.bus0 ./vcan stat /dev/vcan0
