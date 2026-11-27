@@ -32,5 +32,7 @@ ping -n 201 127.0.0.1 >nul
 set QPID=
 if exist qemu.pid set /p QPID=<qemu.pid
 if defined QPID taskkill /pid %QPID% /f >nul 2>&1
+rem give QEMU a moment to release serial.log
+ping -n 3 127.0.0.1 >nul
 echo accel=%ACCEL%>> serial.log
 type serial.log
