@@ -13,6 +13,8 @@ for sudden faults.** Measured (raw logs in [docs/qnx_run_2026-11-07/](docs/qnx_r
 
 Simulated sensors; on one real drive the model does not transfer yet (see [Real-data check](#real-data-check)).
 
+**Demo video (2:57, narrated):** https://youtu.be/_vI-nU5w7Q4 — measured results first; every screen is the real serial log of a QNX 8.0 target in QEMU (captions-only version: https://youtu.be/1FHy8AGi6Ys)
+
 **Category:** Automotive (also fits Robotics). **Target:** QNX SDP 8.0, x86_64 QEMU (aarch64 / Raspberry Pi also builds).
 
 A car or robot trusts its sensors. A wheel-speed sensor that freezes, a gyro that slowly drifts, a
@@ -29,7 +31,6 @@ The detector is a 293-parameter neural network (1.2 KB of weights) that runs in 
 100 Hz tick, with no allocation, no libraries and bounded execution time, so it can live next to
 real-time control code on QNX.
 
-**Demo video (2:47):** https://youtu.be/1FHy8AGi6Ys — every screen is the real serial log of a QNX 8.0 target in QEMU
 ([docs/qnx_run_2026-11-07/](docs/qnx_run_2026-11-07/)).
 
 > **New to QNX?** [codelab/](codelab/README.md) is a step-by-step tutorial: build a QNX 8.0 resource manager + timer-pulse daemon on Windows and boot it in QEMU.
