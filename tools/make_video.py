@@ -5,10 +5,14 @@
 
 Every result on screen is parsed from the console logs of the run (and the
 Linux reference results/envprobe_linux.txt); nothing is typed in by hand.
-Captions only, no voice-over. Needs Pillow, ffmpeg and the DejaVu fonts.
+The caption of each scene is also its narration: the script writes OUT.json
+and OUT.srt next to the video, and tools/narrate.py adds the spoken track on a
+Windows PC. Needs Pillow, ffmpeg and the DejaVu fonts.
 SPDX-License-Identifier: Apache-2.0
 """
 import argparse
+import json
+import math
 import os
 import re
 import subprocess
@@ -118,19 +122,67 @@ def main():
     args = ap.parse_args()
     archs, data, interop_text, linux = load_run(args.rundir)
     series = port.load_series()
-    scenes = []  # (image, seconds)
+    scenes = []  # (image, seconds, narration)
 
-    # 1 title
+    def say(im, d, text, base):
+        caption(d, text)
+        # Windows' Zira voice: about 1.8 words per second with numbers; keep a margin
+        sec = max(base, math.ceil(len(text.split()) / 1.75 + 1.5))
+        scenes.append((im, sec, text))
+
+    # the change table (scene 1 counts it, scene 6 draws it)
+    rows = []
+    for c in series:
+        for t in o6q.TEST_NAME.findall(c.meta["test"]) or []:
+            row = [c.meta["id"], t]
+            for a in archs:
+                res = data[a]["results"]
+                row += [o6q.lookup(res, t, "upstream"), o6q.lookup(res, t, "port")]
+            rows.append(row)
+    host = o6q.parse(interop_text)
+
+    # 1 the measured numbers first
+    a0 = "x86_64" if "x86_64" in archs else archs[0]
+    k0 = archs.index(a0)
+    named = [r[2 + 2 * k0:4 + 2 * k0] for r in rows]  # (release, port)
+    n_port = sum(1 for up, pt in named if pt == "PASS")
+    n_up_fail = sum(1 for up, pt in named if up == "FAIL")
+    n_up_none = sum(1 for up, pt in named if up == "-")
+
+    def total(variant):
+        p = f = 0
+        for s, v in data[a0]["summary"].items():
+            if s.endswith("@upstream") if variant == "upstream" else "@" not in s:
+                p += int(v.get("pass", 0))
+                f += int(v.get("fail", 0))
+        return p, f
+    pp, pf = total("port")
+    rp, rf = total("upstream")
+    n_host = sum(1 for kind, _ in host["results"].values() if kind == "PASS")
+    lat = {}
+    for line in data[a0]["lat"]:
+        name, _, rest = line.partition(" ")
+        kv = dict(x.split("=", 1) for x in rest.split() if "=" in x)
+        if "p50_us" in kv:
+            lat[name] = float(kv["p50_us"]) / 1000
+    l_read = lat.get("core.read", 0)
+    l_enc = lat.get("security.read_Basic256Sha256_SignAndEncrypt", 0)
+    l_ps = lat.get("pubsub.unicast_latency", 0)
     im, d = frame()
-    d.text((60, 190), "open62541-qnx", font=F_BIG, fill=ACC)
-    d.text((60, 270), "OPC UA on QNX 8.0 - every change shown on QNX itself", font=F_H1, fill=FG)
-    d.text((60, 330), f"open62541 {port.VERSION}  |  x86_64 + aarch64le  |  encryption (OpenSSL 3)  |  "
-           "PubSub", font=F_TXT, fill=FG)
-    d.text((60, 420), "Open-source port category. Every result in this video is parsed from the console",
-           font=F_SMALL, fill=DIM)
-    d.text((60, 446), "logs of QNX 8.0 guests in QEMU; nothing is typed in by hand.", font=F_SMALL,
-           fill=DIM)
-    scenes.append((im, 6))
+    d.text((60, 40), "open62541-qnx: OPC UA that behaves on QNX 8.0 as on Linux", font=F_H1, fill=FG)
+    d.text((60, 88), f"open62541 {port.VERSION}, parsed from the QNX 8.0 console log (QEMU {a0}, run "
+           f"{os.path.basename(os.path.normpath(args.rundir))})", font=F_SMALL, fill=DIM)
+    for i, (num, lab, col) in enumerate([
+            (f"{n_port} / {len(named)}", f"tests named by the changes pass with the port "
+             f"(release: {n_up_fail} fail, {n_up_none} cannot run)", GOOD),
+            (f"{pp} / {pf}", f"pass / fail, whole suite with the port (release: {rp} / {rf})", GOOD),
+            (f"{n_host} / {len(host['results'])}", "checks pass from an independent client, encrypted", ACC),
+            (f"{l_read:.1f} ms", f"read p50 on the emulated CPU ({l_enc:.1f} ms encrypted, PubSub "
+             f"{l_ps:.1f} ms)", (230, 160, 90))]):
+        d.text((60, 140 + 98 * i), num, font=F_BIG, fill=col)
+        paragraph(d, 400, 150 + 98 * i, lab, width=W - 460, gap=30)
+    say(im, d, f"On QNX 8.0, all {n_port} tests named by the changes pass with the port; the unchanged "
+               f"release fails {n_up_fail}. An independent client passes {n_host} of {len(host['results'])}.", 12)
 
     # 2 why
     im, d = frame()
@@ -143,9 +195,8 @@ def main():
                  "for QNX since v1.4.12; its platform table lists QNX as tier 3 (no CI, no "
                  "test system)."]:
         y = paragraph(d, 80, y, "•  " + text) + 22
-    caption(d, "It compiles for QNX 8.0. The question is whether the code behaves the same way "
-               "as on Linux, where it is tested. This project measures that.")
-    scenes.append((im, 9))
+    say(im, d, "open62541 compiles for QNX, but has no test system there. "
+               "This project checks that it behaves as on Linux.", 9)
 
     # 3 method
     tests = sum(len(o6q.TEST_NAME.findall(c.meta["test"])) for c in series)
@@ -155,17 +206,16 @@ def main():
     count = words[len(series)] if len(series) < len(words) else str(len(series))
     header(d, f"The port: {count} small changes, each with a test on QNX")
     d.rectangle([60, 130, W - 60, 470], fill=PANEL)
-    rows = [("release", f"open62541.c / .h {port.VERSION}, SHA-256 checked, never committed"),
+    parts = [("release", f"open62541.c / .h {port.VERSION}, SHA-256 checked, never committed"),
             ("patches/", f"{len(series)} changes: reason, upstream file, the test that shows it"),
             ("o6q_check", "test program built from the PORT"),
             ("o6q_check_upstream", "the same program built from the unchanged RELEASE"),
             ("o6q_envprobe", "what the operating system does, next to Linux values")]
-    for i, (k, v) in enumerate(rows):
+    for i, (k, v) in enumerate(parts):
         d.text((90, 160 + 60 * i), k, font=F_H2, fill=ACC)
         d.text((400, 162 + 60 * i), v, font=F_TXT, fill=FG)
-    caption(d, f"Both programs run the same suites on QNX. A change stays only where its {tests} "
-               "named tests show a difference on the target.")
-    scenes.append((im, 10))
+    say(im, d, f"Each test runs twice on QNX, release and port. A change stays only where "
+               f"its tests show a difference: {tests} named tests in all.", 10)
 
     # 4 pipeline
     im, d = frame()
@@ -179,9 +229,8 @@ def main():
     d.rectangle([60, 140, W - 60, 470], fill=PANEL)
     for i, s in enumerate(steps):
         d.text((90, 165 + 48 * i), s, font=F_MONO if i else F_H2, fill=FG if i else ACC)
-    status = o6q.read_text(os.path.join(args.rundir, "qemu_status.txt")).strip().replace("\n", "; ")
-    caption(d, "This run: " + (status or "QEMU status not recorded") + ".")
-    scenes.append((im, 9))
+    say(im, d, "One command on a Windows PC builds, boots QNX in QEMU, runs the tests "
+               "and writes the report. No board needed.", 9)
 
     # 5 raw console
     lines = console(os.path.join(args.rundir, archs[0], "serial.log")) if archs else []
@@ -193,18 +242,9 @@ def main():
     for i, l in enumerate(shown):
         colour = BAD if " FAIL " in l else GOOD if " PASS " in l else DIM
         d.text((56, 122 + 21 * i), l.expandtabs(4)[:118], font=F_MONO, fill=colour)
-    caption(d, "One line per test. The report on the host is made from these lines only.")
-    scenes.append((im, 10))
+    say(im, d, "This is the raw QNX console: one line per test. The report is made from these lines only.", 10)
 
     # 6 changes table
-    rows = []
-    for c in series:
-        for t in o6q.TEST_NAME.findall(c.meta["test"]) or []:
-            row = [c.meta["id"], t]
-            for a in archs:
-                res = data[a]["results"]
-                row += [o6q.lookup(res, t, "upstream"), o6q.lookup(res, t, "port")]
-            rows.append(row)
     im, d = frame()
     header(d, "Each change on QNX: unchanged release vs port")
     x0, y0, rh = 60, 120, min(26, (H - 230) // max(1, len(rows) + 1))
@@ -223,9 +263,8 @@ def main():
             cell(d, xs[2 + j], y, cw[2 + j], rh, v, verdict_colour(v), F_MONO_S)
     shown_fixed = sum(1 for r in rows for k in range(len(archs))
                       if r[2 + 2 * k] == "FAIL" and r[3 + 2 * k] == "PASS")
-    caption(d, f"{shown_fixed} test results fail with the unchanged release and pass with the port "
-               "(red = FAIL, green = PASS, grey = not run).")
-    scenes.append((im, 14))
+    say(im, d, f"{shown_fixed} tests fail with the unchanged release and pass with the port. "
+               "Red is fail, green is pass, grey could not run.", 12)
 
     # 7 operating system differences
     diff = []
@@ -248,9 +287,8 @@ def main():
         d.text((xs[1], y), v[:24], font=F_MONO_S, fill=DIM)
         for j, x in enumerate(q):
             d.text((xs[2 + j], y), (x or "-")[:28], font=F_MONO_S, fill=FG)
-    caption(d, f"{len(diff)} of {len(linux)} probed behaviours differ from Linux. The changes are "
-               "built on these measurements, not on assumptions.")
-    scenes.append((im, 12))
+    say(im, d, f"A probe without open62541 measures the operating system: {len(diff)} of {len(linux)} "
+               "behaviours differ from Linux. The changes are built on these.", 12)
 
     # 8 suites
     im, d = frame()
@@ -269,12 +307,10 @@ def main():
             d.text((80, y), text, font=F_MONO, fill=FG)
             y += 24
         y += 16
-    caption(d, "The port passes where the release fails; everything else behaves the same in "
-               "both builds.")
-    scenes.append((im, 9))
+    say(im, d, f"The whole suite: {pp} pass and {pf} fail with the port, {rp} and {rf} with the release. "
+               "The two failures happen in both builds.", 9)
 
     # 9 interop
-    host = o6q.parse(interop_text)
     im, d = frame()
     header(d, "An independent OPC UA client talks to the QNX demo server",
            "python asyncua on the host -> QEMU port forward -> o6q_server on QNX 8.0 x86_64")
@@ -290,9 +326,8 @@ def main():
             y += 18
         if y > H - 130:
             break
-    caption(d, "Encrypted session (Basic256Sha256, SignAndEncrypt) with user name; anonymous, wrong "
-               "password and an unknown client certificate are refused.")
-    scenes.append((im, 13))
+    say(im, d, "A Python client on the host logs in to the QNX server, encrypted. "
+               "A wrong password and an unknown certificate are refused.", 12)
 
     # 10 demo server and slog2
     x86 = console(os.path.join(args.rundir, "x86_64", "serial.log")) if "x86_64" in archs else []
@@ -312,9 +347,8 @@ def main():
         # slog2info pads its columns with blanks and tabs: one blank is enough
         d.text((56, y), " ".join(l.split())[:120], font=F_MONO_S, fill=DIM)
         y += 19
-    caption(d, "CPU load, memory, processes and uptime once per second; trust folder re-read "
-               "for every connection; stack messages in slog2info.")
-    scenes.append((im, 11))
+    say(im, d, "The demo server publishes CPU load, memory, processes and uptime every second, "
+               "and logs to slog2.", 11)
 
     # 11 end
     im, d = frame()
@@ -324,12 +358,27 @@ def main():
                            "QNX SDP 8.0, qcc for x86_64 and aarch64le; the run: QEMU x86_64.",
                            "Results from QEMU emulation: behaviour, not performance figures."]):
         d.text((60, 360 + 38 * i), s, font=F_TXT, fill=DIM if i == 2 else FG)
-    scenes.append((im, 7))
+    say(im, d, "open62541-qnx is open source. Under emulation, these are behaviour results, "
+               "not performance figures.", 7)
+
+    base = os.path.splitext(args.out)[0]
+    narr, t = [], 0.0
+    for _, sec, text in scenes:
+        narr.append({"start": t, "end": t + sec, "text": text})
+        t += sec
+    with open(base + ".json", "w", encoding="utf-8") as f:
+        json.dump(narr, f, indent=1)
+
+    def ts(x):
+        return "%02d:%02d:%02d,000" % (x // 3600, x % 3600 // 60, x % 60)
+    with open(base + ".srt", "w", encoding="utf-8") as f:
+        for i, n in enumerate(narr, 1):
+            f.write(f"{i}\n{ts(n['start'])} --> {ts(n['end'])}\n{n['text']}\n\n")
 
     with tempfile.TemporaryDirectory() as td:
         lst = os.path.join(td, "list.txt")
         with open(lst, "w") as f:
-            for i, (img, sec) in enumerate(scenes):
+            for i, (img, sec, _) in enumerate(scenes):
                 p = os.path.join(td, f"s{i:02d}.png")
                 img.save(p)
                 f.write(f"file '{p}'\nduration {sec}\n")
@@ -337,7 +386,7 @@ def main():
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i",
                         lst, "-vf", "fps=30,format=yuv420p", "-c:v", "libx264", "-crf", "20",
                         args.out], check=True)
-    print(args.out, sum(s for _, s in scenes), "s")
+    print(args.out, sum(s for _, s, _ in scenes), "s")
 
 
 if __name__ == "__main__":

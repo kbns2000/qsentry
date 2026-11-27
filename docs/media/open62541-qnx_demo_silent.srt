@@ -1,0 +1,44 @@
+1
+00:00:00,000 --> 00:00:17,000
+On QNX 8.0, all 17 tests named by the changes pass with the port; the unchanged release fails 15. An independent client passes 8 of 8.
+
+2
+00:00:17,000 --> 00:00:30,000
+open62541 compiles for QNX, but has no test system there. This project checks that it behaves as on Linux.
+
+3
+00:00:30,000 --> 00:00:46,000
+Each test runs twice on QNX, release and port. A change stays only where its tests show a difference: 17 named tests in all.
+
+4
+00:00:46,000 --> 00:01:00,000
+One command on a Windows PC builds, boots QNX in QEMU, runs the tests and writes the report. No board needed.
+
+5
+00:01:00,000 --> 00:01:12,000
+This is the raw QNX console: one line per test. The report is made from these lines only.
+
+6
+00:01:12,000 --> 00:01:27,000
+15 tests fail with the unchanged release and pass with the port. Red is fail, green is pass, grey could not run.
+
+7
+00:01:27,000 --> 00:01:41,000
+A probe without open62541 measures the operating system: 43 of 96 behaviours differ from Linux. The changes are built on these.
+
+8
+00:01:41,000 --> 00:01:57,000
+The whole suite: 80 pass and 2 fail with the port, 57 and 17 with the release. The two failures happen in both builds.
+
+9
+00:01:57,000 --> 00:02:12,000
+A Python client on the host logs in to the QNX server, encrypted. A wrong password and an unknown certificate are refused.
+
+10
+00:02:12,000 --> 00:02:23,000
+The demo server publishes CPU load, memory, processes and uptime every second, and logs to slog2.
+
+11
+00:02:23,000 --> 00:02:32,000
+open62541-qnx is open source. Under emulation, these are behaviour results, not performance figures.
+
