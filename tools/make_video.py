@@ -2,9 +2,11 @@
 """Render the demo video from a real qsentry serial log captured on QNX 8.0 (QEMU).
 
 Every number and state shown on screen is parsed from the log; nothing is
-re-simulated.  Captions explain each step (no voice-over).
+re-simulated.  The caption of each scene is also its narration: the script
+writes OUT.json (start, end, text per scene) and OUT.srt next to the video;
+tools/narrate.py adds the spoken track on a Windows PC.
 
-usage: python3 tools/make_video.py docs/qnx_run_2026-11-07/serial_run3.log out.mp4
+usage: python3 tools/make_video.py docs/qnx_run_2026-11-07/serial_run3.log docs/media/qsentry_demo_silent.mp4
 needs: Pillow, ffmpeg, DejaVu fonts
 """
 import os, re, subprocess, sys, tempfile
@@ -68,7 +70,7 @@ def footer(d):
     d.text((W - 470, 8), "real serial log: QNX 8.0 x86_64 in QEMU, 2026-11-07", font=F_SMALL, fill=DIM)
 
 
-def card(title, lines, sub=None):
+def card(title, lines, sub=None, cap=None):
     im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im)
     y = 150 if sub is None else 120
     d.text((80, y), title, font=F_H1, fill=FG)
@@ -79,6 +81,23 @@ def card(title, lines, sub=None):
         for wl in wrap(d, l, F_TXT, W - 160):
             d.text((80, y), wl, font=F_TXT, fill=FG); y += 34
         y += 8
+    if cap:
+        caption(d, cap)
+    return im
+
+
+def numbers_card(rows, cap):
+    """The first scene: what was measured, big."""
+    im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im)
+    d.text((60, 40), "qsentry: which sensor is lying, measured on QNX 8.0", font=F_H1, fill=FG)
+    d.text((60, 88), "numbers parsed from the QNX 8.0 (QEMU) serial log and the held-out evaluation",
+           font=F_SMALL, fill=DIM)
+    y = 140
+    for num, lab, col in rows:
+        d.text((60, y), num, font=F_BIG, fill=col)
+        d.text((420, y + 18), lab, font=F_TXT, fill=FG)
+        y += 98
+    caption(d, cap)
     return im
 
 
@@ -137,35 +156,36 @@ def latencies(events):
 
 
 def captions(steps, events):
+    """Spoken text per demo step (also the on-screen caption)."""
     L = latencies(events)
     kv = {st["n"]: st["kv"] for st in steps}
-    f = lambda k: f"{L[k][0]:.2f} s" if k in L else "?"
+    f = lambda k: f"{L[k][0]:.2f} seconds" if k in L else "a moment"
     reset_state = kv.get(6, {}).get("state", "")
-    pl7 = kv.get(7, {}).get("pipeline_us", "").split("max")[0].strip()
-    reset_cap = ("Operator reset after the faults were cleared and the window flushed: back to NOMINAL."
+    m7 = re.match(r"p50 (\d+)\s+p99 (\d+)", kv.get(7, {}).get("pipeline_us", ""))
+    load = (f"{m7.group(1)} microseconds median, {m7.group(2)} at the 99th percentile"
+            if m7 else "bounded time")
+    reset_cap = ("An operator reset after the window was flushed: back to nominal."
                  if reset_state == "NOMINAL" else
-                 "Operator reset while the 1-second window still holds faulty samples: the supervisor "
-                 "re-latches SAFE_STOP at once. It never trusts stale evidence.")
+                 "An operator reset while the window still holds faulty samples: safe stop latches "
+                 "again. qsentry never trusts stale evidence.")
     wd = L.get("watchdog", (0, ""))[0] * 1000
     return {
-        1: "Clean driving. A sensor process MsgSend()s 4 signals at 100 Hz to qsentryd; a 293-parameter "
-           "neural net checks every sensor every tick. All OK, state NOMINAL.",
-        2: "Gyro (yaw) drift injected. Alone the signal looks normal, but it no longer matches the bicycle "
-           f"model from steering and speed. Flagged 'drift' {f('yaw drift')} after injection -> DEGRADED.",
-        3: "Fault cleared. A sensor is only un-flagged after confident health (p(ok) >= 0.9) for a full "
-           "second, so an unsure model never hides a fault. Back to NOMINAL.",
-        4: f"Wheel-speed sensor frozen: 'stuck' in {f('speed stuck')}. Fault isolation: the steer/yaw check "
-           "uses wheel speed, so the gyro pair is not condemned by mistake.",
-        5: f"Accelerometer noise (flagged in {f('accel noise')}) plus gyro drift: both redundant pairs are "
-           "lost -> SAFE_STOP, latched until an operator reset.",
+        1: "Clean driving. Four signals at one hundred hertz, and every sensor is checked on every "
+           "tick. State: nominal.",
+        2: "Now the gyro drifts. On its own it looks normal, but it no longer matches steering and "
+           f"speed. Flagged as drift after {f('yaw drift')}. Degraded.",
+        3: "The fault is cleared. A sensor is trusted again only after a full second of confident "
+           "health. Back to nominal.",
+        4: f"The wheel speed sensor freezes. Stuck, detected in {f('speed stuck')}. The gyro is not "
+           "blamed by mistake.",
+        5: f"Accelerometer noise, found in {f('accel noise')}, plus gyro drift. Both redundant pairs "
+           "are lost, so qsentry latches safe stop.",
         6: reset_cap,
-        7: "Two priority-9 CPU hogs (qsload) for 10 s. The detector thread runs SCHED_FIFO 40 and stays "
-           f"bounded: {pl7} us per sample (software-emulated CPU).",
-        8: "slay qsensord: the sensor ECU dies. A 100 Hz timer pulse on the same QNX channel is a deadline "
-           f"watchdog -> SAFE_STOP {wd:.0f} ms after the last sample (50 ms deadline, 10 ms tick).",
+        7: "Two low priority programs load the CPU. The detector runs at priority forty and stays "
+           f"bounded: {load}.",
+        8: "The sensor process is killed. A timer pulse on the same QNX channel is the watchdog: "
+           f"safe stop {wd:.0f} milliseconds after the last sample.",
     }, L
-
-
 
 
 def main(log, out):
@@ -174,22 +194,30 @@ def main(log, out):
     for e in events:
         m = re.match(r"t=([\d.]+)s", e)
         ev_t.append((float(m.group(1)) if m else 0.0, e))
-    frames = []  # (image, seconds)
-
-    frames.append((card("qsentry", [
-        "An on-device sensor-fault sentinel for QNX 8.0.",
-        "Which sensor is lying, and how: stuck, drift, spikes, noise.",
-        "Automotive track - QNX Global Hackathon 2026"], sub="github.com/kbns2000/qsentry"), 6))
+    frames = []  # (image, seconds, spoken text or None)
+    CAPS, L = captions(steps, events)
+    GOOD, WARN = (46, 160, 90), (230, 160, 30)
+    frames.append((numbers_card([
+        ("800 / 800", "faults found, right sensor and type (simulated drives)", GOOD),
+        ("0", "false alarms in 200 clean drives (3.3 simulated hours)", GOOD),
+        (f"{L['speed stuck'][0]:.2f} s", "stuck wheel-speed sensor detected on QNX 8.0", ACC),
+        (f"{L['watchdog'][0] * 1000:.0f} ms", "dead sensor process -> SAFE_STOP (deadline watchdog)", WARN),
+    ], s0 := "On QNX 8.0, qsentry caught a stuck sensor in half a second. In simulated drives it "
+             "found all 800 injected faults, with zero false alarms."), 12, s0))
     frames.append((card("The problem", [
         "Braking, stability control and path planning trust their sensors.",
         "A frozen wheel-speed sensor or a slowly drifting gyro feeds them wrong numbers.",
-        "Per-signal thresholds miss slow drifts or raise false alarms."]), 8))
+        "Per-signal thresholds miss slow drifts or raise false alarms."],
+        cap=(s1 := "Brakes and stability control trust their sensors. A frozen or slowly drifting "
+                   "sensor feeds them wrong numbers.")), 8, s1))
     frames.append((card("How qsentry works on QNX", [
         "qsensord (prio 30) MsgSend()s every 100 Hz sample to qsentryd; the reply can carry a command.",
         "qsentryd (SCHED_FIFO 40): sliding window -> features incl. physics residuals -> tiny MLP "
         "(293 params, 1.2 KB) -> supervisor NOMINAL / DEGRADED / SAFE_STOP.",
         "A POSIX timer SIGEV_PULSE on the same channel = 50 ms deadline watchdog.",
-        "Resource manager /dev/qsentry: cat for status, echo to inject faults or reset."]), 12))
+        "Resource manager /dev/qsentry: cat for status, echo to inject faults or reset."],
+        cap=(s2 := "A sensor process sends every sample to qsentry with QNX message passing. A tiny "
+                   "neural network checks each sensor, and a timer pulse is the watchdog.")), 12, s2))
 
     # boot
     im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im); footer(d)
@@ -198,37 +226,58 @@ def main(log, out):
     y = 55
     for l in boot[-24:]:
         d.text((42, y), l[:120], font=F_MONO, fill=FG if "QNX" not in l else (255, 230, 120)); y += 21
-    caption(d, "Real QNX 8.0 x86_64 target in QEMU. The demo script starts qsentryd, qsensord and then "
-               "drives everything through /dev/qsentry.")
-    frames.append((im, 7))
+    s3 = "A real QNX 8.0 target in QEMU. Everything on screen comes from its log."
+    caption(d, s3)
+    frames.append((im, 7, s3))
 
     order = steps
-    CAPS, L = captions(steps, events)
     for s in order:
         t_now = 1e9
         m = re.search(r"t=([\d.]+)s", s["kv"].get("event", ""))
         if m: t_now = float(m.group(1))
         evs = [e for t, e in ev_t if t <= t_now] if s["n"] != 1 else [events[0]]
-        for r, dur in ((0.35, 1.2), (0.7, 1.2), (1.0, 11.6)):
-            frames.append((dash(s, evs, CAPS[s["n"]], r), dur))
+        for k, (r, dur) in enumerate(((0.35, 1.2), (0.7, 1.2), (1.0, 11.6))):
+            # one spoken line per step, over its three frames (14 s)
+            frames.append((dash(s, evs, CAPS[s["n"]], r), dur, CAPS[s["n"]] if k == 0 else ""))
 
+    sr = ("On QNX: gyro drift in %.1f seconds, stuck sensor in %.2f, noise in %.2f, watchdog in %.0f "
+          "milliseconds. Offline: 800 of 800 faults, zero false alarms." %
+          (L["yaw drift"][0], L["speed stuck"][0], L["accel noise"][0], L["watchdog"][0] * 1000))
     frames.append((card("Results", [
         "On QNX 8.0 (QEMU, software-emulated CPU): gyro drift %.1f s, wheel speed stuck %.2f s, "
         "accel noise %.2f s, watchdog %.0f ms." % (L["yaw drift"][0], L["speed stuck"][0],
                                                    L["accel noise"][0], L["watchdog"][0] * 1000),
         "Offline, held-out seed: 800 / 800 injected faults found with the right sensor and fault type; "
         "0 false alarms in 200 clean drives (3.3 simulated hours).",
-        "Detector: 3.5 us per tick on an x86-64 host, no allocation, bounded time."]), 14))
+        "Detector: 3.5 us per tick on an x86-64 host, no allocation, bounded time."], cap=sr), 14, sr))
+    se = "qsentry is open source under Apache 2.0. The sensor data is simulated: retrain on recorded data before real use."
     frames.append((card("qsentry", [
         "Open source, Apache-2.0: github.com/kbns2000/qsentry",
         "Simulated sensor data; retrain on recorded data before real use. Not a certified safety component."],
-        sub="Built with QNX SDP 8.0, C11, numpy"), 7))
+        sub="Built with QNX SDP 8.0, C11, numpy", cap=se), 9, se))
 
-    total = sum(t for _, t in frames)
+    total = sum(t for _, t, _ in frames)
+    # narration: a line starts with its frame and may run until the next spoken line
+    narr, t = [], 0.0
+    for im, dur, text in frames:
+        if text:
+            narr.append({"start": round(t, 3), "end": None, "text": text})
+        t += dur
+        if narr:
+            narr[-1]["end"] = round(t, 3)
+    base = os.path.splitext(out)[0]
+    import json
+    with open(base + ".json", "w", encoding="utf-8") as f:
+        json.dump(narr, f, indent=1)
+    def ts(x):
+        return "%02d:%02d:%02d,%03d" % (x // 3600, x % 3600 // 60, x % 60, round(x % 1 * 1000) % 1000)
+    with open(base + ".srt", "w", encoding="utf-8") as f:
+        for i, n in enumerate(narr, 1):
+            f.write(f"{i}\n{ts(n['start'])} --> {ts(n['end'])}\n{n['text']}\n\n")
     tmp = tempfile.mkdtemp()
     lst = os.path.join(tmp, "list.txt")
     with open(lst, "w") as f:
-        for i, (im, t) in enumerate(frames):
+        for i, (im, t, _) in enumerate(frames):
             p = os.path.join(tmp, f"f{i:03d}.png"); im.save(p)
             f.write(f"file '{p}'\nduration {t}\n")
         f.write(f"file '{p}'\n")

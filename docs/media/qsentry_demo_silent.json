@@ -1,0 +1,72 @@
+[
+ {
+  "start": 0.0,
+  "end": 12.0,
+  "text": "On QNX 8.0, qsentry caught a stuck sensor in half a second. In simulated drives it found all 800 injected faults, with zero false alarms."
+ },
+ {
+  "start": 12.0,
+  "end": 20.0,
+  "text": "Brakes and stability control trust their sensors. A frozen or slowly drifting sensor feeds them wrong numbers."
+ },
+ {
+  "start": 20.0,
+  "end": 32.0,
+  "text": "A sensor process sends every sample to qsentry with QNX message passing. A tiny neural network checks each sensor, and a timer pulse is the watchdog."
+ },
+ {
+  "start": 32.0,
+  "end": 39.0,
+  "text": "A real QNX 8.0 target in QEMU. Everything on screen comes from its log."
+ },
+ {
+  "start": 39.0,
+  "end": 53.0,
+  "text": "Clean driving. Four signals at one hundred hertz, and every sensor is checked on every tick. State: nominal."
+ },
+ {
+  "start": 53.0,
+  "end": 67.0,
+  "text": "Now the gyro drifts. On its own it looks normal, but it no longer matches steering and speed. Flagged as drift after 2.79 seconds. Degraded."
+ },
+ {
+  "start": 67.0,
+  "end": 81.0,
+  "text": "The fault is cleared. A sensor is trusted again only after a full second of confident health. Back to nominal."
+ },
+ {
+  "start": 81.0,
+  "end": 95.0,
+  "text": "The wheel speed sensor freezes. Stuck, detected in 0.48 seconds. The gyro is not blamed by mistake."
+ },
+ {
+  "start": 95.0,
+  "end": 109.0,
+  "text": "Accelerometer noise, found in 0.18 seconds, plus gyro drift. Both redundant pairs are lost, so qsentry latches safe stop."
+ },
+ {
+  "start": 109.0,
+  "end": 123.0,
+  "text": "An operator reset while the window still holds faulty samples: safe stop latches again. qsentry never trusts stale evidence."
+ },
+ {
+  "start": 123.0,
+  "end": 137.0,
+  "text": "Two low priority programs load the CPU. The detector runs at priority forty and stays bounded: 144 microseconds median, 286 at the 99th percentile."
+ },
+ {
+  "start": 137.0,
+  "end": 151.0,
+  "text": "The sensor process is killed. A timer pulse on the same QNX channel is the watchdog: safe stop 55 milliseconds after the last sample."
+ },
+ {
+  "start": 151.0,
+  "end": 165.0,
+  "text": "On QNX: gyro drift in 2.8 seconds, stuck sensor in 0.48, noise in 0.18, watchdog in 55 milliseconds. Offline: 800 of 800 faults, zero false alarms."
+ },
+ {
+  "start": 165.0,
+  "end": 174.0,
+  "text": "qsentry is open source under Apache 2.0. The sensor data is simulated: retrain on recorded data before real use."
+ }
+]
