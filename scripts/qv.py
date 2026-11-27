@@ -141,6 +141,7 @@ def cmd_build(args):
     qnx_env()
     os.makedirs(os.path.join(ROOT, "results"), exist_ok=True)
     commit = source_commit()
+    failed = []
     for arch in args.arch:
         log = os.path.join(ROOT, "results", f"build_{arch}.log")
         if os.path.exists(log):
@@ -152,11 +153,17 @@ def cmd_build(args):
         os.makedirs(dest, exist_ok=True)
         for prog, srcs in PROGRAMS.items():
             out = os.path.join(dest, prog)
-            run(tool("qcc") + [f"-Vgcc_nto{arch}"] + CFLAGS +
-                [f'-DQV_COMMIT="{commit}"', "-o", out] + srcs + LIBS.get(prog, []),
-                cwd=ROOT, log=log)
+            if os.path.exists(out):
+                os.remove(out)
+            rc, _ = run(tool("qcc") + [f"-Vgcc_nto{arch}"] + CFLAGS +
+                        [f'-DQV_COMMIT="{commit}"', "-o", out] + srcs + LIBS.get(prog, []),
+                        cwd=ROOT, log=log, check=False)
+            if rc != 0:
+                failed.append(f"{arch}/{prog}")
         warnings = sum(1 for line in read_text(log).split("\n") if "warning:" in line)
         say(f"{arch}: {len(PROGRAMS)} programs in {dest}, {warnings} compiler warnings")
+    if failed:
+        die("build failed: " + ", ".join(failed) + " (see results/build_<arch>.log)")
 
 
 # ------------------------------------------------------------------ image
@@ -362,12 +369,12 @@ def cmd_watch(args):
     """Unattended: run whenever the branch has a new commit of sources."""
     until = datetime.datetime.strptime(args.until, "%Y-%m-%d")
     say(f"watching origin/{args.branch} until {args.until}; close this window to stop")
-    last_run = None
+    seen = set()  # source commits already run, and our own result commits
     while datetime.datetime.now() < until:
         git("fetch", "-q", "origin", args.branch, check=False)
         head = git("rev-parse", "FETCH_HEAD", check=False)
         subject = git("log", "-1", "--format=%s", "FETCH_HEAD", check=False)
-        if head and head != last_run and not subject.startswith("results:"):
+        if head and head not in seen and not subject.startswith("results:"):
             git("reset", "-q", "--hard", "FETCH_HEAD")
             say(f"new sources {head[:12]}: {subject}")
             try:
@@ -375,7 +382,7 @@ def cmd_watch(args):
             except SystemExit as e:  # a failed build or image: record it, go on
                 rundir = None
                 say(f"run failed: {e.code}")
-            last_run = head
+            seen.add(head)
             stamp = os.path.basename(rundir) if rundir else "failed"
             git("add", "-A", "results", check=False)
             git("commit", "-q", "-m", f"results: run {stamp} of {head[:12]}", check=False)
@@ -385,11 +392,8 @@ def cmd_watch(args):
                     break
                 git("pull", "-q", "--rebase", "origin", args.branch, check=False)
                 time.sleep(5 * (attempt + 1))
-            # our own result commit is now the head: remember it as seen
-            last_run = git("rev-parse", "HEAD", check=False) if True else head
+            seen.add(git("rev-parse", "HEAD", check=False))
             say("results pushed; waiting for new sources")
-        elif head and subject.startswith("results:"):
-            last_run = head
         time.sleep(args.poll)
     say("watch period over")
 

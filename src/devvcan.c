@@ -76,7 +76,7 @@ static struct vcan_dev devs[MAX_BUSES];
 static int ndevs = 1;
 static uint32_t opt_bitrate = 500000, opt_rx = 256, opt_tx = 32;
 static const char *opt_prefix = "/dev/vcan";
-static iofunc_mount_t mount;
+static iofunc_mount_t vcan_mount;
 static struct vcan_frame buf[BATCH];
 
 static void die(const char *fmt, ...)
@@ -222,7 +222,7 @@ static void ocb_free(struct vcan_ocb *ocb)
     free(ocb);
 }
 
-static iofunc_funcs_t ocb_funcs = {_IOFUNC_NFUNCS, ocb_calloc, ocb_free};
+static iofunc_funcs_t ocb_funcs = {.nfuncs = _IOFUNC_NFUNCS, .ocb_calloc = ocb_calloc, .ocb_free = ocb_free};
 
 /* ------------------------------------------------------- I/O handlers */
 
@@ -514,8 +514,8 @@ int main(int argc, char **argv)
     io_funcs.unblock = io_unblock;
     io_funcs.close_ocb = io_close_ocb;
 
-    memset(&mount, 0, sizeof mount);
-    mount.funcs = &ocb_funcs;
+    memset(&vcan_mount, 0, sizeof vcan_mount);
+    vcan_mount.funcs = &ocb_funcs;
 
     resmgr_attr_t rattr;
     memset(&rattr, 0, sizeof rattr);
@@ -534,7 +534,7 @@ int main(int argc, char **argv)
         struct vcan_dev *dev = &devs[i];
         dev->index = i;
         iofunc_attr_init(ATTR(&dev->attr), S_IFCHR | 0666, NULL, NULL);
-        dev->attr.mount = &mount;
+        dev->attr.mount = &vcan_mount;
         vcan_bus_init(&dev->bus, opt_bitrate, now);
         dev->bus.rx_ready = on_rx_ready;
         dev->bus.tx_room = on_tx_room;
