@@ -10,7 +10,7 @@ Measured on a QNX 8.0 guest in QEMU (run `20261113-205131`, raw console log in [
 | Independent client (python asyncua on the host, encrypted, user login) | **8 / 8** checks pass |
 | Read latency on the emulated CPU, p50 | **2.1 ms** plain, **2.6 ms** `Basic256Sha256` SignAndEncrypt; PubSub UDP **1.8 ms** |
 
-Demo video (under 2 min): https://youtu.be/KiwMC7GKt-Q
+**Demo video (2:34, narrated):** https://youtu.be/KaLh60HXepY — measured results first, rendered from the raw QNX logs by `tools/make_video.py` (captions-only version: https://youtu.be/KiwMC7GKt-Q)
 
 [open62541](https://www.open62541.org/) is the open-source C implementation of
 OPC UA (IEC 62541), the protocol that PLCs, robots, drives and SCADA/MES

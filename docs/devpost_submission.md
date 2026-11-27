@@ -7,7 +7,7 @@ against itself, with a small port for what QNX shows to be broken.
 
 **Category:** Open-source port
 
-**Video:** https://youtu.be/KiwMC7GKt-Q
+**Video:** https://youtu.be/KaLh60HXepY
 
 **Repository:** https://github.com/kbns2000/open62541-qnx
 
