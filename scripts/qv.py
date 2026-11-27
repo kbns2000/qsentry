@@ -21,7 +21,7 @@ run     boots it in QEMU (software emulation) with UDP port forwarding for
         results/runs/<time>/serial.log
 report  results/runs/<time>/SUMMARY.md from the "QV ..." lines
 watch   for unattended runs: whenever BRANCH on origin has a new commit (not
-        one of its own result commits), resets this clone to it, runs
+        one of its own result commits), fast-forwards this clone to it, runs
         "all", commits results/ and pushes. Stops at --until.
 
 Standard library only.
@@ -375,7 +375,12 @@ def cmd_watch(args):
         head = git("rev-parse", "FETCH_HEAD", check=False)
         subject = git("log", "-1", "--format=%s", "FETCH_HEAD", check=False)
         if head and head not in seen and not subject.startswith("results:"):
-            git("reset", "-q", "--hard", "FETCH_HEAD")
+            # fast-forward only: the new commits sit on top of our result commits
+            if subprocess.run(["git", "-C", ROOT, "merge", "-q", "--ff-only", "FETCH_HEAD"]).returncode:
+                say(f"origin/{args.branch} is not a fast-forward of this clone; skipping it")
+                seen.add(head)
+                time.sleep(args.poll)
+                continue
             say(f"new sources {head[:12]}: {subject}")
             try:
                 rundir = cmd_all(args)
