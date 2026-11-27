@@ -106,7 +106,14 @@ One minute of one car is evidence of the gap, not a validation.
 
 ## Build and run
 
-Requirements: QNX SDP 8.0 (free non-commercial licence from myQNX), a Linux or WSL2 host, QEMU.
+| | |
+|---|---|
+| QNX version | QNX SDP 8.0; the target reports `QNX 8.0.0` ([serial log](docs/qnx_run_2026-11-07/serial_run4.log)) |
+| Target | QEMU x86_64 virtual machine made with `mkqnximage` (software emulation, TCG). aarch64le (Raspberry Pi 4/5) is cross-compiled, not run |
+| Toolchain | `qcc` from SDP 8.0 (GCC 12.2.0 backend): `-Vgcc_ntox86_64`, `-Vgcc_ntoaarch64le` |
+| Host used for the measured runs | Windows 11: [`scripts/build_qnx.cmd`](scripts/build_qnx.cmd), then [`scripts/qemu_win/run_qemu_win.cmd`](scripts/qemu_win/run_qemu_win.cmd) |
+
+Requirements: QNX SDP 8.0 (free non-commercial licence from myQNX), QEMU, and a Windows host (the two `.cmd` scripts above) or a Linux/WSL2 host (below).
 
 ```bash
 # 1. host tests and offline evaluation (any Linux/macOS/WSL)
