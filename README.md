@@ -117,6 +117,13 @@ manager, and `IP_MULTICAST_IF` with a `struct ip_mreq` fails with
 
 ### What you need
 
+| | |
+|---|---|
+| QNX version | QNX SDP 8.0; the target reports `QNX 8.0.0` |
+| Target | QEMU x86_64 virtual machine made with `mkqnximage`, 2 CPUs, software emulation (TCG). aarch64le is cross-compiled, not run (see below) |
+| Toolchain | `qcc` from SDP 8.0 (QCC 12.2.0, [`results/build_x86_64.log`](results/build_x86_64.log)) through CMake + Ninja with [`cmake/qnx800.toolchain.cmake`](cmake/qnx800.toolchain.cmake); OpenSSL 3 from the SDP |
+| Host used for the measured run | Windows 11 PC |
+
 - QNX SDP 8.0 (the free non-commercial licence is enough), on Windows or Linux
 - Python 3.9 or newer; CMake 3.16+ and Ninja (`pip install cmake ninja` works)
 - QEMU (`qemu-system-x86_64`) for the QEMU run
