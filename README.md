@@ -97,7 +97,46 @@ read(fd, &f, sizeof f);              /* f.ts_ns: end of the frame on the bus */
 
 ## Results
 
-See `results/` (added by the test runs).
+QNX 8.0 guest in QEMU x86_64 (software emulation), run `20261127-131315`
+(`results/runs/20261127-131315/SUMMARY.md`, raw console log `serial.log`
+next to it): **all 18 tests pass** (17 in `vcan_test` plus the bridge test; 19 PASS lines, arbitration reports two).
+
+| Test | What the guest measured |
+|---|---|
+| arbitration.order | lowest id first: `100 R100 4000000 200 300` (data before remote, 11-bit before 29-bit) |
+| timing.stuffing | id 000 data 00*8: 127 bits; id 555 data 55*8: 112 bits (nominal 111) |
+| timing.bitrate | 50 frames of 8 bytes at 125 kbit/s: each 888..1080 us apart as its bits say; 45.7 ms bus time |
+| write.backpressure | queue of 4: 5th non-blocking write `EAGAIN`; blocking write of 12 frames returned after 42.6 ms (bus time 40.0 ms) |
+| error.busoff | every frame destroyed: error passive at the 16th error (TEC 128), bus-off at 256, `write()` `EIO`, sends again after reset |
+| error.recover | 16 errors (TEC 128), one good frame: TEC 127, error active again |
+| unblock.signal / unblock.timeout | blocked `read()` ends with `EINTR` after 203 ms (SIGALRM at 200 ms) / 152 ms (`TimerTimeout` 150 ms) |
+| close.cleanup | 500 open/close leave one node; a `read()` blocked while another thread closes the fd ends with `EBADF` |
+| nodes.many | 100 nodes on one bus, every other node got the frame |
+| bridge.udp | 50 of 50 frames to the host over UDP and back (host log: received 50, answered 50, bad 0) |
+
+`TimerTimeout()` note: the kernel does not end a call to a server whose
+channel has `_NTO_CHF_UNBLOCK`; it sends the server an unblock pulse and the
+client gets the server's reply. devvcan answers `EINTR`, as for a signal.
+The first run expected `ETIMEDOUT` and failed; the test now checks what QNX
+does (`results/runs/20261127-130815`).
+
+Demo on one 125 kbit/s bus (`vm/run.sh`): 0x0C0 every 10 ms, 0x1A0 every
+20 ms, 0x18FEF100 every 100 ms, and 0x2B0 every 20 ms on a node that destroys
+every third frame it sends. That node's TEC climbs to bus-off twice (122
+error frames, 2 bus-off events); the generator resets it and the other three
+nodes lose no frame (500, 250 and 50 sent, 0 failed).
+
+Latency through the resource manager (QEMU emulates the CPU in software:
+upper bounds, not hardware figures):
+
+| | p50 | p99 |
+|---|---|---|
+| `write()` on one node to `read()` on another, bus without timing | 295 us | 969 us |
+| same at 1 Mbit/s (frame time included) | 328 us | 1052 us |
+| `select()` wake-up at 1 Mbit/s | 779 us | 1696 us |
+| guest to host and back over the UDP bridge | 3.4 ms | 14.3 ms |
+
+Throughput without bus timing: about 101,000 frames/s.
 
 ## License
 

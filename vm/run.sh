@@ -15,6 +15,7 @@ run() {
 }
 
 echo "QV GUEST START"
+echo "QV GUEST uname $(uname -a)"
 uname -a
 pidin info
 
