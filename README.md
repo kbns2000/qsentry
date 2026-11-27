@@ -1,5 +1,18 @@
 # qsentry — an on-device sensor-fault sentinel for QNX
 
+**A QNX 8.0 service that tells a car or robot which sensor is lying, and how, in about half a second
+for sudden faults.** Measured (raw logs in [docs/qnx_run_2026-11-07/](docs/qnx_run_2026-11-07/) and
+[docs/evaluation_holdout_seed2027.txt](docs/evaluation_holdout_seed2027.txt)):
+
+| | |
+|---|---|
+| Simulated drives (held-out seed): faults found, right sensor and type | **800 / 800**, **0** false alarms in 200 clean drives |
+| Reaction on QNX 8.0 (QEMU) | stuck speed **0.48 s**, accel noise **0.18 s**, slow yaw drift **2.79 s** |
+| Sensor stream dies (`slay qsensord`) | watchdog → `SAFE_STOP` in **55 ms** |
+| Detector per sample on QNX 8.0 (QEMU), p50 / p99 | **119 / 218 µs** idle, **144 / 286 µs** with the CPU saturated at lower priority |
+
+Simulated sensors; on one real drive the model does not transfer yet (see [Real-data check](#real-data-check)).
+
 **Category:** Automotive (also fits Robotics). **Target:** QNX SDP 8.0, x86_64 QEMU (aarch64 / Raspberry Pi also builds).
 
 A car or robot trusts its sensors. A wheel-speed sensor that freezes, a gyro that slowly drifts, a
