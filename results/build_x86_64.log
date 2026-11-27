@@ -1,0 +1,13 @@
+qvcan build for x86_64, sources 00354f5c6a6e
+$ ~/qnx800/host/win64/x86_64/usr/bin\qcc.EXE -V
+cc: targets available in ~/qnx800/host/win64/x86_64/etc/qcc:
+	12.2.0,gcc_ntoaarch64le
+	12.2.0,gcc_ntoaarch64le_cxx
+	12.2.0,gcc_ntoaarch64le_gpp
+	12.2.0,gcc_ntox86_64	(default)
+	12.2.0,gcc_ntox86_64_cxx
+	12.2.0,gcc_ntox86_64_gpp
+$ ~/qnx800/host/win64/x86_64/usr/bin\qcc.EXE -Vgcc_ntox86_64 -O2 -std=gnu11 -Wall -Wextra -Iinclude -Isrc -DQV_COMMIT="00354f5c6a6e" -o F:\Claude\qv\qvcan\out\x86_64\devvcan src/devvcan.c src/vcan_core.c
+$ ~/qnx800/host/win64/x86_64/usr/bin\qcc.EXE -Vgcc_ntox86_64 -O2 -std=gnu11 -Wall -Wextra -Iinclude -Isrc -DQV_COMMIT="00354f5c6a6e" -o F:\Claude\qv\qvcan\out\x86_64\vcan tools/vcan.c
+$ ~/qnx800/host/win64/x86_64/usr/bin\qcc.EXE -Vgcc_ntox86_64 -O2 -std=gnu11 -Wall -Wextra -Iinclude -Isrc -DQV_COMMIT="00354f5c6a6e" -o F:\Claude\qv\qvcan\out\x86_64\vcanbridge tools/vcanbridge.c -lsocket
+$ ~/qnx800/host/win64/x86_64/usr/bin\qcc.EXE -Vgcc_ntox86_64 -O2 -std=gnu11 -Wall -Wextra -Iinclude -Isrc -DQV_COMMIT="00354f5c6a6e" -o F:\Claude\qv\qvcan\out\x86_64\vcan_test tests/vcan_test.c

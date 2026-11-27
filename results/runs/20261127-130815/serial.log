@@ -1,0 +1,157 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+---> Starting slogger2
+---> Starting PCI Services
+---> Starting fsevmgr
+# ---> Starting devb
+---> Mounting file systems
+Path=0 - Intel 82371SB
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Mounting file systems
+---> Starting Networking
+---> Starting sshd
+/usr/libexec/sshd-auth does not exist or is not executable
+---> Starting misc
+QV GUEST START
+QNX qvcan 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+
+CPU:X86_64 Release:8.0.0  FreeMem:873MB/1023MB BootTime:Nov 27 04:08:17 UTC 2026
+To exit QEMU, type <ctrl>a x
+
+[?7hProcesses: 20, Threads: 105
+Processor1: 686 AMD 686 F6M6S3 3761MHz FPU 
+Processor2: 686 AMD 686 F6M6S3 3761MHz FPU 
+devvcan: 2 buses /dev/vcan0 .. at 500000 bit/s, queues rx 256 tx 32: ready
+Process count:23
+Startup complete
+QNX qvcan 8.0.0 2026/06/05-16:26:03EDT x86pc x86_64
+crw-rw-rw-  1 root root 0,   1 2026-11-27 04:08 /dev/vcan0
+crw-rw-rw-  1 root root 0,   1 2026-11-27 04:08 /dev/vcan1
+     pid tid name                         prio STATE          Blocked                     
+  307220   1 ./devvcan                     10r RECEIVE        1                           
+QV RUN tests
+QV BEGIN basic.fanout
+QV PASS basic.fanout 2 receivers, own frame only with VCAN_OPT_RECV_OWN, 48 bits
+QV BEGIN nodes.many
+QV PASS nodes.many 100 nodes on one bus (100 open), every other node got the frame
+QV BEGIN filter.mask
+QV PASS filter.mask 5 of 19 frames passed two id/mask filters (11-bit and 29-bit)
+QV BEGIN arbitration
+QV PASS arbitration.order lowest id first: 100 R100 4000000 200 300 (data before remote, 11-bit before 29-bit)
+QV PASS arbitration.fifo one node's queue keeps its order: 100 300 50
+QV BEGIN timing.bitrate
+QV PASS timing.bitrate 50 frames of 8 bytes at 125000 bit/s: each frame 888..1080 us apart as its bits say; 45.7 ms bus time, 46.6 ms wall time
+QV BEGIN timing.stuffing
+QV PASS timing.stuffing id 000 data 00*8: 127 bits; id 555 data 55*8: 112 bits (nominal 111, stuff bits make the difference)
+QV BEGIN read.nonblock
+QV PASS read.nonblock empty queue: EAGAIN; buffer below one frame: EINVAL
+QV BEGIN select.wakeup
+QV LAT select_wakeup_1Mbit n=20 p50=666.1us p90=1239.5us p99=1451.3us max=1451.3us
+QV PASS select.wakeup 20 of 20 select() calls woke up for a frame from another thread
+QV BEGIN unblock.signal
+QV PASS unblock.signal a blocked read() ended with EINTR after 203 ms (SIGALRM at 200 ms)
+QV BEGIN unblock.timeout
+QV FAIL unblock.timeout read gave -1 (Interrupted function call)
+QV BEGIN write.backpressure
+QV PASS write.backpressure queue of 4: non-blocking 5th write EAGAIN; blocking write of 12 returned after 42.2 ms (8 frames of 50 bits at 10000 bit/s: 40.0 ms)
+QV BEGIN rx.overflow
+QV PASS rx.overflow queue of 8, 20 frames: 8 kept (oldest first), 12 counted as overflow
+QV BEGIN error.busoff
+QV PASS error.busoff every frame destroyed: 32 error frames, error passive at the 16th (tec 128), bus off at tec 256; write() EIO; after reset the node sends again
+QV BEGIN error.recover
+QV PASS error.recover 16 errors (tec 128, error passive), then one good frame: tec 127, error active again
+QV BEGIN close.cleanup
+QV PASS close.cleanup 500 open/close leave the node count at 1; a read blocked while another thread closes the fd ends with EBADF
+QV BEGIN bus.isolation
+QV PASS bus.isolation a frame on vcan0 reaches vcan0 nodes only
+QV BEGIN perf
+QV LAT write_to_read_no_timing n=2000 p50=281.6us p90=422.3us p99=650.9us max=2308.4us
+QV LAT write_to_read_1Mbit n=300 p50=302.0us p90=480.2us p99=2170.6us max=2639.8us
+QV LAT throughput_no_timing frames_per_s=98153
+QV PASS perf.latency write-to-read latency and throughput measured (QV LAT lines)
+QV SUMMARY pass=16 fail=1
+QV EXIT tests 1
+QV GUEST vtnet0 has its DHCP address
+vtnet0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
+	options=80028<VLAN_MTU,JUMBO_MTU,LINKSTATE>
+	ether 52:54:00:12:34:56
+	inet6 fe80::5054:ff:fe12:3456%vtnet0 prefixlen 64 scopeid 0x5
+	inet6 fec0::2670:ece2:d5d8:b8be prefixlen 64 autoconf
+	inet 10.0.2.15 netmask 0xffffff00 broadcast 10.0.2.255
+	media: Ethernet autoselect (10Gbase-T <full-duplex>)
+	status: active
+	nd6 options=1<PERFORMNUD>
+QV BRIDGE /dev/vcan0 <-> udp 10.0.2.2:47002 (local port 47001): running
+QV RUN bridge
+QV LAT bridge_round_trip_host n=50 p50=3166.5us p90=5049.3us p99=15295.9us max=15295.9us
+QV PASS bridge.udp 50 of 50 frames went to the host over UDP and came back changed
+QV SUMMARY pass=1 fail=0
+QV EXIT bridge 0
+QV BRIDGE END to_udp=50 to_bus=50 dropped=0
+QV DEMO four nodes on /dev/vcan1 at 125 kbit/s, 0x2B0 is faulty
+QV RUN demo.dump
+QV DUMP    13.420342       1A0  [4]  34 00 00 00              bits=86 node=6 seq=246
+QV DUMP    13.423839       0C0  [8]  69 00 00 00 00 00 00 00  bits=124 node=5 seq=247
+QV DUMP    13.427314       2B0  [8]  34 00 00 00 00 00 00 00  bits=125 node=8 seq=249
+QV DUMP    13.434531       0C0  [8]  6A 00 00 00 00 00 00 00  bits=123 node=5 seq=250
+QV DUMP    13.439126       1A0  [4]  35 00 00 00              bits=85 node=6 seq=251
+QV DUMP    13.444482       0C0  [8]  6B 00 00 00 00 00 00 00  bits=123 node=5 seq=252
+QV DUMP    13.445579       2B0  [8]  35 00 00 00 00 00 00 00  bits=124 node=8 seq=253
+QV DUMP    13.453679       0C0  [8]  6C 00 00 00 00 00 00 00  bits=124 node=5 seq=254
+QV DUMP    13.458933       1A0  [4]  36 00 00 00              bits=85 node=6 seq=255
+QV DUMP    13.463717       0C0  [8]  6D 00 00 00 00 00 00 00  bits=123 node=5 seq=256
+QV DUMP    13.467109       2B0  [8]  36 00 00 00 00 00 00 00  bits=125 node=8 seq=258
+QV DUMP    13.474328       0C0  [8]  6E 00 00 00 00 00 00 00  bits=123 node=5 seq=259
+QV DUMP    13.480318       1A0  [4]  37 00 00 00              bits=85 node=6 seq=260
+QV DUMP    13.484363  18FEF100  [8]  0B 00 00 00 00 00 00 00  bits=146 node=7 seq=261
+QV DUMP    13.485347       0C0  [8]  6F 00 00 00 00 00 00 00  bits=123 node=5 seq=262
+QV DUMP    13.486536       2B0  [8]  37 00 00 00 00 00 00 00  bits=124 node=8 seq=263
+QV DUMP    13.494972       0C0  [8]  70 00 00 00 00 00 00 00  bits=125 node=5 seq=264
+QV DUMP    13.499442       1A0  [4]  38 00 00 00              bits=85 node=6 seq=265
+QV DUMP    13.504100       0C0  [8]  71 00 00 00 00 00 00 00  bits=124 node=5 seq=266
+QV DUMP    13.507484       2B0  [8]  38 00 00 00 00 00 00 00  bits=124 node=8 seq=268
+QV DUMP    13.513360       0C0  [8]  72 00 00 00 00 00 00 00  bits=124 node=5 seq=269
+QV DUMP    13.519511       1A0  [4]  39 00 00 00              bits=85 node=6 seq=270
+QV DUMP    13.524330       0C0  [8]  73 00 00 00 00 00 00 00  bits=123 node=5 seq=271
+QV DUMP    13.525440       2B0  [8]  39 00 00 00 00 00 00 00  bits=124 node=8 seq=272
+QV DUMP END 24 frames
+QV EXIT demo.dump 0
+QV RUN demo.stat
+QV STAT bitrate=125000 nodes=6 paused=0 frames=248 errors=29 bits=33017 busy_ms=264.136 up_ms=9014.527 load=2.93%
+QV EXIT demo.stat 0
+     pid tid name                         prio STATE          Blocked                     
+  307220   1 ./devvcan                     10r RECEIVE                                    
+QV GEN C0 sent 500 failed 0
+QV GEN 1A0 sent 250 failed 0
+QV GEN 18FEF100 sent 50 failed 0
+QV GEN 2B0 bus-off after 87 frames: reset
+QV GEN 2B0 bus-off after 174 frames: reset
+QV GEN 2B0 sent 248 failed 2
+QV DEMO error frames seen by the error-only node (first 12):
+QV DUMP    12.426066  ERROR  frame destroyed  node=8 tec=8 state=active seq=13
+QV DUMP    12.465622  ERROR  frame destroyed  node=8 tec=14 state=active seq=22
+QV DUMP    12.506276  ERROR  frame destroyed  node=8 tec=20 state=active seq=32
+QV DUMP    12.546539  ERROR  frame destroyed  node=8 tec=26 state=active seq=41
+QV DUMP    12.586216  ERROR  frame destroyed  node=8 tec=32 state=active seq=51
+QV DUMP    12.625936  ERROR  frame destroyed  node=8 tec=38 state=active seq=60
+QV DUMP    12.666282  ERROR  frame destroyed  node=8 tec=44 state=active seq=69
+QV DUMP    12.706309  ERROR  frame destroyed  node=8 tec=50 state=active seq=79
+QV DUMP    12.746010  ERROR  frame destroyed  node=8 tec=56 state=active seq=88
+QV DUMP    12.786657  ERROR  frame destroyed  node=8 tec=62 state=active seq=98
+QV DUMP    12.827266  ERROR  frame destroyed  node=8 tec=68 state=active seq=107
+QV DUMP    12.866166  ERROR  frame destroyed  node=8 tec=74 state=active seq=116
+QV DEMO error frames in total: 122, bus-off events: 2
+QV RUN demo.stat.end
+QV STAT bitrate=125000 nodes=1 paused=0 frames=1046 errors=122 bits=138473 busy_ms=1107.784 up_ms=14981.505 load=7.39%
+QV EXIT demo.stat.end 0
+QV RUN demo.stat.bus0
+QV STAT bitrate=500000 nodes=1 paused=0 frames=100718 errors=48 bits=11814781 busy_ms=195.642 up_ms=14999.952 load=1.30%
+QV EXIT demo.stat.bus0 0
+QV GUEST DONE
+
+# 
