@@ -1,5 +1,15 @@
 # open62541-qnx: OPC UA on QNX 8.0, with the evidence
 
+**OPC UA (open62541 v1.4.22) that behaves on QNX 8.0 as on Linux, shown by tests that run on QNX.**
+Measured on a QNX 8.0 guest in QEMU (run `20261113-205131`, raw console log in [`results/`](results/runs/20261113-205131/)):
+
+| | |
+|---|---|
+| Tests named by the seven changes | **17 / 17 pass** with the port; the unchanged release: **15 fail, 2 cannot run** |
+| Whole suite, port vs unchanged release | **80 pass / 2 fail** vs **57 / 17** |
+| Independent client (python asyncua on the host, encrypted, user login) | **8 / 8** checks pass |
+| Read latency on the emulated CPU, p50 | **2.1 ms** plain, **2.6 ms** `Basic256Sha256` SignAndEncrypt; PubSub UDP **1.8 ms** |
+
 Demo video (under 2 min): https://youtu.be/KiwMC7GKt-Q
 
 [open62541](https://www.open62541.org/) is the open-source C implementation of
