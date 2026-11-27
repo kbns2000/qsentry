@@ -10,12 +10,15 @@
 
 **Repository:** https://github.com/kbns2000/open62541-qnx
 
+**Upstream:** https://github.com/open62541/open62541 (release v1.4.22: https://github.com/open62541/open62541/releases/tag/v1.4.22). This repository is new, not a fork: the release files are downloaded and SHA-256 checked, and the changes are kept as separate patch files.
+
 ## Measured on QNX 8.0 (QEMU x86_64; raw logs in the repository)
 
 - Tests named by the seven changes: **17 of 17 pass** with the port; the unchanged release: **15 fail, 2 cannot run**.
 - Whole suite, port vs unchanged release: **80 pass / 2 fail** vs **57 / 17**.
 - Independent client (python asyncua on the host, encrypted, user login): **8 of 8** checks pass.
 - Read latency on the emulated CPU, p50: **2.1 ms** plain, **2.6 ms** Basic256Sha256 SignAndEncrypt; PubSub UDP **1.8 ms**.
+- Upstream: https://github.com/open62541/open62541 (release v1.4.22). This repository is new, not a fork; the seven changes are separate patch files.
 
 ## Inspiration
 

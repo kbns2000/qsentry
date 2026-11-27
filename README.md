@@ -12,7 +12,7 @@ Measured on a QNX 8.0 guest in QEMU (run `20261113-205131`, raw console log in [
 
 **Demo video (2:34, narrated):** https://youtu.be/KaLh60HXepY — measured results first, rendered from the raw QNX logs by `tools/make_video.py` (captions-only version: https://youtu.be/KiwMC7GKt-Q)
 
-[open62541](https://www.open62541.org/) is the open-source C implementation of
+[open62541](https://www.open62541.org/) ([upstream repository](https://github.com/open62541/open62541)) is the open-source C implementation of
 OPC UA (IEC 62541), the protocol that PLCs, robots, drives and SCADA/MES
 systems use to exchange data. QNX runs many of the controllers underneath
 them.
