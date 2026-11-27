@@ -359,7 +359,7 @@ def main():
                            "Results from QEMU emulation: behaviour, not performance figures."]):
         d.text((60, 360 + 38 * i), s, font=F_TXT, fill=DIM if i == 2 else FG)
     say(im, d, "open62541-qnx is open source. Under emulation, these are behaviour results, "
-               "not performance figures.", 7)
+               "not performance figures.", 11)
 
     base = os.path.splitext(args.out)[0]
     narr, t = [], 0.0

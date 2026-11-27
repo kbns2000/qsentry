@@ -39,6 +39,6 @@ A Python client on the host logs in to the QNX server, encrypted. A wrong passwo
 The demo server publishes CPU load, memory, processes and uptime every second, and logs to slog2.
 
 11
-00:02:23,000 --> 00:02:32,000
+00:02:23,000 --> 00:02:34,000
 open62541-qnx is open source. Under emulation, these are behaviour results, not performance figures.
 
