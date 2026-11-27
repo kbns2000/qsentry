@@ -129,6 +129,19 @@ One minute of one car is evidence of the gap, not a validation.
 
 Requirements: QNX SDP 8.0 (free non-commercial licence from myQNX), QEMU, and a Windows host (the two `.cmd` scripts above) or a Linux/WSL2 host (below).
 
+On Windows it is one command after cloning (SDP in `%USERPROFILE%\qnx800`, QEMU in `C:\Program Files\qemu`):
+
+```bat
+git clone https://github.com/kbns2000/qsentry.git
+cd qsentry
+scripts\qemu_win\run_qemu_win.cmd
+```
+
+It cross-compiles with `qcc` if `build\qnx-x86_64` is empty, builds the image with `mkqnximage`, boots it, runs the
+scripted demo (`scripts/autodemo.sh`, QEMU is stopped after 200 s) and prints the console log.
+
+On Linux/WSL2, step by step:
+
 ```bash
 # 1. host tests and offline evaluation (any Linux/macOS/WSL)
 make test          # unit tests

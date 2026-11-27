@@ -1,10 +1,11 @@
 @echo off
-rem Build a QNX 8.0 QEMU image containing qsentry and boot it; console -> serial.log
+rem One command: cross-compile qsentry if needed, build a QNX 8.0 QEMU image with it, boot it; console -> serial.log
 setlocal
 set ROOT=%~dp0..\..
 set VM=%USERPROFILE%\qsentry-vm
 set QEMU=C:\Program Files\qemu\qemu-system-x86_64.exe
 if "%QNX_HOST%"=="" call "%USERPROFILE%\qnx800\qnxsdp-env.bat"
+if not exist "%ROOT%\build\qnx-x86_64\qsentryd" call "%ROOT%\scripts\build_qnx.cmd" x86_64 || exit /b 1
 if not exist "%VM%\local\snippets" mkdir "%VM%\local\snippets"
 if not exist "%VM%\payload" mkdir "%VM%\payload"
 copy /y "%ROOT%\build\qnx-x86_64\*" "%VM%\payload\" >nul
